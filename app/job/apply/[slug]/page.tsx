@@ -4,11 +4,11 @@ import type { PutBlobResult } from '@vercel/blob';
 import { useState, useRef } from 'react';
 import ResumeUploadForm from './resumeUploader';
 
-export default function AvatarUploadPage() {
-    const jobId = '12345';
+export default function AvatarUploadPage({ params }: { params: { slug: string } }) {
+
     return (
         <>
-            <ResumeUploadForm jobId={jobId} />
+            <ResumeUploadForm jobId={params.slug} />
         </>
     );
 }
