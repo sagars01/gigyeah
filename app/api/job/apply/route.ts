@@ -13,21 +13,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         const { searchParams } = new URL(request.url);
         const filename = searchParams.get('filename') as string;
-        const jobId = searchParams.get('jobId') as string;
 
-        const blob = await put(filename, request.body, {
+
+        const formData = await request.formData();
+        const file = formData.get('file') as File;
+        const jobId = formData.get('jobId') as string;
+        const name = formData.get('name') as string;
+        const shortIntro = formData.get('shortIntro') as string;
+
+        const blob = await put(filename, file, {
             access: 'public',
         });
 
-        const application = new Application({
-            jobId,
-            resumeUrl: blob.url
-        })
+        const existingApplication = await Application.findOne({ jobId });
+        if (existingApplication) {
 
-        await application.save();
+            existingApplication.applications.push({
+                name,
+                shortIntro,
+                resumeUrl: blob.url
+            });
 
-        return NextResponse.json({ message: "Application Successful" }, { status: 200 });
+            await existingApplication.save();
+            return NextResponse.json({ message: "Application Successful" }, { status: 200 });
+
+        } else {
+            return NextResponse.json({}, { status: 409, statusText: 'Job not found' });
+        }
     } catch (error) {
+        console.error(error);
         return NextResponse.json({ error: 'Server Error' }, { status: 500 });
     }
 }

@@ -6,10 +6,9 @@ interface ResumeUploadFormProps {
 
 const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
     const inputFileRef = useRef<HTMLInputElement>(null);
-    const [uploadStatus, setUploadStatus] = useState<string>('');
+    const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        debugger
         event.preventDefault();
         setUploadStatus('');
 
@@ -20,10 +19,16 @@ const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
 
         const file = inputFileRef.current.files[0];
 
+        const formData = new FormData();
+        formData.append('jobId', jobId);
+        formData.append('name', 'Applicant Name 1'); // Replace with the desired name
+        formData.append('shortIntro', 'My name is applicant'); // Replace with the desired shortIntro
+        formData.append('file', file);
+
         try {
             const response = await fetch(`/api/job/apply?filename=${encodeURIComponent(file.name)}&jobId=${jobId}`, {
                 method: 'POST',
-                body: file,
+                body: formData,
             });
 
             if (!response.ok) {
@@ -40,12 +45,14 @@ const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
     };
 
     return (
-        <form onSubmit={handleFormSubmit}>
-            <h2>Upload Resume for Job ID: {jobId}</h2>
-            <input type="file" ref={inputFileRef} required />
-            <button type="submit">Upload Resume</button>
-            {uploadStatus && <p>{uploadStatus}</p>}
-        </form>
+        <>
+            <form onSubmit={handleFormSubmit}>
+                <h2>Upload Resume for Job ID: {jobId}</h2>
+                <input type="file" ref={inputFileRef} required />
+                <button type="submit">Upload Resume</button>
+                {uploadStatus && <p>{uploadStatus}</p>}
+            </form>
+        </>
     );
 };
 
