@@ -1,3 +1,4 @@
+import { ApplicationMainContainer } from '@/app/styles/applicants/application.styles';
 import React, { useState, useRef } from 'react';
 
 interface ResumeUploadFormProps {
@@ -46,12 +47,14 @@ const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
 
     return (
         <>
-            <form onSubmit={handleFormSubmit}>
-                <h2>Upload Resume for Job ID: {jobId}</h2>
-                <input type="file" ref={inputFileRef} required />
-                <button type="submit">Upload Resume</button>
-                {uploadStatus && <p>{uploadStatus}</p>}
-            </form>
+            <ApplicationMainContainer>
+                <form onSubmit={handleFormSubmit}>
+                    <h2>Upload Resume for Job ID: {jobId}</h2>
+                    <input type="file" ref={inputFileRef} required />
+                    <button type="submit">Upload Resume</button>
+                    {uploadStatus && <p>{uploadStatus}</p>}
+                </form>
+            </ApplicationMainContainer>
         </>
     );
 };
