@@ -1,7 +1,4 @@
 "use client"
-import GlobalStyles from '@/app/styles/GlobalStyles'
-import Providers from './Providers'
-
 
 export default function RootLayout({
   children,
@@ -11,9 +8,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          {children}
-        </Providers>
+
+        {children}
+
       </body>
     </html>
   )
