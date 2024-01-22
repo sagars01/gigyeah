@@ -5,7 +5,7 @@ import ResumeUploadForm from './resumeUploader';
 import { Row, Col } from 'antd';
 
 interface JobApplicationPageProps {
-    params: { slug: string };
+    params: { jobId: string };
     job: any; // Replace 'any' with a more specific type if available
     error?: string;
 }
@@ -24,16 +24,16 @@ async function getServerSideProps(jobId: string) {
 }
 
 export default function JobApplicationPage(args: JobApplicationPageProps) {
-    const [jobDetail, setJobDetails] = useState<any>(null)
+    const [jobDetail, setJobDetails] = useState<any>(null);
+    const [jobFetchError, setJobFetchError] = useState<boolean>(false);
+
     useEffect(() => {
         const fetchJob = async () => {
-            try {
-                const { job } = await getServerSideProps(args.params.slug);
-                setJobDetails(job)
-            } catch (error) {
-
+            const { job, error } = await getServerSideProps(args.params.jobId);
+            if (!error) setJobDetails(job)
+            else {
+                setJobFetchError(true)
             }
-
         }
         fetchJob()
     }, []);
@@ -41,10 +41,10 @@ export default function JobApplicationPage(args: JobApplicationPageProps) {
         <>
             <Row gutter={16}>
                 <Col xs={24} md={16} style={{ maxHeight: '95vh', overflowY: 'auto' }}>
-                    <JobListing jobContent={jobDetail} />
+                    <JobListing jobContent={jobDetail} error={jobFetchError} />
                 </Col>
                 <Col xs={24} md={8}>
-                    <ResumeUploadForm jobId={args.params.slug} />
+                    <ResumeUploadForm jobId={args.params.jobId} />
                 </Col>
             </Row>
         </>

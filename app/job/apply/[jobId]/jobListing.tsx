@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Typography, List } from 'antd';
+import { Card, Typography, List, Empty } from 'antd';
 const { Title, Text } = Typography;
 
-const JobListing: React.FC<IJobListingProps> = ({ jobContent }) => {
-    return (
+const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
+    const ListingCard = () => (
         <>
             <Card bordered={false} loading={!jobContent}>
                 <Title level={2}>Job Listing</Title>
@@ -24,6 +24,21 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent }) => {
             </Card>
         </>
     );
+
+    const ErrorCard = () => (
+        <>
+            <Card>
+                <Empty description="Couldn't find the specified job" />
+            </Card>
+        </>
+    )
+    return (
+        <>
+            {
+                error ? <ErrorCard /> : <ListingCard />
+            }
+        </>
+    );
 }
 
 interface JobPosting {
@@ -40,7 +55,8 @@ interface JobPosting {
 }
 
 interface IJobListingProps {
-    jobContent: JobPosting;
+    jobContent?: JobPosting;
+    error?: boolean;
 }
 
 export default JobListing;
