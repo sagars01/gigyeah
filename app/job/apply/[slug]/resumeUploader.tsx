@@ -1,32 +1,77 @@
-import React, { useState, useRef } from 'react';
+import { InboxOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Button, Form, Input, Upload, message } from 'antd';
 
-interface ResumeUploadFormProps {
-    jobId: string;
-}
+const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 14 },
+};
 
-const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
-    const inputFileRef = useRef<HTMLInputElement>(null);
-    const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+        return e;
+    }
+    return e?.fileList;
+};
 
-    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setUploadStatus('');
+const FormFieldsForCandidateData = () => (
+    <>
+        <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name!' }]}>
+            <Input placeholder="Enter your name" />
+        </Form.Item>
 
-        if (!inputFileRef.current?.files?.[0]) {
-            setUploadStatus('Please select a file to upload.');
-            return;
-        }
+        <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+                {
+                    required: true,
+                    message: 'Please enter your email address!',
+                },
+                {
+                    type: 'email',
+                    message: 'Invalid email address format!',
+                },
+            ]}
+        >
+            <Input placeholder="Enter your email" />
+        </Form.Item>
 
-        const file = inputFileRef.current.files[0];
+        <Form.Item
+            name="shortIntro"
+            label="Why should we hire you?"
+            rules={[{ required: true, message: 'Please provide a short description!' }]}
+        >
+            <Input.TextArea rows={4} placeholder="Enter a short description" />
+        </Form.Item>
+    </>
+);
+
+
+const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId }) => {
+    const [loading, setLoading] = useState(false);
+    const [relevantFile, setRelevantFile] = useState(null);
+
+    const onFinish = async (values: any) => {
+        setLoading(true);
 
         const formData = new FormData();
         formData.append('jobId', jobId);
-        formData.append('name', 'Applicant Name 1'); // Replace with the desired name
-        formData.append('shortIntro', 'My name is applicant'); // Replace with the desired shortIntro
-        formData.append('file', file);
+        formData.append('name', values.name);
+        formData.append('email', values.email);
+        formData.append('shortIntro', values.shortIntro);
 
+        if (values.dragger.length > 0) {
+            const file = values.dragger[0].originFileObj;
+            formData.append('file', file);
+            formData.append('filename', encodeURIComponent(file.name));
+        } else {
+            message.error('Please upload a file.');
+            setLoading(false);
+            return;
+        }
         try {
-            const response = await fetch(`/api/job/apply?filename=${encodeURIComponent(file.name)}&jobId=${jobId}`, {
+            const response = await fetch(`/api/job/apply?filename=${encodeURIComponent(values.dragger[0].originFileObj.name)}&jobId=${jobId}`, {
                 method: 'POST',
                 body: formData,
             });
@@ -35,27 +80,50 @@ const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({ jobId }) => {
                 throw new Error(`Error: ${response.status}`);
             }
 
-            const data = await response.json();
-            console.log(data)
-            setUploadStatus(`Job Applied Successfully!`);
+            await response.json();
+            message.success('Job Applied Successfully!');
         } catch (error) {
-            setUploadStatus('Failed to upload the file.');
+            message.error('Failed to upload the file.');
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
+
+    const FormFieldsResumeUpload = () => (
+        <Form.Item label="Relevant Files">
+            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+                <Upload.Dragger name="files" beforeUpload={() => false} multiple={false} maxCount={1}>
+                    <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                    <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+                </Upload.Dragger>
+            </Form.Item>
+        </Form.Item>
+    )
+
     return (
-        <>
-
-            <form onSubmit={handleFormSubmit}>
-                <h2>Upload Resume for Job ID: {jobId}</h2>
-                <input type="file" ref={inputFileRef} required />
-                <button type="submit">Upload Resume</button>
-                {uploadStatus && <p>{uploadStatus}</p>}
-            </form>
-
-        </>
+        <Form
+            name="validate_other"
+            {...formItemLayout}
+            onFinish={onFinish}
+        >
+            <FormFieldsForCandidateData />
+            <FormFieldsResumeUpload />
+            <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
+                <Button type="primary" htmlType="submit" loading={loading}>
+                    Submit
+                </Button>
+            </Form.Item>
+        </Form>
     );
 };
 
-export default ResumeUploadForm;
+interface IResumeUploadProps {
+    jobId: string;
+}
+
+export default ResumeUploadComponent;

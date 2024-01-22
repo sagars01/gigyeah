@@ -1,17 +1,20 @@
 "use client"
+import React from 'react';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider, theme } from 'antd';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body>
+const RootLayout = ({ children }: React.PropsWithChildren) => (
+  <html lang="en">
+    <body>
+      <AntdRegistry>
+        <ConfigProvider theme={{
+          algorithm: theme.defaultAlgorithm
+        }}>
+          {children}
+        </ConfigProvider>
+      </AntdRegistry>
+    </body>
+  </html>
+);
 
-        {children}
-
-      </body>
-    </html>
-  )
-}
+export default RootLayout;
