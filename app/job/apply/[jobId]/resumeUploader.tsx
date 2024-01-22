@@ -46,9 +46,8 @@ const FormFieldsForCandidateData = () => (
 );
 
 
-const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId }) => {
+const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading = true, isError = false }) => {
     const [loading, setLoading] = useState(false);
-    const [relevantFile, setRelevantFile] = useState(null);
 
     const onFinish = async (values: any) => {
         setLoading(true);
@@ -104,28 +103,34 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId }) => {
     )
 
     return (
-        <Card>
-            <Form
-                name="validate_other"
-                {...formItemLayout}
-                onFinish={onFinish}
-            >
-                <FormFieldsForCandidateData />
-                <FormFieldsResumeUpload />
-                <Form.Item>
-                    <Button icon={<RocketFilled />} type="primary"
-                        className={buttonStyles.gradientButton}
-                        htmlType="submit" loading={loading}>
-                        Apply
-                    </Button>
-                </Form.Item>
-            </Form>
-        </Card>
+        <>
+            {
+                !isError && (<Card loading={isLoading}>
+                    <Form
+                        name="validate_other"
+                        {...formItemLayout}
+                        onFinish={onFinish}
+                    >
+                        <FormFieldsForCandidateData />
+                        <FormFieldsResumeUpload />
+                        <Form.Item>
+                            <Button icon={<RocketFilled />} type="primary"
+                                className={buttonStyles.gradientButton}
+                                htmlType="submit" loading={loading}>
+                                Apply
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>)
+            }
+        </>
     );
 };
 
 interface IResumeUploadProps {
     jobId: string;
+    isLoading: boolean;
+    isError?: boolean;
 }
 
 export default ResumeUploadComponent;

@@ -40,12 +40,24 @@ export default function JobApplicationPage(args: JobApplicationPageProps) {
     return (
         <>
             <Row gutter={16}>
-                <Col xs={24} md={16} style={{ maxHeight: '95vh', overflowY: 'auto' }}>
-                    <JobListing jobContent={jobDetail} error={jobFetchError} />
-                </Col>
-                <Col xs={24} md={8}>
-                    <ResumeUploadForm jobId={args.params.jobId} />
-                </Col>
+                {
+                    jobFetchError ? (
+                        <>
+                            <Col xs={24}>
+                                <JobListing jobContent={jobDetail} error={jobFetchError} />
+                            </Col>
+                        </>
+                    ) : (
+                        <>
+                            <Col xs={24} md={16} style={{ maxHeight: '95vh', overflowY: 'auto' }}>
+                                <JobListing jobContent={jobDetail} error={jobFetchError} />
+                            </Col>
+                            <Col xs={24} md={8}>
+                                <ResumeUploadForm jobId={args.params.jobId} isLoading={!jobDetail} />
+                            </Col>
+                        </>
+                    )
+                }
             </Row>
         </>
     );
