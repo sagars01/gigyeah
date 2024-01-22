@@ -1,10 +1,10 @@
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, RocketFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { Button, Form, Input, Upload, message } from 'antd';
+import { Button, Card, Form, Input, Upload, message } from 'antd';
+import buttonStyles from '../../../../styles/components/Button.module.css';
 
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 14 },
+
 };
 
 const normFile = (e: any) => {
@@ -16,13 +16,12 @@ const normFile = (e: any) => {
 
 const FormFieldsForCandidateData = () => (
     <>
-        <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name!' }]}>
-            <Input placeholder="Enter your name" />
+        <Form.Item name="name" rules={[{ required: true, message: 'Please enter your name!' }]}>
+            <Input placeholder="What should we call you?" />
         </Form.Item>
 
         <Form.Item
             name="email"
-            label="Email"
             rules={[
                 {
                     required: true,
@@ -39,10 +38,9 @@ const FormFieldsForCandidateData = () => (
 
         <Form.Item
             name="shortIntro"
-            label="Why should we hire you?"
-            rules={[{ required: true, message: 'Please provide a short description!' }]}
+            rules={[{ required: true, message: 'Please advertise yourself' }]}
         >
-            <Input.TextArea rows={4} placeholder="Enter a short description" />
+            <Input.TextArea rows={3} placeholder="Tell us about real you in 120 words" maxLength={120} />
         </Form.Item>
     </>
 );
@@ -92,33 +90,37 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId }) => {
 
 
     const FormFieldsResumeUpload = () => (
-        <Form.Item label="Relevant Files">
+        <Form.Item>
             <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
                 <Upload.Dragger name="files" beforeUpload={() => false} multiple={false} maxCount={1}>
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+                    <p className="ant-upload-text">Click or drag file to this area to upload. [PDF]</p>
+                    <p className="ant-upload-hint">Upload your resume, proof of work,or relevant documents</p>
                 </Upload.Dragger>
             </Form.Item>
         </Form.Item>
     )
 
     return (
-        <Form
-            name="validate_other"
-            {...formItemLayout}
-            onFinish={onFinish}
-        >
-            <FormFieldsForCandidateData />
-            <FormFieldsResumeUpload />
-            <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-                <Button type="primary" htmlType="submit" loading={loading}>
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
+        <Card>
+            <Form
+                name="validate_other"
+                {...formItemLayout}
+                onFinish={onFinish}
+            >
+                <FormFieldsForCandidateData />
+                <FormFieldsResumeUpload />
+                <Form.Item>
+                    <Button icon={<RocketFilled />} type="primary"
+                        className={buttonStyles.gradientButton}
+                        htmlType="submit" loading={loading}>
+                        Apply
+                    </Button>
+                </Form.Item>
+            </Form>
+        </Card>
     );
 };
 

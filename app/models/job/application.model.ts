@@ -1,33 +1,23 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-// Interface describing a job application
 interface IApplication extends Document {
-    createdBy: string;
-    jobId: string;
-    applications: Array<{
-        name: string;
-        shortIntro: string;
-        resumeUrl: string;
-    }>;
+    jobId: mongoose.Schema.Types.ObjectId;
+    applicantName: string;
+    shortIntro: string;
+    resumeUrl: string;
+    status: 'applied' | 'shortlisted' | 'rejected';
 }
 
-// Schema corresponding to the document interface
-const ApplicationSchema = new Schema<IApplication>({
-    createdBy: { type: String, required: true },
-    jobId: { type: String, required: true },
-    applications: [
-        {
-            name: { type: String, required: true },
-            shortIntro: { type: String, required: true },
-            resumeUrl: { type: String, required: true },
-        },
-    ],
-}, {
-    timestamps: true, // Adds createdAt and updatedAt timestamps
+const ApplicationsSchema = new Schema({
+    jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
+    applicantName: { type: String, required: true },
+    shortIntro: { type: String, required: true },
+    resumeUrl: { type: String, required: true },
+    status: {
+        type: String,
+        enum: ['applied', 'shortlisted', 'rejected'],
+        default: 'applied'
+    },
 });
 
-
-// Model
-const Application = mongoose.models.Application || mongoose.model<IApplication>('Application', ApplicationSchema);
-
-export default Application;
+export default mongoose.model<IApplication>('Applications', ApplicationsSchema);
