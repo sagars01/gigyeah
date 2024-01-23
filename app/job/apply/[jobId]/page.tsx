@@ -4,11 +4,6 @@ import JobListing from './jobListing';
 import ResumeUploadForm from './resumeUploader';
 import { Row, Col } from 'antd';
 
-interface JobApplicationPageProps {
-    params: { jobId: string };
-    job: any; // Replace 'any' with a more specific type if available
-    error?: string;
-}
 
 async function getServerSideProps(jobId: string) {
     try {
@@ -23,13 +18,13 @@ async function getServerSideProps(jobId: string) {
     }
 }
 
-export default function JobApplicationPage(args: JobApplicationPageProps) {
+export default function JobApplicationPage({ params: { jobId = "" } }) {
     const [jobDetail, setJobDetails] = useState<any>(null);
     const [jobFetchError, setJobFetchError] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchJob = async () => {
-            const { job, error } = await getServerSideProps(args.params.jobId);
+            const { job, error } = await getServerSideProps(jobId);
             if (!error) setJobDetails(job)
             else {
                 setJobFetchError(true)
@@ -53,7 +48,7 @@ export default function JobApplicationPage(args: JobApplicationPageProps) {
                                 <JobListing jobContent={jobDetail} error={jobFetchError} />
                             </Col>
                             <Col xs={24} md={8}>
-                                <ResumeUploadForm jobId={args.params.jobId} isLoading={!jobDetail} />
+                                <ResumeUploadForm jobId={jobId} isLoading={!jobDetail} />
                             </Col>
                         </>
                     )
