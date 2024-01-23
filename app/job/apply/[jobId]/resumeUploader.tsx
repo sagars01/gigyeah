@@ -58,7 +58,7 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
         formData.append('email', values.email);
         formData.append('shortIntro', values.shortIntro);
 
-        if (values.dragger.length > 0) {
+        if (values.dragger?.length > 0) {
             const file = values.dragger[0].originFileObj;
             formData.append('file', file);
             formData.append('filename', encodeURIComponent(file.name));
@@ -68,19 +68,21 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
             return;
         }
         try {
-            const response = await fetch(`/api/job/apply?filename=${encodeURIComponent(values.dragger[0].originFileObj.name)}&jobId=${jobId}`, {
+            const response = await fetch(`/api/job/apply`, {
                 method: 'POST',
                 body: formData,
             });
 
             if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
+                const errorBody = await response.json();
+                const errorMessage = errorBody?.error || 'Unexpected issue occured while applying job';
+                message.error(errorMessage);
+                throw new Error(errorMessage);
             }
 
             await response.json();
             message.success('Job Applied Successfully!');
-        } catch (error) {
-            message.error('Failed to upload the file.');
+        } catch (error: any) {
             console.error(error);
         } finally {
             setLoading(false);
@@ -89,17 +91,18 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
 
 
     const FormFieldsResumeUpload = () => (
-        <Form.Item>
-            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                <Upload.Dragger name="files" beforeUpload={() => false} multiple={false} maxCount={1}>
-                    <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload. [PDF]</p>
-                    <p className="ant-upload-hint">Upload your resume, proof of work,or relevant documents</p>
-                </Upload.Dragger>
-            </Form.Item>
+
+        <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}
+            rules={[{ required: true, message: 'Attach relevant documents' }]}>
+            <Upload.Dragger name="files" beforeUpload={() => false} multiple={false} maxCount={1}>
+                <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Click or drag file to this area to upload. [PDF]</p>
+                <p className="ant-upload-hint">Upload your resume, proof of work,or relevant documents</p>
+            </Upload.Dragger>
         </Form.Item>
+
     )
 
     return (
