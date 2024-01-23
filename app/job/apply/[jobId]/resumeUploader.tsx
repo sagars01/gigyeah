@@ -1,7 +1,8 @@
-import { InboxOutlined, RocketFilled } from '@ant-design/icons';
+import { CheckOutlined, InboxOutlined, RocketFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, Upload, message } from 'antd';
 import buttonStyles from '../../../../styles/components/Button.module.css';
+import Icon from '@ant-design/icons/lib/components/Icon';
 
 const formItemLayout = {
 
@@ -14,40 +15,12 @@ const normFile = (e: any) => {
     return e?.fileList;
 };
 
-const FormFieldsForCandidateData = () => (
-    <>
-        <Form.Item name="name" rules={[{ required: true, message: 'Please enter your name!' }]}>
-            <Input placeholder="What should we call you?" />
-        </Form.Item>
-
-        <Form.Item
-            name="email"
-            rules={[
-                {
-                    required: true,
-                    message: 'Please enter your email address!',
-                },
-                {
-                    type: 'email',
-                    message: 'Invalid email address format!',
-                },
-            ]}
-        >
-            <Input placeholder="Enter your email" />
-        </Form.Item>
-
-        <Form.Item
-            name="shortIntro"
-            rules={[{ required: true, message: 'Please advertise yourself' }]}
-        >
-            <Input.TextArea rows={3} placeholder="Tell us about real you in 120 words" maxLength={120} />
-        </Form.Item>
-    </>
-);
 
 
 const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading = true, isError = false }) => {
     const [loading, setLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const { Meta } = Card;
 
     const onFinish = async (values: any) => {
         setLoading(true);
@@ -89,6 +62,36 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
         }
     };
 
+    const FormFieldsForCandidateData = () => (
+        <>
+            <Form.Item name="name" rules={[{ required: true, message: 'Please enter your name!' }]}>
+                <Input placeholder="What should we call you?" />
+            </Form.Item>
+
+            <Form.Item
+                name="email"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please enter your email address!',
+                    },
+                    {
+                        type: 'email',
+                        message: 'Invalid email address format!',
+                    },
+                ]}
+            >
+                <Input placeholder="Enter your email" />
+            </Form.Item>
+
+            <Form.Item
+                name="shortIntro"
+                rules={[{ required: true, message: 'Please advertise yourself' }]}
+            >
+                <Input.TextArea rows={3} placeholder="Tell us about real you in 120 words" maxLength={120} />
+            </Form.Item>
+        </>
+    );
 
     const FormFieldsResumeUpload = () => (
 
@@ -108,23 +111,42 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
     return (
         <>
             {
-                !isError && (<Card loading={isLoading}>
-                    <Form
-                        name="validate_other"
-                        {...formItemLayout}
-                        onFinish={onFinish}
-                    >
-                        <FormFieldsForCandidateData />
-                        <FormFieldsResumeUpload />
-                        <Form.Item>
-                            <Button icon={<RocketFilled />} type="primary"
-                                className={buttonStyles.gradientButton}
-                                htmlType="submit" loading={loading}>
-                                Apply
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Card>)
+                !isError && (
+                    <>
+                        {
+                            !showSuccess ? (<Card loading={isLoading}>
+                                <Form
+                                    name="validate_other"
+                                    {...formItemLayout}
+                                    onFinish={onFinish}
+                                >
+                                    <FormFieldsForCandidateData />
+                                    <FormFieldsResumeUpload />
+                                    <Form.Item>
+                                        <Button icon={<RocketFilled />} type="primary"
+                                            className={buttonStyles.gradientButton}
+                                            htmlType="submit" loading={loading}>
+                                            Apply
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </Card>) : (
+                                <>
+                                    {/* TODO: Upload images for success */}
+                                    <Card hoverable
+                                        cover={
+                                            <img alt="heavy check marx"
+                                                src="https://cliply.co/wp-content/uploads/2021/03/372103860_CHECK_MARK_400px.gif" />
+                                        }
+                                    >
+
+                                        <Meta title="Apply to other interesting jobs!" description="www.instagram.com" />
+                                    </Card>
+                                </>
+                            )
+                        }
+                    </>
+                )
             }
         </>
     );
