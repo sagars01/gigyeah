@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const withAntdLess = require('next-plugin-antd-less');
+const nextConfig = {
+    compiler: {
 
-module.exports = nextConfig
+    },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
+}
+
+module.exports = withAntdLess(nextConfig)
