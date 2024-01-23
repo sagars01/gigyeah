@@ -31,7 +31,7 @@ export default function JobApplicationPage({ params: { jobId = "" } }) {
             }
         }
         fetchJob()
-    }, []);
+    }, [jobId]);
     return (
         <>
             <Row gutter={16}>

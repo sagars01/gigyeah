@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^1.18.2",
     "@ant-design/icons": "^5.2.6",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@types/mongoose": "^5.11.97",
@@ -20,8 +21,10 @@
     "mongoose": "^8.1.0",
     "next": "14.0.4",
     "next-plugin-antd-less": "^1.8.0",
+    "postcss": "^8.1.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "webpack": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
