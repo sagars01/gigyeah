@@ -1,8 +1,9 @@
-import { CheckOutlined, InboxOutlined, RocketFilled } from '@ant-design/icons';
+import { CheckOutlined, InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { Button, Card, Form, Input, Upload, message } from 'antd';
+import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
 import buttonStyles from '../../../../styles/components/Button.module.css';
 import Icon from '@ant-design/icons/lib/components/Icon';
+import Link from 'next/link';
 
 const formItemLayout = {
 
@@ -133,14 +134,16 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                             </Card>) : (
                                 <>
                                     {/* TODO: Upload images for success */}
-                                    <Card hoverable
-                                        cover={
-                                            <img alt="heavy check marx"
-                                                src="https://cliply.co/wp-content/uploads/2021/03/372103860_CHECK_MARK_400px.gif" />
-                                        }
-                                    >
-
-                                        <Meta title="Apply to other interesting jobs!" description="www.instagram.com" />
+                                    <Card hoverable>
+                                        <div style={{ margin: '2rem 0' }}>
+                                            <Typography.Title level={2} >Congratulations <RocketOutlined /></Typography.Title>
+                                            <Typography.Paragraph type='success' style={{
+                                                fontSize: '1rem'
+                                            }}>Your application is on its way</Typography.Paragraph>
+                                        </div>
+                                        <Link href={'/'}>
+                                            <Meta title="Apply to other interesting jobs!" description="www.gigyeah.com" />
+                                        </Link>
                                     </Card>
                                 </>
                             )
