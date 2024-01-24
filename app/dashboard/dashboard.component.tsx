@@ -1,9 +1,10 @@
 "use client";
 
-import React from 'react';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import React, { useState } from 'react';
+import { PlusOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu, theme } from 'antd';
 import { useWindowDimensions } from '@/utils/ui/getWindowDims.utils';
+import CreateJob from './createJob.component';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -23,8 +24,18 @@ const DashboardComponent: React.FC = () => {
 
     const { width, height } = useWindowDimensions();
 
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const showDrawer = () => {
+        setOpenDrawer(true)
+    }
+
+    const onDrawerClose = () => {
+        setOpenDrawer(false)
+    }
+
     return (
         <Layout>
+            <CreateJob openDrawer={openDrawer} onDrawerClose={onDrawerClose} />
             <Sider
                 breakpoint="lg"
                 collapsedWidth="0"
@@ -39,12 +50,16 @@ const DashboardComponent: React.FC = () => {
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer }} />
+                <Header style={{ padding: 0, background: colorBgContainer, position: 'relative' }} >
+                    <Button style={{ bottom: '25%', right: 15, position: 'absolute' }} type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
+                        Create New Job
+                    </Button>
+                </Header>
                 <Content style={{ margin: '24px 16px 0' }}>
                     <div
                         style={{
                             padding: 24,
-                            minHeight: height - (height * 23) / 100,
+                            minHeight: '100vh',
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}
@@ -53,7 +68,7 @@ const DashboardComponent: React.FC = () => {
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    Gigyeah ©{new Date().getFullYear()} Made in India
                 </Footer>
             </Layout>
         </Layout>

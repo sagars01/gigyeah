@@ -1,38 +1,43 @@
-// WindowDimensionsContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface WindowDimensions {
-    width: number;
-    height: number;
+    width: number | undefined;
+    height: number | undefined;
 }
 
 const WindowDimensionsContext = createContext<WindowDimensions>({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: undefined,
+    height: undefined,
 });
 
 export const useWindowDimensions = () => useContext(WindowDimensionsContext);
 
 export const WindowDimensionsProvider: React.FC<any> = ({ children }) => {
     const [dimensions, setDimensions] = useState<WindowDimensions>({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: undefined,
+        height: undefined,
     });
 
     useEffect(() => {
-        const handleResize = () => {
-            setDimensions({
-                width: window.innerWidth,
-                height: window.innerHeight,
-            });
-        };
+        if (typeof window !== "undefined") {
+            const handleResize = () => {
+                setDimensions({
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                });
+            };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+            window.addEventListener('resize', handleResize);
+
+            handleResize();
+
+            // Cleanup
+            return () => window.removeEventListener('resize', handleResize);
+        }
     }, []);
 
     return (
-        <WindowDimensionsContext.Provider value={dimensions} >
+        <WindowDimensionsContext.Provider value={dimensions}>
             {children}
         </WindowDimensionsContext.Provider>
     );
