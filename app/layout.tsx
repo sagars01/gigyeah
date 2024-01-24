@@ -2,6 +2,8 @@
 import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider, theme } from 'antd';
+import '../styles/components/global.css';
+import { WindowDimensionsProvider } from '@/utils/ui/getWindowDims.utils';
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
@@ -10,7 +12,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
         <ConfigProvider theme={{
           algorithm: theme.defaultAlgorithm
         }}>
-          {children}
+          <WindowDimensionsProvider>
+            {children}
+          </WindowDimensionsProvider>
         </ConfigProvider>
       </AntdRegistry>
     </body>
