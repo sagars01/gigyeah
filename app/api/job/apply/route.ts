@@ -41,7 +41,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             applicantName: name,
             shortIntro: shortIntro,
             resumeUrl: blob.url,
-            status: 'applied' // Default status
+            status: 'applied'
         });
 
         await newApplication.save();

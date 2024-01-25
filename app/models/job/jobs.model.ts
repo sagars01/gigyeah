@@ -13,7 +13,7 @@ interface IJob extends Document {
 }
 
 const JobSchema = new Schema({
-    createdBy: { type: String, required: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     requirements: [{ type: String, required: true }],
