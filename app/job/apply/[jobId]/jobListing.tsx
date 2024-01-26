@@ -12,7 +12,10 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                 <br />
                 <Text strong>Company Description:</Text> <Text>{jobContent?.company.description}</Text>
                 <br />
-                <Text strong>Job Description:</Text> <Text>{jobContent?.description}</Text>
+                <Text strong>Job Description:</Text>
+                <div>
+                    <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
+                </div>
                 <br />
                 <Text strong>Requirements:</Text>
                 <List

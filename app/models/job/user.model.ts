@@ -2,6 +2,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 type SubscriptionLevel = 1 | 2 | 3;
 
+// 1 : Free 2: Founder Tier 3: Enterprise Level
+
 export interface IUserModel extends Document {
     name: string;
     title: string;
@@ -11,7 +13,8 @@ export interface IUserModel extends Document {
         name: string;
         description: string;
     };
-    subscriptionLevel: SubscriptionLevel
+    subscriptionLevel: 1 | 2 | 3;
+    jobsCreated: number;
     createdAt: Date;
 }
 
@@ -47,10 +50,14 @@ const UserSchema = new Schema<IUserModel>({
             default: 'Building the next big thing'
         },
     },
+    jobsCreated: {
+        type: Number,
+        default: 0
+    },
     subscriptionLevel: {
         type: Number,
-        required: true,
-        default: 1
+        enum: [1, 2, 3],
+        default: 1,
     },
     createdAt: {
         type: Date,

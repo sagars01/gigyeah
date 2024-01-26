@@ -6,10 +6,11 @@ interface IApplication extends Document {
     applicantName: string;
     shortIntro: string;
     resumeUrl: string;
+    applicationsReceived: number;
     status: 'applied' | 'shortlisted' | 'rejected';
 }
 
-const ApplicationsSchema = new Schema({
+const ApplicationsSchema = new Schema<IApplication>({
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
     email: { type: String, required: true, unique: true },
     applicantName: { type: String, required: true },
@@ -20,6 +21,10 @@ const ApplicationsSchema = new Schema({
         enum: ['applied', 'shortlisted', 'rejected'],
         default: 'applied'
     },
+    applicationsReceived: {
+        type: Number,
+        default: 0
+    }
 });
 
 export default mongoose.models.Applications || mongoose.model<IApplication>('Applications', ApplicationsSchema);
