@@ -11,6 +11,11 @@ interface IJob extends Document {
     };
     postedAt: Date;
     status: 'active' | 'expired';
+    location: {
+        city: string;
+        country: string;
+    }
+    remote: boolean;
 }
 
 const JobSchema = new Schema<IJob>({
@@ -21,6 +26,11 @@ const JobSchema = new Schema<IJob>({
         type: [{ type: String, required: true }],
         validate: [arrayLimit, 'Requirements exceeds the limit of 3'] // Custom validator
     },
+    location: {
+        city: { type: String, maxlength: 20 },
+        country: { type: String, maxlength: 40 }
+    },
+    remote: { type: Boolean, default: true },
     company: {
         name: { type: String, required: true },
         description: { type: String, required: true },

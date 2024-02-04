@@ -5,6 +5,7 @@ type SubscriptionLevel = 1 | 2 | 3;
 // 1 : Free 2: Founder Tier 3: Enterprise Level
 
 export interface IUserModel extends Document {
+
     name: string;
     title: string;
     email: string;
@@ -13,20 +14,23 @@ export interface IUserModel extends Document {
         name: string;
         description: string;
     };
-    subscriptionLevel: 1 | 2 | 3;
+    subscriptionLevel: SubscriptionLevel;
+    authProviderIdentifier: string;
     jobsCreated: number;
     createdAt: Date;
 }
 
 const UserSchema = new Schema<IUserModel>({
+    authProviderIdentifier: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
-        required: true,
         default: 'John Doe'
     },
     title: {
         type: String,
-        required: true,
         default: 'Founder'
     },
     email: {
@@ -41,12 +45,10 @@ const UserSchema = new Schema<IUserModel>({
     company: {
         name: {
             type: String,
-            required: true,
             default: 'Acme Co.'
         },
         description: {
             type: String,
-            required: true,
             default: 'Building the next big thing'
         },
     },
