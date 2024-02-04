@@ -1,56 +1,12 @@
-import { ValidationChain, body, validationResult } from 'express-validator';
-import { NextRequest } from 'next/server';
+import Joi from 'joi';
 
-export const validateUserChain: ValidationChain[] = [
-    // Name validation
-    body('name')
-        .trim()
-        .isLength({ min: 1 }).withMessage('Name is required'),
-
-    // Title validation
-    body('title')
-        .trim()
-        .isLength({ min: 1 }).withMessage('Title is required'),
-
-    // Intro validation (optional field)
-    body('intro')
-        .optional({ checkFalsy: true })
-        .trim(),
-
-    // Company name validation
-    body('company.name')
-        .trim()
-        .isLength({ min: 1 }).withMessage('Company name is required'),
-
-    // Company description validation
-    body('company.description')
-        .trim()
-        .isLength({ min: 1 }).withMessage('Company description is required')
-];
-
-export const runValidation = async (request: NextRequest) => {
-    const res = await request.json();
-
-    // Set default values for missing fields
-    if (!res.name) {
-        res.name = 'Default Name';
-    }
-    if (!res.title) {
-        res.title = 'Default Title';
-    }
-    if (!res.company) {
-        res.company = {
-            name: 'Default Company Name',
-            description: 'Default Company Description',
-        };
-    }
-    await Promise.all(validateUserChain.map((validation) => validation.run(res)));
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        return { data: null, errors: errors.array() }
-    }
-
-    return { data: res, errors: null };
-}
-
-
+export const UpdateUserValidatorSchema = Joi.object({
+    name: Joi.string().trim().min(2).optional(),
+    title: Joi.string().trim().optional(),
+    intro: Joi.string().trim().optional(),
+    company: Joi.object({
+        name: Joi.string().trim().optional(),
+        description: Joi.string().trim().optional()
+    }).optional(),
+    subscriptionLevel: Joi.string().trim().optional()
+});

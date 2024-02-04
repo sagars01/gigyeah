@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import { runValidation } from './requestValidator';
 
-// TODO: Express Validator to validate the data.
+// TODO: JOI to validate data
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
     let blobUrl = null;
@@ -21,11 +21,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const shortIntro = formData.get('shortIntro') as string;
         const filename = file.name;
 
-        // const validationCheck = await runValidation(req);
-        // if (validationCheck) {
-        //     return NextResponse.json({ errors: validationCheck.errors },
-        //         { status: 409, statusText: "Request Validation Failed" });
-        // }
+        const dataStore = {
+            jobId: new mongoose.Types.ObjectId(jobId),
+            email: email,
+            applicantName: name,
+            shortIntro: shortIntro,
+            status: 'applied'
+        }
 
         const blob = await put(filename, file, {
             access: 'public',
@@ -35,17 +37,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         await dbConnect();
 
-        const newApplication = new Application({
-            jobId: new mongoose.Types.ObjectId(jobId),
-            email: email,
-            applicantName: name,
-            shortIntro: shortIntro,
-            resumeUrl: blob.url,
-            status: 'applied'
-        });
+        const newApplication = new Application({ ...dataStore, resumeUrl: blob.url });
 
         await newApplication.save();
-        return NextResponse.json({ message: "Application Successful" }, { status: 200 });
+        return NextResponse.json({ message: "Application Successful" }, { status: 200, statusText: "success" });
 
     } catch (error: any) {
         let errorMessage = "Unexpected Server Error";
