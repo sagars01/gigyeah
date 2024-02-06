@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import User, { IUserModel } from "@/app/models/job/user.model";
+import User from "@/app/models/user/user.model";
 import { MongooseError } from "mongoose";
 import dbConnect from "@/libs/mongodb";
+
+/**
+ * 
+ * @param request 
+ * @returns 
+ * @description creates a new user with default values in the system. This is stage 1.
+ */
 
 export async function POST(request: NextRequest) {
 
     if (request.method === 'POST') {
         await dbConnect();
         try {
-            // Get every data from the token as got from the session cookie and the Firebase API from middleware
+            // TODO: Get every data from the token as got from the session cookie and the Firebase API from middleware
             const data = {
                 email: "testemail@test.com",
                 authProviderIdentifier: 'test-account'

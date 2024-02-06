@@ -1,14 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Space, Typography } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Drawer, Form, Input, Row, Space, Typography, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { apiService } from '@/utils/request/apiservice';
 
 interface ICreateJobProps {
     openDrawer: boolean;
+    jobCreatedEvt: any;
     onDrawerClose: (e: Event | boolean) => void;
 }
 
+interface IJob {
+    title: string;
+    description: string;
+    requirements: string[];
+    location: {
+        city: string;
+        country: string;
+    }
+    remote: boolean;
+}
+function convertSkillsArray(skillsArray: any[]) {
+    return skillsArray.map((item: { skill: any; }) => item.skill);
+}
 
-const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClose }) => {
+const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClose, jobCreatedEvt }) => {
     const [open, setOpen] = useState(openDrawer);
     const [form] = Form.useForm();
 
@@ -17,12 +32,30 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
         onDrawerClose(false);
     };
 
+
+
     useEffect(() => {
         setOpen(openDrawer);
     }, [openDrawer]);
 
-    const onSubmit = (e: any) => {
-        console.log(form.getFieldsValue())
+    const onSubmit = async (e: any) => {
+        const formData: IJob = form.getFieldsValue();
+        const updatedRequirementModel = convertSkillsArray(formData.requirements);
+        formData.requirements = updatedRequirementModel;
+        try {
+            const response = await apiService.post(
+                "/job/create",
+                formData
+            )
+            message.success("Job created successfully!")
+            console.log(response);
+            jobCreatedEvt(response)
+
+        } catch (error) {
+            console.log(error)
+            message.error("Unexpected error ocurred. Try Again!")
+        }
+
     }
 
     return (
@@ -31,6 +64,7 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                 title="Create a new job"
                 width={720}
                 onClose={onClose}
+                maskClosable={false}
                 open={open}
                 styles={{
                     body: {
@@ -61,7 +95,7 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                     <Row gutter={16}>
                         <Col span={24}>
                             <Typography.Paragraph>Mandatory Skills ( Max 3 )</Typography.Paragraph>
-                            <Form.List name="skills">
+                            <Form.List name="requirements">
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map(({ key, name, ...restField }) => (
@@ -96,6 +130,43 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                             </Form.List>
                         </Col>
                     </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name={['location', 'city']}
+                                label="City"
+                                rules={[{ required: true, message: 'Please enter the city' }]}
+                            >
+                                <Input placeholder="Enter city name" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name={['location', 'country']}
+                                label="Country"
+                                rules={[{ required: true, message: 'Please enter the country' }]}
+                            >
+                                <Input placeholder="Enter country name" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="remote"
+                                valuePropName="checked"
+                                wrapperCol={{
+                                    offset: 0,
+                                    span: 24,
+                                }}
+                            >
+                                <Checkbox>Remote Position</Checkbox>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item

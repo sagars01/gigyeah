@@ -1,5 +1,9 @@
+/**
+ * @description updates user profile after the user has logged in using Google Auth.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/app/models/job/user.model";
+import User from "@/app/models/user/user.model";
 import { UpdateUserValidatorSchema } from "./validator";
 import dbConnect from "@/libs/mongodb";
 

@@ -1,8 +1,7 @@
-import { CheckOutlined, InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
+import { InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
 import buttonStyles from '../../../../styles/components/Button.module.css';
-import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'next/link';
 
 const formItemLayout = {
@@ -22,6 +21,7 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const { Meta } = Card;
+    const [form] = Form.useForm();
 
     const onFinish = async (values: any) => {
         setLoading(true);
@@ -60,6 +60,7 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
             console.error(error);
         } finally {
             setLoading(false);
+            form.resetFields()
         }
     };
 
@@ -109,6 +110,8 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
 
     )
 
+
+
     return (
         <>
             {
@@ -117,6 +120,7 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                         {
                             !showSuccess ? (<Card loading={isLoading}>
                                 <Form
+                                    form={form}
                                     name="validate_other"
                                     {...formItemLayout}
                                     onFinish={onFinish}

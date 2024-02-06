@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ message: 'Job not found' }, { status: 404 });
         }
 
-        return NextResponse.json(job)
+        return NextResponse.json(job, { status: 200, statusText: "OK" })
 
     } catch (error) {
         console.error(error);

@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { PlusOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
-import { useWindowDimensions } from '@/utils/ui/getWindowDims.utils';
+// import { useWindowDimensions } from '@/utils/ui/getWindowDims.utils';
 import CreateJob from './createJob.component';
+import GetJobsComponent from './getJobs.component';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -21,8 +22,11 @@ const DashboardComponent: React.FC = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+    const [shouldFetchJobs, setFetchJob] = useState(false);
+    const [jobId, setJobId] = useState<any>(null);
 
-    const { width, height } = useWindowDimensions();
+    // const { width, height } = useWindowDimensions();
+
 
     const [openDrawer, setOpenDrawer] = useState(false);
     const showDrawer = () => {
@@ -33,9 +37,15 @@ const DashboardComponent: React.FC = () => {
         setOpenDrawer(false)
     }
 
+    const onJobCreatedSuccessfully = (response: any) => {
+        const { jobId } = response;
+        setJobId(jobId);
+        setFetchJob(true);
+    }
+
     return (
         <Layout>
-            <CreateJob openDrawer={openDrawer} onDrawerClose={onDrawerClose} />
+            <CreateJob jobCreatedEvt={onJobCreatedSuccessfully} openDrawer={openDrawer} onDrawerClose={onDrawerClose} />
             <Sider
                 breakpoint="lg"
                 collapsedWidth="0"
@@ -64,7 +74,7 @@ const DashboardComponent: React.FC = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        content
+                        <GetJobsComponent shouldFetchJobs={shouldFetchJobs} jobId={jobId} />
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
