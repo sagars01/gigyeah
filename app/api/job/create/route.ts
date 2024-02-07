@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/libs/mongodb';
 import jobsModel from '@/app/models/job/jobs.model';
 import jobSchema from './requestValidator';
+import { getCookies } from '@/utils/auth/getCookies';
 
 export async function POST(request: NextRequest) {
     try {
@@ -13,16 +14,10 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        //TODO: Get rid of hard coded stuff
+        const userData = getCookies(request);
+        const createdBy = userData.userId;
 
-        const createdBy = "65c30b602c41727f4abfd5fb"; // getvalues from session 
-        const companyData = {
-            name: "Tech Innovation",
-            description: "Nothing Much to talk about this"
-        } // get from profile and session
-
-
-        const jobData = { ...body, createdBy, company: companyData } // Get CreatedBy From Token and Session
+        const jobData = { ...body, createdBy }
 
         const { error, value: jobDetailsValue } = jobSchema.validate(jobData);
 

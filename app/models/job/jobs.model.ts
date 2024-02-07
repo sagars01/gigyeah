@@ -5,16 +5,17 @@ interface IJob extends Document {
     title: string;
     description: string; // RTF data as HTML
     requirements: string[]; // Array with a maximum of 3 items
-    company: {
-        name: string;
-        description: string;
-    };
     postedAt: Date;
     status: 'active' | 'expired';
     location: {
         city: string;
         country: string;
-    }
+    };
+    payRange: {
+        currency: string; // ISO Currency Codes 
+        min: number,
+        max: number
+    };
     remote: boolean;
 }
 
@@ -31,17 +32,34 @@ const JobSchema = new Schema<IJob>({
         country: { type: String, maxlength: 40 }
     },
     remote: { type: Boolean, default: true },
-    company: {
-        name: { type: String, required: true },
-        description: { type: String, required: true },
+    payRange: {
+        currency: {
+            type: String,
+            required: true
+        },
+        min: {
+            type: Number,
+            required: true,
+        },
+        max: {
+            type: Number,
+            required: true,
+        },
     },
     postedAt: { type: Date, default: Date.now },
     status: { type: String, required: true, default: 'active' }
 });
 
-// Helper function to validate the array length
 function arrayLimit(val: string[]) {
     return val.length <= 3;
 }
+
+JobSchema.pre('save', function (next) {
+    if (this.payRange.min >= this.payRange.max) {
+        next(new Error('Minimum pay range must be less than the maximum pay range'));
+    } else {
+        next();
+    }
+});
 
 export default mongoose.models.Job || mongoose.model<IJob>('Job', JobSchema);

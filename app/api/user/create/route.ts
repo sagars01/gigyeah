@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/app/models/user/user.model";
 import { MongooseError } from "mongoose";
 import dbConnect from "@/libs/mongodb";
+import { getCookies } from "@/utils/auth/getCookies";
 
 /**
  * 
@@ -15,12 +16,8 @@ export async function POST(request: NextRequest) {
     if (request.method === 'POST') {
         await dbConnect();
         try {
-            // TODO: Get every data from the token as got from the session cookie and the Firebase API from middleware
-            const data = {
-                email: "sagarmoy-jobAPI@test.com",
-                authProviderIdentifier: 'test-account-1'
-            };
 
+            const data = getCookies(request);
             const userData = {
                 email: data.email,
                 authProviderIdentifier: data.authProviderIdentifier

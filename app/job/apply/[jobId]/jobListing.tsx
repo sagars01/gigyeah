@@ -10,6 +10,8 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                 <Title level={3}>{jobContent?.company.name}</Title>
                 <Text strong>Title:</Text> <Text>{jobContent?.title}</Text>
                 <br />
+                <Text strong>Company Name:</Text> <Text>{jobContent?.company.name}</Text>
+                <br />
                 <Text strong>Company Description:</Text> <Text>{jobContent?.company.description}</Text>
                 <br />
                 <Text strong>Job Description:</Text>

@@ -7,7 +7,7 @@ import { Row, Col } from 'antd';
 
 async function getServerSideProps(jobId: string) {
     try {
-        const res = await fetch(`/api/job/fetch?jobId=${jobId}`); // Replace with your API endpoint
+        const res = await fetch(`/api/job/public?jobId=${jobId}`); // Replace with your API endpoint
         if (!res.ok) {
             throw new Error(`Failed to fetch job, received status ${res.status}`);
         }
