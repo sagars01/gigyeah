@@ -13,7 +13,9 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        const createdBy = "65bfe5abc98893ebc6c1ea6b"; // getvalues from session 
+        //TODO: Get rid of hard coded stuff
+
+        const createdBy = "65c30b602c41727f4abfd5fb"; // getvalues from session 
         const companyData = {
             name: "Tech Innovation",
             description: "Nothing Much to talk about this"

@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
         try {
             // TODO: Get every data from the token as got from the session cookie and the Firebase API from middleware
             const data = {
-                email: "testemail@test.com",
-                authProviderIdentifier: 'test-account'
+                email: "sagarmoy-jobAPI@test.com",
+                authProviderIdentifier: 'test-account-1'
             };
 
             const userData = {

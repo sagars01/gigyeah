@@ -13,13 +13,29 @@ export async function GET(request: NextRequest) {
         if (request.method !== 'GET') {
             NextResponse.json({ error: 'Method Not Allowed' }, { status: 409 });
         }
+
+        // Extract user ID from cookies
+        // TODO: Hardcoded values of the user id
+        const userId = "65c30b602c41727f4abfd5fb"; // request.cookies.get('userId');
+        if (!userId) {
+            return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+        }
+
+
         // Check if the ID is a valid ObjectId
         const jobId: any = request.nextUrl.searchParams.get("jobId");
-        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+        if (jobId && !mongoose.Types.ObjectId.isValid(jobId)) {
             return NextResponse.json({ message: 'Invalid job ID' }, { status: 400 });
         }
 
-        const job = await jobsModel.findById(jobId);
+        // If there is no jobId return every job the user has created
+        if (!jobId) {
+            const jobs = await jobsModel.find({ createdBy: userId });
+            return NextResponse.json(jobs, { status: 200, statusText: "OK" })
+        }
+
+        // Fetch the specific job
+        const job = await jobsModel.findOne({ _id: jobId, createdBy: userId });
 
         if (!job) {
             return NextResponse.json({ message: 'Job not found' }, { status: 404 });
@@ -32,4 +48,3 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 };
-
