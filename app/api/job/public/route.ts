@@ -10,7 +10,6 @@ import dbConnect from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import jobsModel from "@/app/models/job/jobs.model";
-import { getCookies } from "@/utils/auth/getCookies";
 import userModel from "@/app/models/user/user.model";
 
 

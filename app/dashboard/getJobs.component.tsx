@@ -51,7 +51,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
                 <Card key={job._id} title={job.title} style={{ marginBottom: 16 }}>
                     <p>{job.description}</p>
                     {/* Use job._id as part of the link if needed */}
-                    <a href={`/jobs/${job._id}`}>View Job</a>
+                    <a href={`/job/apply/${job._id}`}>View Job</a>
                 </Card>
             ))}
         </>

@@ -17,6 +17,10 @@ interface IJob extends Document {
         max: number
     };
     remote: boolean;
+    company: {
+        name: string;
+        description: string;
+    }
 }
 
 const JobSchema = new Schema<IJob>({
