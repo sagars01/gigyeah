@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Col, DatePicker, Drawer, Form, Input, Row, Space, Typography, message } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, Typography, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { apiService } from '@/utils/request/apiservice';
 
@@ -23,8 +23,10 @@ function convertSkillsArray(skillsArray: any[]) {
     return skillsArray.map((item: { skill: any; }) => item.skill);
 }
 
+const { Option } = Select;
 const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClose, jobCreatedEvt }) => {
     const [open, setOpen] = useState(openDrawer);
+
     const [form] = Form.useForm();
 
     const onClose = () => {
@@ -57,6 +59,18 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
         }
 
     }
+
+    const validateMinMax = (_: any, value: any) => {
+        if (!value) {
+            return Promise.reject(new Error('Please enter a value'));
+        }
+        const minPay = form.getFieldValue(['payRange', 'min']);
+        const maxPay = form.getFieldValue(['payRange', 'max']);
+        if (minPay && maxPay && minPay > maxPay) {
+            return Promise.reject(new Error('Max pay must be greater than min pay'));
+        }
+        return Promise.resolve();
+    };
 
     return (
         <>
@@ -128,6 +142,52 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                                     </>
                                 )}
                             </Form.List>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item
+                                name={['payRange', 'currency']}
+                                label="Currency"
+                                rules={[{ required: true, message: 'Please select a currency' }]}
+                            >
+                                <Select placeholder="Select currency">
+                                    <Option value="USD">USD</Option>
+                                    <Option value="INR">INR</Option>
+                                    <Option value="EUR">EUR</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item
+                                name={['payRange', 'min']}
+                                label="Minimum Pay"
+                                rules={[{
+                                    required: true,
+                                    validator: validateMinMax,
+                                    message: 'Please enter minimum pay'
+                                }]}
+                            >
+                                <InputNumber
+                                    style={{ width: '100%' }}
+                                    placeholder="Minimum"
+                                    min={0}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item
+                                name={['payRange', 'max']}
+                                label="Maximum Pay"
+                                rules={[{ required: true, validator: validateMinMax, message: 'Please enter maximum pay' }]}
+                            >
+                                <InputNumber
+                                    style={{ width: '100%' }}
+                                    placeholder="Maximum"
+                                    min={0}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
 

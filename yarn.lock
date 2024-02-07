@@ -1903,6 +1903,11 @@ is-core-module@^2.11.0, is-core-module@^2.13.0, is-core-module@^2.13.1:
   dependencies:
     hasown "^2.0.0"
 
+is-currency-code@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/is-currency-code/-/is-currency-code-1.2.0.tgz#4df40b8756443ff165c9166f88a42341efb42876"
+  integrity sha512-rm+zNay1cLXY2Nw7TE5mpR3SY6Uuxc7V7VgTqWBK7k3IkcxqPDP25Ar0a8Y6kuE9EnIFlQA93u3E5ni73AzKkA==
+
 is-date-object@^1.0.1, is-date-object@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/is-date-object/-/is-date-object-1.0.5.tgz#0841d5536e724c25597bf6ea62e1bd38298df31f"
@@ -2058,6 +2063,13 @@ jest-worker@^27.4.5:
     "@types/node" "*"
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
+
+joi-currency-code@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/joi-currency-code/-/joi-currency-code-3.0.2.tgz#8c631bb1e1a60917e04a4cd78c4eb7bdf214c847"
+  integrity sha512-L8r3gCEWZyP5xkqB7Z6A6uNyciwBNfAMBtn2eNdgzKXmLx4o93wsi/SA2BgpHGrFyKtM21WIhVTUD5BTm8/dIg==
+  dependencies:
+    is-currency-code "1.2.0"
 
 joi@^17.12.0:
   version "17.12.0"

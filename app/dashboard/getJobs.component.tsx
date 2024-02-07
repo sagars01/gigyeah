@@ -19,22 +19,29 @@ interface JobsDisplayComponentProps {
 
 const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs, jobId }) => {
     const [jobs, setJobs] = useState<Job[]>([]);
+    const fetchJobs = async () => {
+        try {
+            const url = jobId ? `/job/fetch?jobId=${jobId}` : `/job/fetch`;
+            const response = await apiService.get<Job | Job[]>(url);
+            const job = response;
+            let updatedJob: any = []
+            if (Array.isArray(job)) {
+                updatedJob = [...jobs, ...job]
+            } else {
+                updatedJob = [...jobs, job]
+            }
 
+            setJobs(updatedJob);
+
+        } catch (error) {
+            message.error('Failed to fetch jobs');
+        }
+    };
+    useEffect(() => {
+        fetchJobs();
+    }, []);
 
     useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                if (shouldFetchJobs) {
-                    const response = await apiService.get<Job>(`/job/fetch?jobId=${jobId}`);
-                    const job = response;
-                    const updatedJob: any = [...jobs, job]
-                    setJobs(updatedJob);
-                }
-            } catch (error) {
-                message.error('Failed to fetch jobs');
-            }
-        };
-
         fetchJobs();
     }, [shouldFetchJobs]);
 

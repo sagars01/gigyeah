@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
         // If there is no jobId return every job the user has created
         if (!jobId) {
-            const jobs = await jobsModel.find({ createdBy: userData.userId });
+            const jobs = await jobsModel.find({ createdBy: userData.userId }).sort({ postedAt: -1 });
             return NextResponse.json(jobs, { status: 200, statusText: "OK" })
         }
 

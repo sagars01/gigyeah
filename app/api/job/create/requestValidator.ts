@@ -7,14 +7,15 @@ const jobSchema = Joi.object({
     requirements: Joi.array().items(
         Joi.string().required()
     ).max(3),
-    company: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string().required(),
-    }).required(),
     location: Joi.object({
         city: Joi.string().max(20),
         country: Joi.string().max(40),
     }).required(),
+    payRange: Joi.object({
+        min: Joi.number().required(),
+        max: Joi.number().required(),
+        currency: Joi.string().default("USD").valid("USD", "INR", "EUR")
+    }),
     remote: Joi.boolean(),
     status: Joi.string().default("active").valid('active', 'expired'),
 });
