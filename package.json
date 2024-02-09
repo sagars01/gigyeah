@@ -12,6 +12,7 @@
     "@ant-design/cssinjs": "^1.18.2",
     "@ant-design/icons": "^5.2.6",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@clerk/nextjs": "^4.29.6",
     "@types/mongoose": "^5.11.97",
     "@vercel/blob": "^0.19.0",
     "antd": "^5.13.2",

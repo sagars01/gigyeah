@@ -1,0 +1,36 @@
+.dsbSiderIconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.demoLogoVertical {
+    background-color: antiquewhite;
+    height: 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+.leftAligned {
+    float: left;
+}
+
+.btnSiderSwitcher {
+    font-size: 16px;
+    width: 64;
+    /* Add px unit */
+    height: 64;
+    /* Add px unit */
+    color: #fff;
+}
+
+.topSiderMenu {
+    display: block;
+}
+
+.bottomSiderMenu {
+    position: absolute;
+    bottom: 20px;
+    color: #fff;
+    width: 100%;
+}

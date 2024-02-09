@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Fetch the specific job
-        const job = await jobsModel.findOne({ _id: jobId, createdBy: userData.userId }).sort({ postedAt: -1 });
+        const job = await jobsModel.findOne({ _id: jobId, createdBy: userData.userId }).sort({ postedAt: 1 });
 
         if (!job) {
             return NextResponse.json({ message: 'Job not found' }, { status: 404 });

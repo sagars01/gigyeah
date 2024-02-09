@@ -14,8 +14,6 @@ interface JobsDisplayComponentProps {
     jobId?: string;
 }
 
-// TODO: Make this component to fetch all jobs as well as specialized job using the jobId
-// To achieve this edit the exisiting API to return all jobs for the specific user incase there's is no jobId
 
 const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs, jobId }) => {
     const [jobs, setJobs] = useState<Job[]>([]);

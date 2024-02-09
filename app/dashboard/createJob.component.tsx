@@ -51,9 +51,11 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
             )
             message.success("Job created successfully!")
             console.log(response);
-            jobCreatedEvt(response)
+            jobCreatedEvt(response);
+            form.resetFields();
 
         } catch (error) {
+            // TODO: Point out exactly where the error is on the form
             console.log(error)
             message.error("Unexpected error ocurred. Try Again!")
         }

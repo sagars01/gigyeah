@@ -14,6 +14,10 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
+        // TODO : Priority 1 - Call Create New User after signup in Clerk 
+        // Get the userId from Clerk
+
+        // TODO: The entire middleware work now
         const userData = getCookies(request);
         const createdBy = userData.userId;
 

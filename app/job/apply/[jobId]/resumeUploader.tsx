@@ -137,7 +137,6 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                                 </Form>
                             </Card>) : (
                                 <>
-                                    {/* TODO: Upload images for success */}
                                     <Card hoverable>
                                         <div style={{ margin: '2rem 0' }}>
                                             <Typography.Title level={2} >Congratulations <RocketOutlined /></Typography.Title>

@@ -3,6 +3,7 @@ import { Card, Typography, List, Empty } from 'antd';
 const { Title, Text } = Typography;
 
 const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
+    debugger
     const ListingCard = () => (
         <>
             <Card bordered={false} loading={!jobContent}>
@@ -19,7 +20,7 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                     <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
                 </div>
                 <br />
-                <Text strong>Pay Range: {jobContent?.payRange.currency} {jobContent?.payRange.max} - {jobContent?.payRange.max}</Text>
+                <Text strong>Pay Range: {jobContent?.payRange.currency} {jobContent?.payRange.min} - {jobContent?.payRange.max}</Text>
                 <br />
                 <Text strong>Requirements:</Text>
                 <List
