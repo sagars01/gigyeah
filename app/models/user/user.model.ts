@@ -1,6 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 type SubscriptionLevel = 1 | 2 | 3;
+interface ISocialMedia {
+    platform: string;
+    url: string;
+}
 
 // 1 : Free 2: Founder Tier 3: Enterprise Level
 
@@ -14,11 +18,30 @@ export interface IUserModel extends Document {
         name: string;
         description: string;
     };
+    socialMedia: ISocialMedia[]
     subscriptionLevel: SubscriptionLevel;
     authProviderIdentifier: string;
     jobsCreated: number;
     createdAt: Date;
+    authProviderMetaData: any;
 }
+
+const EmailAddressSchema = new Schema({
+    email_address: String,
+    id: String,
+    linked_to: [String],
+    object: String,
+    verification: {
+        status: String,
+        strategy: String,
+    }
+}, { _id: false });
+
+const SocialMediaSchema = new Schema({
+    platform: String,
+    url: String,
+}, { _id: false });
+
 
 const UserSchema = new Schema<IUserModel>({
     authProviderIdentifier: {
@@ -38,6 +61,7 @@ const UserSchema = new Schema<IUserModel>({
         required: true,
         unique: true,
     },
+    socialMedia: [SocialMediaSchema],
     intro: {
         type: String,
         default: 'Looking to build something great!'
@@ -65,6 +89,7 @@ const UserSchema = new Schema<IUserModel>({
         type: Date,
         default: Date.now,
     },
+    authProviderMetaData: mongoose.Schema.Types.Mixed
 });
 
 export default mongoose.models.User || mongoose.model<IUserModel>('User', UserSchema);

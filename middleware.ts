@@ -4,9 +4,10 @@ export default authMiddleware({
     publicRoutes: ["/",
         "/jobs/apply",
         "/api/job/public",
-        "/api/job/apply"
+        "/api/job/apply(.*)",
+        "/api/webhooks(.*)"
     ],
-    debug: true
+    debug: false
 });
 
 export const config = {

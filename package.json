@@ -29,6 +29,7 @@
     "postcss": "^8.1.0",
     "react": "^18",
     "react-dom": "^18",
+    "svix": "^1.17.0",
     "webpack": "^5.0.0"
   },
   "devDependencies": {
