@@ -11,7 +11,7 @@ import dbConnect from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import jobsModel from "@/app/models/job/jobs.model";
-import { getCookies } from "@/utils/auth/getCookies";
+import { getSessionInformation } from "@/utils/auth/getCookies";
 
 export async function GET(request: NextRequest) {
 
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
             NextResponse.json({ error: 'Method Not Allowed' }, { status: 409 });
         }
 
-        const userData = getCookies(request);
+        const userData = getSessionInformation(request);
         if (!userData) {
             return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
         }

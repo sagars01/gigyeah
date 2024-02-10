@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/app/models/user/user.model";
 import { MongooseError } from "mongoose";
 import dbConnect from "@/libs/mongodb";
-import { getCookies } from "@/utils/auth/getCookies";
+import { getSessionInformation } from "@/utils/auth/getCookies";
 
 /**
  * 
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         await dbConnect();
         try {
 
-            const data = getCookies(request);
+            const data = getSessionInformation(request);
             const userData = {
                 email: data.email,
                 authProviderIdentifier: data.authProviderIdentifier

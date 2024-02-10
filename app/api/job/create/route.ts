@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/libs/mongodb';
 import jobsModel from '@/app/models/job/jobs.model';
 import jobSchema from './requestValidator';
-import { getCookies } from '@/utils/auth/getCookies';
+import { getSessionInformation } from '@/utils/auth/getCookies';
 
 export async function POST(request: NextRequest) {
     try {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         // Get the userId from Clerk
 
         // TODO: The entire middleware work now
-        const userData = getCookies(request);
+        const userData: any = await getSessionInformation(request);
         const createdBy = userData.userId;
 
         const jobData = { ...body, createdBy }
