@@ -15,13 +15,7 @@ import userModel from "@/app/models/user/user.model";
 
 const getJobWithCreator = async (jobId: string) => {
     await dbConnect();
-    const job = await jobsModel.findById(jobId)
-        .populate({
-            path: 'createdBy',
-            model: userModel,
-            select: 'name company -_id'
-        })
-        .lean();
+    const job = await jobsModel.findById(jobId);
     return job;
 };
 

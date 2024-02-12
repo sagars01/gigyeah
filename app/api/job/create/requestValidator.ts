@@ -1,7 +1,17 @@
 import Joi from 'joi';
 
+// TODO: Phase 2: User Profile where onclick on the postedBy people should be redirected to User LinkTree Page
+
 const jobSchema = Joi.object({
-    createdBy: Joi.string().hex().length(24).required(),
+    createdBy: {
+        name: Joi.string().required(),
+        profileImg: Joi.string().optional(),
+        company: {
+            name: Joi.string().required(),
+            description: Joi.string().required()
+        },
+        id: Joi.string().required()
+    },
     title: Joi.string().required(),
     description: Joi.string().required().max(300),
     requirements: Joi.array().items(

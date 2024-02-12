@@ -5,13 +5,14 @@
 
 export const dynamic = 'force-dynamic';
 
-// TODO: Write the middleware to validate if the email and the userId from the cookie matches. This will prevent tampering of the data
+// TODO: Move all these functions from the route to the controller.
 
 import dbConnect from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import jobsModel from "@/app/models/job/jobs.model";
-import { getSessionInformation } from "@/utils/auth/getCookies";
+import { getSessionInformation } from "@/utils/auth/getUserSessionData";
+import JobController from "@/controllers/jobs/jobs.controller";
 
 export async function GET(request: NextRequest) {
 
@@ -22,32 +23,21 @@ export async function GET(request: NextRequest) {
             NextResponse.json({ error: 'Method Not Allowed' }, { status: 409 });
         }
 
-        const userData = getSessionInformation(request);
-        if (!userData) {
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+        const userData = await getSessionInformation(request);
+        if (!userData || !userData.userId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-
-        // Check if the ID is a valid ObjectId
         const jobId = request.nextUrl.searchParams.get("jobId") as string;
-        if (jobId && !mongoose.Types.ObjectId.isValid(jobId)) {
-            return NextResponse.json({ message: 'Invalid job ID' }, { status: 400 });
+
+        // Use JobController to fetch jobs using userId from session
+        const jobsOrJob = await JobController.getJobsByUser(userData.userId, jobId);
+
+        if (!jobsOrJob || (Array.isArray(jobsOrJob) && jobsOrJob.length === 0)) {
+            return NextResponse.json({ message: 'No jobs found' }, { status: 404 });
         }
 
-        // If there is no jobId return every job the user has created
-        if (!jobId) {
-            const jobs = await jobsModel.find({ createdBy: userData.userId });
-            return NextResponse.json(jobs, { status: 200, statusText: "OK" })
-        }
-
-        // Fetch the specific job
-        const job = await jobsModel.findOne({ _id: jobId, createdBy: userData.userId }).sort({ postedAt: 1 });
-
-        if (!job) {
-            return NextResponse.json({ message: 'Job not found' }, { status: 404 });
-        }
-
-        return NextResponse.json(job, { status: 200, statusText: "OK" })
+        return NextResponse.json(jobsOrJob, { status: 200, statusText: "OK" });
 
     } catch (error) {
         console.error(error);

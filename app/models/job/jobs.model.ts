@@ -1,30 +1,18 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IJob extends Document {
-    createdBy: mongoose.Schema.Types.ObjectId;
-    title: string;
-    description: string; // RTF data as HTML
-    requirements: string[]; // Array with a maximum of 3 items
-    postedAt: Date;
-    status: 'active' | 'expired';
-    location: {
-        city: string;
-        country: string;
-    };
-    payRange: {
-        currency: string; // ISO Currency Codes 
-        min: number,
-        max: number
-    };
-    remote: boolean;
+const CreatedBySchema = new Schema<CreatedByType>({
+    name: { type: String, required: true },
+    id: { type: String, required: true },
+    profileImg: { type: String, required: false },
     company: {
-        name: string;
-        description: string;
+        name: String,
+        description: String
     }
-}
+
+})
 
 const JobSchema = new Schema<IJob>({
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createdBy: CreatedBySchema,
     title: { type: String, required: true },
     description: { type: String, required: true, maxlength: 300 }, // Max 300 characters
     requirements: {
@@ -67,3 +55,37 @@ JobSchema.pre('save', function (next) {
 });
 
 export default mongoose.models.Job || mongoose.model<IJob>('Job', JobSchema);
+
+
+interface IJob extends Document {
+    createdBy: CreatedByType;
+    title: string;
+    description: string; // RTF data as HTML
+    requirements: string[]; // Array with a maximum of 3 items
+    postedAt: Date;
+    status: 'active' | 'expired';
+    location: {
+        city: string;
+        country: string;
+    };
+    payRange: {
+        currency: string; // ISO Currency Codes 
+        min: number,
+        max: number
+    };
+    remote: boolean;
+    company: {
+        name: string;
+        description: string;
+    }
+}
+
+export type CreatedByType = {
+    id: string;
+    name: string;
+    profileImg?: string;
+    company?: {
+        name: string;
+        description: string;
+    }
+}

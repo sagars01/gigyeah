@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/libs/mongodb';
-import jobsModel from '@/app/models/job/jobs.model';
+import jobsModel, { CreatedByType } from '@/app/models/job/jobs.model';
 import jobSchema from './requestValidator';
-import { getSessionInformation } from '@/utils/auth/getCookies';
+import { getSessionInformation } from '@/utils/auth/getUserSessionData';
 
 export async function POST(request: NextRequest) {
     try {
@@ -14,20 +14,29 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        // TODO : Priority 1 - Call Create New User after signup in Clerk 
-        // Get the userId from Clerk
+        const { profileImg, userId, customerCache: {
+            name,
+            company
+        } }: any = await getSessionInformation(request);
 
-        // TODO: The entire middleware work now
-        const userData: any = await getSessionInformation(request);
-        const createdBy = userData.userId;
+        const createdBy: CreatedByType = {
+            id: userId,
+            name,
+            company,
+            profileImg
+        }
 
-        const jobData = { ...body, createdBy }
+        const jobData = {
+            ...body, createdBy
+        }
 
         const { error, value: jobDetailsValue } = jobSchema.validate(jobData);
 
         if (error) {
             return NextResponse.json({ error: error.details[0].message }, { status: 419, statusText: "Validation Failed!" });
         }
+
+        // TODO: Move the code to Jobs Controller
 
         const newJob = new jobsModel(jobDetailsValue);
 

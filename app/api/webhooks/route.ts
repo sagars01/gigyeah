@@ -2,8 +2,7 @@ import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import { NextResponse, NextRequest } from 'next/server'
-import { handleUserCreated, handleUserDeleted, handleUserUpdated } from './user.controller'
-
+import UserController from '@/controllers/users/users.controller'
 export async function POST(req: NextRequest) {
 
     const WEBHOOK_SECRET = process.env.USER_EVT_WEBHOOK_SECRET
@@ -39,14 +38,14 @@ export async function POST(req: NextRequest) {
         })
         switch (verifiedPayload.type) {
             case "user.created":
-                await handleUserCreated(verifiedPayload.data);
+                await UserController.handleUserCreated(verifiedPayload.data);
                 return NextResponse.json({ message: "User created successfully" }, { status: 200 });
             case "user.updated":
-                await handleUserUpdated(verifiedPayload.data);
+                await UserController.handleUserUpdated(verifiedPayload.data);
                 return NextResponse.json({ message: "User updated successfully" }, { status: 200 });
             case "user.deleted":
                 // Assuming the payload contains an 'id' for deletion
-                await handleUserDeleted(verifiedPayload.data.id);
+                await UserController.handleUserDeleted(verifiedPayload.data.id);
                 return NextResponse.json({ message: "User deleted successfully" }, { status: 200 });
             default:
                 return NextResponse.json({ message: "Event type not handled" }, { status: 200 });
