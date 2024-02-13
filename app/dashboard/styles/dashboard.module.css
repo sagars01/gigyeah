@@ -34,3 +34,11 @@
     color: #fff;
     width: 100%;
 }
+
+.buttonSeperator {
+    margin: 1rem 0;
+}
+
+.buttonSeperator>button:first-child {
+    margin-right: 1rem;
+}

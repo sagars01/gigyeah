@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IApplication extends Document {
+export interface IApplication {
     jobId: mongoose.Schema.Types.ObjectId;
     email: string;
     applicantName: string;

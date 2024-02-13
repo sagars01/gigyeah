@@ -1,17 +1,32 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import UserController from "@/controllers/users/users.controller";
 
-// TODO: Phase 2 - Cache the customer information based on session id
+// Define the structure for company object
+interface ICompany {
+    name: string;
+    description: string;
+}
 
-export const getSessionInformation = async (request: NextRequest) => {
+// Define the structure for the session information
+export interface ISessionInformation {
+    userId: string;
+    accessToken: string;
+    idToken: string;
+    email: string;
+    profileImg: string;
+    authProviderIdentifier: string;
+    customerCache: {
+        name: string;
+        company: ICompany; // Reference the ICompany interface here
+    };
+}
 
+export const getSessionInformation = async (request: NextRequest): Promise<ISessionInformation | any> => {
     const authSessionData: any = getAuth(request);
 
-    const { sessionClaims: {
-        email, profileImg, userId
-    } } = authSessionData;
-    if (!userId) return false;
+    const { sessionClaims: { email, profileImg, userId } } = authSessionData;
+    if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401, statusText: "Unauthorized" });
 
     try {
         const userProfileData = await UserController.getUserDetails(email);
@@ -27,17 +42,8 @@ export const getSessionInformation = async (request: NextRequest) => {
                 name,
                 company: { ...company }
             }
-        }
+        };
     } catch (error) {
-        return {
-            statusText: "Failed to generate session information",
-            status: 401
-        }
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401, statusText: "Unauthorized" });
     }
-
-
-
-
-}
-
-// TODO: Show notifications to users to create profile before creating jobs
+};

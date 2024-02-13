@@ -3,7 +3,6 @@ import dbConnect from '@/libs/mongodb';
 import Application from '@/app/models/job/application.model';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import { runValidation } from './requestValidator';
 
 // TODO: JOI to validate data
 

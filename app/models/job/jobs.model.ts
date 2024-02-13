@@ -8,7 +8,6 @@ const CreatedBySchema = new Schema<CreatedByType>({
         name: String,
         description: String
     }
-
 })
 
 const JobSchema = new Schema<IJob>({
@@ -57,7 +56,7 @@ JobSchema.pre('save', function (next) {
 export default mongoose.models.Job || mongoose.model<IJob>('Job', JobSchema);
 
 
-interface IJob extends Document {
+export interface IJob {
     createdBy: CreatedByType;
     title: string;
     description: string; // RTF data as HTML

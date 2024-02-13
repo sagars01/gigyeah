@@ -32,3 +32,9 @@ body {
         transform: rotate(360deg);
     }
 }
+
+.absolute-middle {
+    position: absolute;
+    top: calc(50% - 30px);
+    right: calc(50% - 15px);
+}
