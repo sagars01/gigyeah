@@ -10,3 +10,6 @@ export default function Dashboard() {
         </main>
     )
 }
+
+
+// TODO: When a new user logs in there's no jobs created. It returns Failed to fetch jobs. 

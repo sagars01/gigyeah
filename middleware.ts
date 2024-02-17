@@ -7,7 +7,7 @@ export default authMiddleware({
         "/api/job/apply(.*)",
         "/api/webhooks(.*)"
     ],
-    debug: false
+    debug: Boolean(process.env.DEBUG_CLERK) || false
 });
 
 export const config = {

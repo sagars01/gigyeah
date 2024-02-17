@@ -6,21 +6,34 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/app/models/user/user.model";
 import { UpdateUserValidatorSchema } from "./validator";
 import dbConnect from "@/libs/mongodb";
+import { ISessionInformation, getSessionInformation } from "@/utils/auth/getUserSessionData";
+import UserController from "@/controllers/users/users.controller";
 
 export async function POST(request: NextRequest) {
 
+    // TODO: Fix the user Profile update
+
+    /**
+     * @description Allow Users to update there First Name Last Name and the social links in the application
+     * 
+     */
     if (request.method === 'POST') {
         await dbConnect();
-
-        // TODO: Write middleware.
         try {
-            const email = 'sagarmoysengupta@owner.com';
+
+            const userDetail: ISessionInformation = await getSessionInformation(request);
+
             const body = await request.json();
             const { error, value: data } = await UpdateUserValidatorSchema.validate(body);
             if (error) {
                 return NextResponse.json({ error }, { status: 422, statusText: 'Validation Error' });
             }
-            const updateUser = await User.findOneAndUpdate({ email: email }, { ...data });
+
+            const payload: any = {
+                id: userDetail.userId,
+                profileUpdates: body
+            }
+            const updateUser = await UserController.handleUserUpdated(payload)
 
             if (!updateUser) {
                 return NextResponse.json({ error: 'User not found or update failed' }, { status: 404 });

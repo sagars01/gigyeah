@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs";
 import UserController from "@/controllers/users/users.controller";
 
 // Define the structure for company object
@@ -22,8 +23,9 @@ export interface ISessionInformation {
     };
 }
 
-export const getSessionInformation = async (request: NextRequest): Promise<ISessionInformation | any> => {
-    const authSessionData: any = getAuth(request);
+export const getSessionInformation = async (request?: NextRequest): Promise<ISessionInformation | any> => {
+
+    const authSessionData: any = request ? getAuth(request) : auth();
 
     const { sessionClaims: { email, profileImg, userId } } = authSessionData;
     if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401, statusText: "Unauthorized" });

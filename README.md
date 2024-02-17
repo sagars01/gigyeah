@@ -1,15 +1,10 @@
-# TRADEOFF
+# LOCAL DEVELOPMENT
 
-Due to time constraints and no hope of success I am going to keep one database and one collection.
 
-application : {
-    createdBy: 'id',
-    jobId: 'jid',
-    applications: [
-        {
-            name: 'Applicant Name 1",
-            shortIntro:  'My name is applicant',
-            resumeUrl: 'Some worker from Tier 3 College'
-        }
-    ]
-}
+## USER AUTHENTICATION
+
+When a new user registers in Clerk
+Clerk uses a Webhook to Send the User Details to our application
+
+Use LocalTunnel to expose the API /webhook/all to Clerk
+Clerk will send the data to the API

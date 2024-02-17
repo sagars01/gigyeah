@@ -1,4 +1,4 @@
-import userModel from "@/app/models/user/user.model";
+import userModel, { IUserModel } from "@/app/models/user/user.model";
 import dbConnect from "@/libs/mongodb";
 import mongoose from "mongoose";
 
@@ -61,7 +61,7 @@ class UserController {
         }
     }
 
-    static async handleUserUpdated(payload: WebhookUserPayload): Promise<void> {
+    static async handleUserUpdated(payload: WebhookUserPayload): Promise<IUserModel> {
         await dbConnect();
         try {
             const updateDoc = {
@@ -69,8 +69,9 @@ class UserController {
                 email: payload.email_addresses[0]?.email_address || '',
                 authProviderMetaData: payload,
             };
-            await userModel.findOneAndUpdate({ authProviderIdentifier: payload.id }, updateDoc, { new: true });
+            const updateModel = await userModel.findOneAndUpdate({ authProviderIdentifier: payload.id }, updateDoc, { new: true });
             console.log('User updated successfully');
+            return updateModel;
         } catch (error) {
             console.error('Error updating user:', error);
             throw new Error('Failed to update user');
