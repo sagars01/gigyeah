@@ -4,6 +4,7 @@ import { Card, message, Dropdown, Menu, Button, Empty, Spin } from 'antd';
 import { DeleteOutlined, EyeOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
 import { apiService } from '@/utils/request/apiservice';
 import styles from "./styles/dashboard.module.css"
+import URL from '@/constants/url/url';
 
 interface Job {
     _id: string;
@@ -78,10 +79,10 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
                             <p>{job.description}</p>
                             <div className={styles.buttonSeperator}>
                                 <Button type='primary' icon={<EyeOutlined />}>
-                                    <a href={`/job/apply/${job._id}`}>View Job</a>
+                                    <a href={`${URL.dashboard.viewJob}/${job._id}`}>View Job</a>
                                 </Button>
                                 <Button type='primary' icon={<SettingOutlined />}>
-                                    <a href={`/job/applicants/${job._id}`}>Manage Applications</a>
+                                    <a href={`${URL.dashboard.manageApplication}/${job._id}`}>Manage Applications</a>
                                 </Button>
                             </div>
                         </Card>

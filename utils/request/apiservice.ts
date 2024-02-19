@@ -26,7 +26,7 @@ class ApiService {
     async get<T>(url: string): Promise<ApiResponse<T>> {
         try {
             const response = await this.axiosInstance.get<ApiResponse<T>>(url);
-            return response.data;
+            return response.data
         } catch (error: any) {
             const apiError: ApiError = {
                 message: error.response?.data?.message || error.message,

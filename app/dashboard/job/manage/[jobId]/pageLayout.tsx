@@ -4,6 +4,7 @@ import React from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import ApplicationList from './ApplicationList';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,7 +33,7 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
     },
 );
 
-const App: React.FC = () => {
+const PageLayout: React.FC<Props> = ({ jobId }) => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -58,11 +59,18 @@ const App: React.FC = () => {
                             items={items2}
                         />
                     </Sider>
-                    <Content style={{ padding: '0 24px', minHeight: 280 }}>Content</Content>
+                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                        <ApplicationList jobId={jobId} />
+                    </Content>
                 </Layout>
             </Content>
         </Layout>
     );
 };
 
-export default App;
+
+interface Props {
+    jobId: string
+}
+
+export default PageLayout;

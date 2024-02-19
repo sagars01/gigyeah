@@ -3,7 +3,7 @@ import { Card, Typography, List, Empty } from 'antd';
 const { Title, Text } = Typography;
 
 const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
-    debugger
+
     const ListingCard = () => (
         <>
             <Card bordered={false} loading={!jobContent}>

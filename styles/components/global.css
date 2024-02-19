@@ -11,6 +11,25 @@ body {
     height: 100vh;
 }
 
+/*
+    Global Reusable Styles
+*/
+
+/* Button.module.css */
+.gradientButton {
+    background: linear-gradient(45deg, hsl(257, 100%, 72%), hsl(201, 100%, 87%)) !important;
+    border: none !important;
+    width: 100% !important;
+    height: 3rem !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+}
+
+.gradientButton:hover,
+.gradientButton:focus {
+    background: linear-gradient(45deg, hsl(236, 100%, 87%), hsl(248, 100%, 72%)) !important;
+}
+
 .loader {
     position: absolute;
     top: calc(50% - 30px);

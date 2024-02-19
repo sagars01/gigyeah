@@ -5,6 +5,7 @@ import Unauthorized from "@/libs/components/reusables/unauthorized";
 import { Layout } from "antd";
 import { NextRequest } from "next/server";
 import { Suspense } from "react";
+import PageLayout from "./pageLayout";
 
 
 async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
@@ -18,7 +19,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
     } else {
         return (
             <>
-                <Layout />
+                <PageLayout jobId={jobId} />
             </>
         )
     }
