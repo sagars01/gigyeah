@@ -5,6 +5,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider, theme } from 'antd';
 import '../styles/components/global.css';
 import { WindowDimensionsProvider } from '@/utils/ui/getWindowDims.utils';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
@@ -20,6 +21,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
             }}>
               <WindowDimensionsProvider>
                 {children}
+                <SpeedInsights />
               </WindowDimensionsProvider>
             </ConfigProvider>
           </AntdRegistry>
