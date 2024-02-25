@@ -2,10 +2,10 @@ import JobController from "@/controllers/jobs/jobs.controller";
 import { getSessionInformation } from "@/utils/auth/getUserSessionData";
 import Loading from "@/libs/components/reusables/loading";
 import Unauthorized from "@/libs/components/reusables/unauthorized";
-import { Layout } from "antd";
 import { NextRequest } from "next/server";
 import { Suspense } from "react";
-import PageLayout from "./pageLayout";
+import DashboardLayout from "@/libs/components/reusables/dashboard.layout";
+import ApplicationList from "./ApplicationList";
 
 
 async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
@@ -19,7 +19,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
     } else {
         return (
             <>
-                <PageLayout jobId={jobId} />
+                <DashboardLayout content={<ApplicationList jobId={jobId} />} />
             </>
         )
     }

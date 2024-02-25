@@ -1,4 +1,4 @@
-import DashboardComponent from "./dashboard.component"
+import DashboardComponent from "./dashboard"
 
 export default function Dashboard() {
 
