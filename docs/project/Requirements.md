@@ -19,6 +19,8 @@
 
 ### Dashboard 
 
+1. Signout button on the Dashboard Sider
+
 #### Application Management
 
 #### Job Management

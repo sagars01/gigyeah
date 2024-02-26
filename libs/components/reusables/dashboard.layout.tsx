@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Link from 'next/link';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -29,8 +30,17 @@ function getItem(
     } as MenuItem;
 }
 
+const DashboardLink = () => {
+    return (
+        <div>
+            <PieChartOutlined style={{ paddingRight: '0.5rem' }} />
+            <Link href={"/dashboard"} />
+        </div>
+    )
+}
+
 const items: MenuItem[] = [
-    getItem('Option 1', '1', <PieChartOutlined />),
+    getItem('Dashboard', '1', <DashboardLink />),
     getItem('Option 2', '2', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
         getItem('Tom', '3'),
@@ -47,11 +57,15 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+    const onMenuClick = () => {
+
+    }
+
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="demo-logo-vertical" />
-                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={onMenuClick} />
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, background: colorBgContainer, position: 'relative', marginBottom: '1rem' }} >
@@ -70,7 +84,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    Gigyeah ©{new Date().getFullYear()} Built by Sagar from India
                 </Footer>
             </Layout>
         </Layout>

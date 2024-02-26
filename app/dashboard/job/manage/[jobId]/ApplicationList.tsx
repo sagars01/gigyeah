@@ -86,7 +86,6 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
                                     </Tooltip>
                                     <div style={{ textAlign: 'right', marginTop: 16 }}>
                                         <Button
-                                            className="gradientButton"
                                             type="primary" onClick={() => {/* Handle Summarize for Me action */ }}>
                                             Summarize for Me
                                         </Button>
