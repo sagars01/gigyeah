@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, Typography, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { apiService } from '@/utils/request/apiservice';
+import { apiService } from '@/libs/request/apiservice';
 
 interface ICreateJobProps {
     openDrawer: boolean;

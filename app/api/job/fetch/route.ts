@@ -9,8 +9,6 @@ export const dynamic = 'force-dynamic';
 
 import dbConnect from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
-import jobsModel from "@/app/models/job/jobs.model";
 import { getSessionInformation } from "@/utils/auth/getUserSessionData";
 import JobController from "@/controllers/jobs/jobs.controller";
 
@@ -34,10 +32,12 @@ export async function GET(request: NextRequest) {
         const jobsOrJob = await JobController.getJobsByUser(userData.userId, jobId);
 
         if (!jobsOrJob || (Array.isArray(jobsOrJob) && jobsOrJob.length === 0)) {
-            return NextResponse.json({ message: 'No jobs found' }, { status: 404 });
+            return NextResponse.json({ message: 'No jobs found', jobs: [] }, { status: 200 });
         }
 
-        return NextResponse.json(jobsOrJob, { status: 200, statusText: "OK" });
+        return NextResponse.json({
+            jobs: jobsOrJob
+        }, { status: 200, statusText: "OK" });
 
     } catch (error) {
         console.error(error);

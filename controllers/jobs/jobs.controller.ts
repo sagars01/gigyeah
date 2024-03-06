@@ -24,6 +24,33 @@ class JobController {
             throw new Error('Failed to fetch jobs');
         }
     }
+
+    static async updateJob(jobId: string, updateData: {
+        description?: string,
+        payRange?: {
+            currency: string,
+            min: number,
+            max: number
+        },
+        requirements?: string[],
+        status?: 'active' | 'expired'
+    }) {
+        await dbConnect();
+        try {
+
+            const updatedJob = await jobsModel.findOneAndUpdate(
+                { _id: jobId },
+                { $set: updateData },
+                { new: true, runValidators: true }
+            );
+
+            return updatedJob;
+        } catch (error) {
+            console.error('Error updating job:', error);
+            throw new Error('Failed to update job');
+        }
+    }
+
 }
 
 export default JobController;

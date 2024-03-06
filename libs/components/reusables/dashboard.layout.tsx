@@ -9,7 +9,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
 
 const { Header, Content, Footer, Sider } = Layout;

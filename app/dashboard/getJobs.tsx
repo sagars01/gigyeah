@@ -1,15 +1,26 @@
-// JobsDisplayComponent.tsx
+/**
+ * @description This code renders the job cards in the dashboard
+ */
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Card, message, Dropdown, Menu, Button, Empty, Spin } from 'antd';
-import { DeleteOutlined, EyeOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
-import { apiService } from '@/utils/request/apiservice';
+import { DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
+import { ApiResponse, apiService } from '@/libs/request/apiservice';
 import styles from "./styles/dashboard.module.css"
 import URL from '@/constants/url/url';
+import EditJobDrawer from './editJob';
 
 interface Job {
     _id: string;
     title: string;
     description: string;
+    minPay: number;
+    maxPay: number;
+    requirements: string[];
+}
+
+type JobResponse = {
+    jobs: Job[]
 }
 
 interface JobsDisplayComponentProps {
@@ -21,13 +32,15 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [openEditDrawer, setOpenEditDrawer] = useState(false)
+    const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
 
     const fetchJobs = async () => {
         try {
             setLoading(true)
             const url = jobId ? `/job/fetch?jobId=${jobId}` : `/job/fetch`;
-            const response = await apiService.get<Job | Job[]>(url);
-            const job = response;
+            const response: any = await apiService.get<ApiResponse<JobResponse>>(url);
+            const { jobs: job } = response;
             let updatedJob: any = []
             if (Array.isArray(job)) {
                 updatedJob = [...jobs, ...job]
@@ -46,14 +59,23 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
         fetchJobs();
     }, [shouldFetchJobs, jobId]);
 
-    const handleMenuClick = useCallback((jobId: string, action: string) => {
+    const handleMenuClick = useCallback((jobId: string, action: string, jobDetails?: Job) => {
         console.log(`Action: ${action} on jobId: ${jobId}`);
+
+        if (action === "edit") {
+            // open modal to edit
+            setJobToEdit(jobDetails || null)
+            setOpenEditDrawer(true)
+        } else if (action === "expired") {
+            // call api to set expired
+        }
 
     }, []);
 
-    const jobActionsMenu = (jobId: string) => (
-        <Menu onClick={({ key }) => handleMenuClick(jobId, key)}>
-            <Menu.Item key="disable"> Delete <DeleteOutlined /></Menu.Item>
+    const jobActionsMenu = (jobId: string, jobDetail?: Job) => (
+        <Menu onClick={({ key }) => handleMenuClick(jobId, key, jobDetail)}>
+            <Menu.Item key="edit"> Edit Job <EditOutlined /></Menu.Item>
+            <Menu.Item key="expired"> Mark Expired <DeleteOutlined /></Menu.Item>
         </Menu>
     );
 
@@ -69,7 +91,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
                             title={job.title}
                             style={{ marginBottom: 16 }}
                             extra={
-                                <Dropdown overlay={jobActionsMenu(job._id)} trigger={['click']}>
+                                <Dropdown overlay={jobActionsMenu(job._id, job)} trigger={['click']}>
                                     <a onClick={(e) => e.preventDefault()}>
                                         <MoreOutlined />
                                     </a>
@@ -95,6 +117,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
 
     return (
         <>
+            <EditJobDrawer openDrawer={openEditDrawer} jobDetails={jobToEdit} />
             {
                 !loading ? <JobListingCard /> : <div className='absolute-middle'><Spin size='large' /></div>
             }
