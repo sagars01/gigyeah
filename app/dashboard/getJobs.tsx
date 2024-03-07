@@ -33,7 +33,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [openEditDrawer, setOpenEditDrawer] = useState(false)
-    const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
+    const [jobToEdit, setJobToEdit] = useState<Job | any>(null);
 
     const fetchJobs = async () => {
         try {
@@ -117,9 +117,12 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
 
     return (
         <>
-            <EditJobDrawer openDrawer={openEditDrawer} jobDetails={jobToEdit} />
+
             {
-                !loading ? <JobListingCard /> : <div className='absolute-middle'><Spin size='large' /></div>
+                !loading ? <>
+                    <EditJobDrawer jobUpdatedEvt={() => setOpenEditDrawer(false)} openDrawer={openEditDrawer} jobDetails={jobToEdit} onDrawerClose={() => setOpenEditDrawer(false)} />
+                    <JobListingCard />
+                </> : <div className='absolute-middle'><Spin size='large' /></div>
             }
             {
                 !loading && error ? <Empty description={"Oops!"} /> : <></>
