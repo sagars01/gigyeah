@@ -9,7 +9,6 @@ interface ISocialMedia {
 // 1 : Free 2: Founder Tier 3: Enterprise Level
 
 export interface IUserModel extends Document {
-
     name: string;
     title: string;
     email: string;
@@ -25,17 +24,6 @@ export interface IUserModel extends Document {
     createdAt: Date;
     authProviderMetaData: any;
 }
-
-const EmailAddressSchema = new Schema({
-    email_address: String,
-    id: String,
-    linked_to: [String],
-    object: String,
-    verification: {
-        status: String,
-        strategy: String,
-    }
-}, { _id: false });
 
 const SocialMediaSchema = new Schema({
     platform: String,

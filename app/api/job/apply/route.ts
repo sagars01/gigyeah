@@ -1,8 +1,9 @@
 import { del, put } from '@vercel/blob';
 import dbConnect from '@/libs/mongodb';
-import Application from '@/app/models/job/application.model';
+import Application from '@/app/models/application/application.model';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
+import JobController from '@/controllers/jobs/jobs.controller';
 
 // TODO: JOI to validate data
 
@@ -20,13 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const shortIntro = formData.get('shortIntro') as string;
         const filename = file.name;
 
-        const dataStore = {
-            jobId: new mongoose.Types.ObjectId(jobId),
-            email: email,
-            applicantName: name,
-            shortIntro: shortIntro,
-            status: 'applied'
-        }
+
 
         const blob = await put(filename, file, {
             access: 'public',
@@ -35,6 +30,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         blobUrl = blob.url;
 
         await dbConnect();
+
+        // Get User Id from Database
+        const jobDetails = await JobController.getJobsById(jobId);
+        const ownerId = jobDetails?.createdBy.id as string;
+
+        const dataStore = {
+            jobId: new mongoose.Types.ObjectId(jobId),
+            ownerId: new mongoose.Types.ObjectId(ownerId as string),
+            email: email,
+            applicantName: name,
+            shortIntro: shortIntro,
+            status: 'applied'
+        }
 
         const newApplication = new Application({ ...dataStore, resumeUrl: blob.url });
 

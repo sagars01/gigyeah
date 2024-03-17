@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, ExpandAltOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
 import { apiService } from '@/libs/request/apiservice';
 
 
@@ -20,6 +20,8 @@ interface Applicant {
 interface Props {
     jobId: string;
 }
+
+type Action = 'expand' | 'shortlist' | 'reject' | 'summarize';
 
 const ApplicationList: React.FC<Props> = ({ jobId }) => {
     const [applicants, setApplicants] = useState<Applicant[]>([]);
@@ -47,6 +49,13 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
         console.log(`Action: ${action} on applicantId: ${applicantId}`);
         // Here you can add the functionality for shortlisting or rejecting applicants
     };
+
+    const handleApplicationAction = (applicationId: string, action: Action) => {
+        if (action === "expand") {
+            console.log(`Action: ${action} on applicationId: ${applicationId}`);
+            // Here you can add the functionality for expanding the applicant's profile
+        }
+    }
 
     const applicantActionsMenu = (applicantId: string) => (
         <Menu onClick={({ key }) => handleMenuClick(applicantId, key)}>
@@ -83,6 +92,9 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
                                     </Tooltip>
                                     <Tooltip title="Reject">
                                         <Button shape="circle" icon={<CloseCircleOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
+                                    </Tooltip>
+                                    <Tooltip title="Expand">
+                                        <Button onClick={() => handleApplicationAction(applicant._id, 'expand')} shape="circle" icon={<ExpandAltOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
                                     </Tooltip>
                                     <div style={{ textAlign: 'right', marginTop: 16 }}>
                                         <Button

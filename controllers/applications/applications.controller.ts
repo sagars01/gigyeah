@@ -1,8 +1,25 @@
 // controllers/ApplicationsController.ts
 import dbConnect from '@/libs/mongodb';
-import applicationModel, { IApplication } from '@/app/models/job/application.model';
+import applicationModel, { IApplication } from '@/app/models/application/application.model';
 
 class ApplicationsController {
+    static async createApplication(application: IApplication) {
+        throw new Error("Method not implemented.");
+    }
+
+    static async getApplicationById(applicationId: string) {
+        await dbConnect();
+        try {
+            const application = await this.Application.findById(applicationId).lean();
+            if (!application) {
+                throw new Error('Application not found');
+            }
+            return application;
+        }
+        catch {
+            throw new Error('Failed to fetch application');
+        }
+    }
 
     static Application = applicationModel;
     static async getAllApplicationsByJobId(jobId: string) {
