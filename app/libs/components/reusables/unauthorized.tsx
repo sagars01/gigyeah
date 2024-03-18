@@ -1,7 +1,7 @@
 import React from 'react';
 import { Result, Button } from 'antd';
 import { RightCircleOutlined } from '@ant-design/icons';
-import URL from '@/constants/url/url';
+import URL from '@/app/constants/url/url';
 
 const Unauthorized = () => {
     return (

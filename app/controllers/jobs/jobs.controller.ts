@@ -1,4 +1,4 @@
-import dbConnect from "@/libs/mongodb";
+import dbConnect from "@/app/libs/mongodb";
 import jobsModel, { IJob } from "@/app/models/job/jobs.model";
 
 class JobController {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { apiService } from '@/libs/request/apiservice';
+import { apiService } from '@/app/libs/request/apiservice';
 
 
 const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, onDrawerClose, jobUpdatedEvt }) => {

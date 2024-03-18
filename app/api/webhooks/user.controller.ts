@@ -1,6 +1,6 @@
 // UserController.ts
 import userModel from "@/app/models/user/user.model";
-import dbConnect from "@/libs/mongodb";
+import dbConnect from "@/app/libs/mongodb";
 
 type WebhookUserPayload = {
     id: string;

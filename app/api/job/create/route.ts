@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/libs/mongodb';
+import dbConnect from '@/app/libs/mongodb';
 import jobsModel, { CreatedByType } from '@/app/models/job/jobs.model';
 import jobSchema from './requestValidator';
-import { getSessionInformation } from '@/utils/auth/getUserSessionData';
+import { getSessionInformation } from '@/app/utils/auth/getUserSessionData';
 
 export async function POST(request: NextRequest) {
     try {

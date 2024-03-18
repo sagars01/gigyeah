@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ExpandAltOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
-import { apiService } from '@/libs/request/apiservice';
+import { apiService } from '@/app/libs/request/apiservice';
 
 
 interface Applicant {

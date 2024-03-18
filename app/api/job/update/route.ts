@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import JobController from '@/controllers/jobs/jobs.controller';
+import JobController from '@/app/controllers/jobs/jobs.controller';
 import jobValidator from './requestValidator';
-import { getSessionInformation } from '@/utils/auth/getUserSessionData';
+import { getSessionInformation } from '@/app/utils/auth/getUserSessionData';
 
 export async function PUT(request: NextRequest) {
     try {

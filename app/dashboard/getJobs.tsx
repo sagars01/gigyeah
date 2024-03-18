@@ -5,9 +5,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Card, message, Dropdown, Menu, Button, Empty, Spin } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
-import { ApiResponse, apiService } from '@/libs/request/apiservice';
+import { ApiResponse, apiService } from '@/app/libs/request/apiservice';
 import styles from "./styles/dashboard.module.css"
-import URL from '@/constants/url/url';
+import URL from '@/app/constants/url/url';
 import EditJobDrawer from './editJob';
 
 interface Job {

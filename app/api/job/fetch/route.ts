@@ -7,10 +7,10 @@ export const dynamic = 'force-dynamic';
 
 // TODO: Move all these functions from the route to the controller.
 
-import dbConnect from "@/libs/mongodb";
+import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionInformation } from "@/utils/auth/getUserSessionData";
-import JobController from "@/controllers/jobs/jobs.controller";
+import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
+import JobController from "@/app/controllers/jobs/jobs.controller";
 
 export async function GET(request: NextRequest) {
 

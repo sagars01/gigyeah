@@ -1,5 +1,5 @@
 // controllers/ApplicationsController.ts
-import dbConnect from '@/libs/mongodb';
+import dbConnect from '@/app/libs/mongodb';
 import applicationModel, { IApplication } from '@/app/models/application/application.model';
 
 class ApplicationsController {

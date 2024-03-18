@@ -1,5 +1,5 @@
 import userModel, { IUserModel } from "@/app/models/user/user.model";
-import dbConnect from "@/libs/mongodb";
+import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
 
 type WebhookUserPayload = {

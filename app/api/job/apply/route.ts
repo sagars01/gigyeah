@@ -1,9 +1,9 @@
 import { del, put } from '@vercel/blob';
-import dbConnect from '@/libs/mongodb';
+import dbConnect from '@/app/libs/mongodb';
 import Application from '@/app/models/application/application.model';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import JobController from '@/controllers/jobs/jobs.controller';
+import JobController from '@/app/controllers/jobs/jobs.controller';
 
 // TODO: JOI to validate data
 

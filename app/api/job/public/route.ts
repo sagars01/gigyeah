@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 // TODO: Write the middleware to validate if the email and the userId from the cookie matches. This will prevent tampering of the data
 
-import dbConnect from "@/libs/mongodb";
+import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import jobsModel from "@/app/models/job/jobs.model";

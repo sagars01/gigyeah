@@ -1,10 +1,10 @@
-import JobController from "@/controllers/jobs/jobs.controller";
-import { getSessionInformation } from "@/utils/auth/getUserSessionData";
-import Loading from "@/libs/components/reusables/loading";
-import Unauthorized from "@/libs/components/reusables/unauthorized";
+import JobController from "@/app/controllers/jobs/jobs.controller";
+import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
+import Loading from "@/app/libs/components/reusables/loading";
+import Unauthorized from "@/app/libs/components/reusables/unauthorized";
 import { NextRequest } from "next/server";
 import { Suspense } from "react";
-import DashboardLayout from "@/libs/components/reusables/dashboard.layout";
+import DashboardLayout from "@/app/libs/components/reusables/dashboard.layout";
 import ApplicationList from "./ApplicationList";
 import ContentHeader from "./ContentHeader";
 import { IJob } from "@/app/models/job/jobs.model";

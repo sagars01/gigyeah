@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import ApplicationsController from "@/controllers/applications/applications.controller";
-import { ISessionInformation, getSessionInformation } from "@/utils/auth/getUserSessionData";
+import ApplicationsController from "@/app/controllers/applications/applications.controller";
+import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 
 
 export async function GET(request: NextRequest) {

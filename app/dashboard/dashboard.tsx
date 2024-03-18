@@ -8,7 +8,7 @@ import { Button } from 'antd';
 import CreateJob from './createJob';
 import GetJobsComponent from './getJobs';
 
-import DashboardLayout from '@/libs/components/reusables/dashboard.layout';
+import DashboardLayout from '@/app/libs/components/reusables/dashboard.layout';
 
 
 const DashboardComponent: React.FC = () => {
