@@ -1,7 +1,7 @@
 "use client";
 
 import Typography from 'antd/es/typography';
-import styles from '../../../styles/applications.module.css'
+import styles from '../styles/applications.module.css'
 
 
 const ContentHeader: React.FC<Props> = ({ jobDesc, jobTitle }) => {

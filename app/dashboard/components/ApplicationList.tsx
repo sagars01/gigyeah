@@ -4,12 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ExpandAltOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
+import ApplicantProfileExpand from './ApplicantProfileExpanded';
 
 
 interface Applicant {
     _id: string;
     jobId: string;
+    onwerId: string;
     email: string;
+    name: string;
     applicantName: string;
     shortIntro: string;
     resumeUrl: string;
@@ -50,32 +53,31 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
         // Here you can add the functionality for shortlisting or rejecting applicants
     };
 
-    const handleApplicationAction = (applicationId: string, action: Action) => {
+    const [applicantData, setApplicantData] = useState<Applicant | null>(null)
+    const handleApplicationAction = (applicantData: Applicant, action: Action) => {
         if (action === "expand") {
-            console.log(`Action: ${action} on applicationId: ${applicationId}`);
-            // Here you can add the functionality for expanding the applicant's profile
+            console.log(`Action: ${action} on applicationId: ${applicantData}`);
+            setApplicantData(applicantData)
         }
     }
-
-    const applicantActionsMenu = (applicantId: string) => (
-        <Menu onClick={({ key }) => handleMenuClick(applicantId, key)}>
-            <Menu.Item key="shortlist">Shortlist</Menu.Item>
-            <Menu.Item key="reject">Reject</Menu.Item>
-        </Menu>
-    );
 
     if (loading) {
         return <Spin className='absolute-middle' tip="Loading applicants..." size="large" />;
     }
 
+    const onApplicationExpandedClose = () => {
+        setApplicantData(null)
+    }
+
     const Applications = () => {
+
         return (
             <>
+                <ApplicantProfileExpand open={!!applicantData} applicant={applicantData} onClose={onApplicationExpandedClose} />
                 <Space direction="vertical" size="middle" style={{ display: 'flex', width: '100%' }}>
                     {applicants.map((applicant) => (
-                        // Inside the map function of applicants
-
                         <Card key={applicant._id}>
+
                             <Row gutter={[16, 16]}>
                                 <Col span={18}>
                                     <p><strong>Name:</strong> {applicant.applicantName}</p>
@@ -94,7 +96,7 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
                                         <Button shape="circle" icon={<CloseCircleOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
                                     </Tooltip>
                                     <Tooltip title="Expand">
-                                        <Button onClick={() => handleApplicationAction(applicant._id, 'expand')} shape="circle" icon={<ExpandAltOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
+                                        <Button onClick={() => handleApplicationAction(applicant, 'expand')} shape="circle" icon={<ExpandAltOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
                                     </Tooltip>
                                     <div style={{ textAlign: 'right', marginTop: 16 }}>
                                         <Button
@@ -104,9 +106,7 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
                                     </div>
                                 </Col>
                             </Row>
-
                         </Card>
-
                     ))}
                 </Space>
             </>

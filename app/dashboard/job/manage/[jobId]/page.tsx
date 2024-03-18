@@ -5,8 +5,8 @@ import Unauthorized from "@/app/libs/components/reusables/unauthorized";
 import { NextRequest } from "next/server";
 import { Suspense } from "react";
 import DashboardLayout from "@/app/libs/components/reusables/dashboard.layout";
-import ApplicationList from "./ApplicationList";
-import ContentHeader from "./ContentHeader";
+import ApplicationList from "../../../components/ApplicationList";
+import ContentHeader from "../../../components/ContentHeader";
 import { IJob } from "@/app/models/job/jobs.model";
 
 
