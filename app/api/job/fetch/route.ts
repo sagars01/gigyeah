@@ -1,7 +1,16 @@
+/**
+ * @description This route is only for LOGGED IN USER
+ * 
+ */
+
+export const dynamic = 'force-dynamic';
+
+// TODO: Move all these functions from the route to the controller.
+
 import dbConnect from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
-import jobsModel from "@/app/models/job/jobs.model";
+import { getSessionInformation } from "@/utils/auth/getUserSessionData";
+import JobController from "@/controllers/jobs/jobs.controller";
 
 export async function GET(request: NextRequest) {
 
@@ -11,23 +20,27 @@ export async function GET(request: NextRequest) {
         if (request.method !== 'GET') {
             NextResponse.json({ error: 'Method Not Allowed' }, { status: 409 });
         }
-        // Check if the ID is a valid ObjectId
-        const jobId: any = request.nextUrl.searchParams.get("jobId");
-        if (!mongoose.Types.ObjectId.isValid(jobId)) {
-            return NextResponse.json({ message: 'Invalid job ID' }, { status: 400 });
+
+        const userData = await getSessionInformation(request);
+        if (!userData || !userData.userId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const job = await jobsModel.findById(jobId);
+        const jobId = request.nextUrl.searchParams.get("jobId") as string;
 
-        if (!job) {
-            return NextResponse.json({ message: 'Job not found' }, { status: 404 });
+        // Use JobController to fetch jobs using userId from session
+        const jobsOrJob = await JobController.getJobsByUser(userData.userId, jobId);
+
+        if (!jobsOrJob || (Array.isArray(jobsOrJob) && jobsOrJob.length === 0)) {
+            return NextResponse.json({ message: 'No jobs found', jobs: [] }, { status: 200 });
         }
 
-        return NextResponse.json(job)
+        return NextResponse.json({
+            jobs: jobsOrJob
+        }, { status: 200, statusText: "OK" });
 
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 };
-

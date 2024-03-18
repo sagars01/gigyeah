@@ -1,7 +1,8 @@
-import { InboxOutlined, RocketFilled } from '@ant-design/icons';
+import { InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { Button, Card, Form, Input, Upload, message } from 'antd';
+import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
 import buttonStyles from '../../../../styles/components/Button.module.css';
+import Link from 'next/link';
 
 const formItemLayout = {
 
@@ -14,40 +15,13 @@ const normFile = (e: any) => {
     return e?.fileList;
 };
 
-const FormFieldsForCandidateData = () => (
-    <>
-        <Form.Item name="name" rules={[{ required: true, message: 'Please enter your name!' }]}>
-            <Input placeholder="What should we call you?" />
-        </Form.Item>
-
-        <Form.Item
-            name="email"
-            rules={[
-                {
-                    required: true,
-                    message: 'Please enter your email address!',
-                },
-                {
-                    type: 'email',
-                    message: 'Invalid email address format!',
-                },
-            ]}
-        >
-            <Input placeholder="Enter your email" />
-        </Form.Item>
-
-        <Form.Item
-            name="shortIntro"
-            rules={[{ required: true, message: 'Please advertise yourself' }]}
-        >
-            <Input.TextArea rows={3} placeholder="Tell us about real you in 120 words" maxLength={120} />
-        </Form.Item>
-    </>
-);
 
 
 const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading = true, isError = false }) => {
     const [loading, setLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const { Meta } = Card;
+    const [form] = Form.useForm();
 
     const onFinish = async (values: any) => {
         setLoading(true);
@@ -86,9 +60,40 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
             console.error(error);
         } finally {
             setLoading(false);
+            form.resetFields()
         }
     };
 
+    const FormFieldsForCandidateData = () => (
+        <>
+            <Form.Item name="name" rules={[{ required: true, message: 'Please enter your name!' }]}>
+                <Input placeholder="What should we call you?" />
+            </Form.Item>
+
+            <Form.Item
+                name="email"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please enter your email address!',
+                    },
+                    {
+                        type: 'email',
+                        message: 'Invalid email address format!',
+                    },
+                ]}
+            >
+                <Input placeholder="Enter your email" />
+            </Form.Item>
+
+            <Form.Item
+                name="shortIntro"
+                rules={[{ required: true, message: 'Please advertise yourself' }]}
+            >
+                <Input.TextArea rows={3} placeholder="Tell us about real you in 120 words" maxLength={120} />
+            </Form.Item>
+        </>
+    );
 
     const FormFieldsResumeUpload = () => (
 
@@ -105,26 +110,49 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
 
     )
 
+
+
     return (
         <>
             {
-                !isError && (<Card loading={isLoading}>
-                    <Form
-                        name="validate_other"
-                        {...formItemLayout}
-                        onFinish={onFinish}
-                    >
-                        <FormFieldsForCandidateData />
-                        <FormFieldsResumeUpload />
-                        <Form.Item>
-                            <Button icon={<RocketFilled />} type="primary"
-                                className={buttonStyles.gradientButton}
-                                htmlType="submit" loading={loading}>
-                                Apply
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Card>)
+                !isError && (
+                    <>
+                        {
+                            !showSuccess ? (<Card loading={isLoading}>
+                                <Form
+                                    form={form}
+                                    name="validate_other"
+                                    {...formItemLayout}
+                                    onFinish={onFinish}
+                                >
+                                    <FormFieldsForCandidateData />
+                                    <FormFieldsResumeUpload />
+                                    <Form.Item>
+                                        <Button icon={<RocketFilled />} type="primary"
+                                            className={buttonStyles.gradientButton}
+                                            htmlType="submit" loading={loading}>
+                                            Apply
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </Card>) : (
+                                <>
+                                    <Card hoverable>
+                                        <div style={{ margin: '2rem 0' }}>
+                                            <Typography.Title level={2} >Congratulations <RocketOutlined /></Typography.Title>
+                                            <Typography.Paragraph type='success' style={{
+                                                fontSize: '1rem'
+                                            }}>Your application is on its way</Typography.Paragraph>
+                                        </div>
+                                        <Link href={'/'}>
+                                            <Meta title="Apply to other interesting jobs!" description="www.gigyeah.com" />
+                                        </Link>
+                                    </Card>
+                                </>
+                            )
+                        }
+                    </>
+                )
             }
         </>
     );

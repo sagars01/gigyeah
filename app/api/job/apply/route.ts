@@ -1,11 +1,11 @@
 import { del, put } from '@vercel/blob';
 import dbConnect from '@/libs/mongodb';
-import Application from '@/app/models/job/application.model';
+import Application from '@/app/models/application/application.model';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import { runValidation } from './requestValidator';
+import JobController from '@/controllers/jobs/jobs.controller';
 
-// TODO: Express Validator to validate the data.
+// TODO: JOI to validate data
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
     let blobUrl = null;
@@ -21,11 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const shortIntro = formData.get('shortIntro') as string;
         const filename = file.name;
 
-        // const validationCheck = await runValidation(req);
-        // if (validationCheck) {
-        //     return NextResponse.json({ errors: validationCheck.errors },
-        //         { status: 409, statusText: "Request Validation Failed" });
-        // }
+
 
         const blob = await put(filename, file, {
             access: 'public',
@@ -35,17 +31,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         await dbConnect();
 
-        const newApplication = new Application({
+        // Get User Id from Database
+        const jobDetails = await JobController.getJobsById(jobId);
+        const ownerId = jobDetails?.createdBy.id as string;
+
+        const dataStore = {
             jobId: new mongoose.Types.ObjectId(jobId),
+            ownerId: new mongoose.Types.ObjectId(ownerId as string),
             email: email,
             applicantName: name,
             shortIntro: shortIntro,
-            resumeUrl: blob.url,
-            status: 'applied' // Default status
-        });
+            status: 'applied'
+        }
+
+        const newApplication = new Application({ ...dataStore, resumeUrl: blob.url });
 
         await newApplication.save();
-        return NextResponse.json({ message: "Application Successful" }, { status: 200 });
+        return NextResponse.json({ message: "Application Successful" }, { status: 200, statusText: "success" });
 
     } catch (error: any) {
         let errorMessage = "Unexpected Server Error";

@@ -1,15 +1,15 @@
-import { Button } from "antd";
+import DashboardComponent from "./dashboard"
 
 export default function Dashboard() {
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main>
             <div>
-                <h1>
-                    Welcome to Crazy Frog
-                    <Button>Click for Magic</Button>
-                </h1>
+                <DashboardComponent />
             </div>
         </main>
     )
 }
+
+
+// TODO: When a new user logs in there's no jobs created. It returns Failed to fetch jobs. 
