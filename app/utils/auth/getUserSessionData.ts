@@ -42,7 +42,8 @@ export const getSessionInformation = async (request?: NextRequest): Promise<ISes
             authProviderIdentifier: userId,
             customerCache: {
                 name,
-                company: { ...company }
+                company: { ...company },
+                ...userProfileData
             }
         };
     } catch (error) {
