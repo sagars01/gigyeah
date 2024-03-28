@@ -1,20 +1,27 @@
-import axios from "axios";
-import pdfParse from "pdf-parse";
+import ApiService from "@/app/libs/request/apiservice";
 
 type Summary = {
     summary: string;
 };
 
-async function extractTextFromPDF(pdfUrl: string): Promise<string> {
+const AI_Service_URL = process.env.AI_ENGINE_API_BASE_URL;
+const api = new ApiService(AI_Service_URL)
 
+async function extractTextFromPDF(pdfUrl: string, jobDescription: string): Promise<any> {
+    const url = `/api/v1/summarize?pdf_url=${pdfUrl}`
+    const response = await api.post(url, {
+        job_desc: jobDescription
+    })
+
+    return response;
 }
 
 class AISummarize {
-    static async getSummary(applicantionId: string): Promise<Summary> {
+    static async getSummary(pdfUrl: string, jobDescription: string): Promise<Summary> {
         try {
-            const extractedTextFromPDF = await extractTextFromPDF(applicantionId);
+            const extractedTextFromPDF = await extractTextFromPDF(pdfUrl, jobDescription);
             return {
-                summary: extractedTextFromPDF // Placeholder: return the full text for now
+                summary: extractedTextFromPDF
             }
         } catch (error) {
             console.error('Error summarizing PDF:', error);

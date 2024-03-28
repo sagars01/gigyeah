@@ -22,11 +22,12 @@ interface Applicant {
 
 interface Props {
     jobId: string;
+    jobDesc: string;
 }
 
 type Action = 'expand' | 'shortlist' | 'reject' | 'summarize';
 
-const ApplicationList: React.FC<Props> = ({ jobId }) => {
+const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
     const [applicants, setApplicants] = useState<Applicant[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -73,7 +74,7 @@ const ApplicationList: React.FC<Props> = ({ jobId }) => {
 
         return (
             <>
-                <ApplicantProfileExpand open={!!applicantData} applicant={applicantData} onClose={onApplicationExpandedClose} />
+                <ApplicantProfileExpand open={!!applicantData} jobDesc={jobDesc} applicant={applicantData} onClose={onApplicationExpandedClose} />
                 <Space direction="vertical" size="middle" style={{ display: 'flex', width: '100%' }}>
                     {applicants.map((applicant) => (
                         <Card key={applicant._id}>

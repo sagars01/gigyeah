@@ -2,7 +2,7 @@ import AISummarize from "@/app/controllers/ai/summarize.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
     try {
         const userInformation = await getSessionInformation(request);
         if (userInformation.subscriptionLevel === 0) {
@@ -11,10 +11,34 @@ export async function GET(request: NextRequest) {
                 reason: "User is not a premium user"
             })
         }
-        const applicantionId = request.nextUrl.searchParams.get("applicantionId") as string;
-        const summary = await AISummarize.getSummary(applicantionId);
+        const {
+            resumeUrl,
+            jobDescription
+        } = await request.json();
+
+        if (!resumeUrl || !jobDescription) {
+            return NextResponse.json({
+                message: "FAILED",
+                reason: "Missing required parameters"
+            }, {
+                status: 400,
+                statusText: "Invalid_Request"
+            })
+        }
+
+        if (resumeUrl && !resumeUrl.startsWith("https://")) {
+            return NextResponse.json({
+                message: "FAILED",
+                reason: "Invalid resume URL"
+            }, {
+                status: 400,
+                statusText: "Invalid_Request"
+            })
+        }
+
+        const summary = await AISummarize.getSummary(resumeUrl, jobDescription);
         return NextResponse.json({
-            summary: summary
+            ...summary
         })
     } catch (error: any) {
         return NextResponse.json({

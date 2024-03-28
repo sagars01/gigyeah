@@ -8,15 +8,14 @@ interface ApiError {
     statusCode?: number;
 }
 
-// ApiService.ts
 import axios, { AxiosInstance } from 'axios';
 
 class ApiService {
     private axiosInstance: AxiosInstance;
 
-    constructor() {
+    constructor(baseUrl?: string) {
         this.axiosInstance = axios.create({
-            baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+            baseURL: baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -33,9 +32,9 @@ class ApiService {
         }
     }
 
-    async post<T>(url: string, data: unknown): Promise<ApiResponse<T>> {
+    async post<T>(path: string, data: unknown): Promise<ApiResponse<T>> {
         try {
-            const response = await this.axiosInstance.post<ApiResponse<T>>(url, data);
+            const response = await this.axiosInstance.post<ApiResponse<T>>(path, data);
             return response.data;
         } catch (error: any) {
             const apiError: ApiError = this.handleError(error);
@@ -62,3 +61,4 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
+export default ApiService

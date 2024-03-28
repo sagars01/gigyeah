@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Row, Col, Button } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined } from '@ant-design/icons';
+import { apiService } from '../../libs/request/apiservice'
 
-const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose }) => {
+const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jobDesc }) => {
+
+
+    const [summaryLoading, setSummaryLoading] = useState(false)
+    const [profileSummary, setProfileSummary] = useState(null)
+    const [errorProfileSummary, setErrorProfileSummary] = useState<any>(null)
 
     const getModalWidth = () => {
         const screenWidth = window.innerWidth;
@@ -19,8 +25,25 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose }) 
 
     }
 
-    const handleSummarize = () => {
-
+    const handleSummarize = async (resumeUrl: string) => {
+        debugger
+        const url = `/ai/summarize`;
+        const body = {
+            resumeUrl,
+            jobDescription: jobDesc
+        }
+        setSummaryLoading(true)
+        setProfileSummary(null)
+        setErrorProfileSummary(null)
+        try {
+            const response: any = await apiService.post(url, body)
+            const { summary: { text } } = response
+            setProfileSummary(text)
+        } catch (error: any) {
+            setErrorProfileSummary("Error summarizing profile")
+        } finally {
+            setSummaryLoading(false)
+        }
     }
     return (
         <Modal
@@ -39,11 +62,35 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose }) 
                         <p>Email: {applicant?.email}</p>
                         <p>Introduction: {applicant?.shortIntro}</p>
                     </div>
-                    {/* Action Buttons */}
+                    <div>
+                        {
+                            summaryLoading && (
+                                <>Loading...</>
+                            )
+                        }
+                        {
+                            profileSummary && (
+                                <>
+                                    {
+                                        profileSummary
+                                    }
+                                </>
+                            )
+                        }
+                        {
+                            errorProfileSummary && (
+                                <>
+                                    {
+                                        errorProfileSummary
+                                    }
+                                </>
+                            )
+                        }
+                    </div>
                     <div style={{ position: 'absolute', bottom: 0, left: 0, margin: 8 }}>
                         <Button onClick={handleShortlist} icon={<CheckCircleOutlined />} style={{ marginRight: 8 }}>Shortlist</Button>
                         <Button onClick={handleReject} danger icon={<CloseCircleOutlined />} style={{ marginRight: 8 }}>Reject</Button>
-                        <Button onClick={handleSummarize} type="primary" icon={<FileTextOutlined />} style={{ marginRight: 8 }}>Summarize</Button>
+                        <Button onClick={() => handleSummarize(applicant?.resumeUrl as string)} type="primary" icon={<FileTextOutlined />} style={{ marginRight: 8 }}>Summarize</Button>
                     </div>
 
                 </Col>
@@ -68,9 +115,9 @@ interface IProps {
         name: string;
         email: string;
         shortIntro: string;
-        resumeUrl: string; // Assuming this is the URL to the PDF
-        // Add other relevant fields here
+        resumeUrl: string;
     } | null;
-    open: boolean; // Added prop for controlling modal visibility
-    onClose: () => void; // Callback function for closing the modal
+    open: boolean;
+    onClose: () => void;
+    jobDesc: string;
 }

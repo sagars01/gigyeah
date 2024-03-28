@@ -25,7 +25,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
             <>
                 <DashboardLayout
                     header={<ContentHeader jobTitle={title} jobDesc={description} />}
-                    content={<ApplicationList jobId={jobId} />} />
+                    content={<ApplicationList jobId={jobId} jobDesc={description} />} />
             </>
         )
     }
