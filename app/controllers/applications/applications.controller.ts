@@ -1,4 +1,4 @@
-// controllers/ApplicationsController.ts
+import { ObjectId } from 'mongodb';
 import dbConnect from '@/app/libs/mongodb';
 import applicationModel, { IApplication } from '@/app/models/application/application.model';
 
@@ -34,21 +34,34 @@ class ApplicationsController {
     }
 
 
-    static async updateApplicationById(applicationId: string, updates: Partial<IApplication>) {
+    static async updateApplicationStatus(
+        applicationId: string,
+        status: 'shortlisted' | 'rejected',
+        userId: string
+    ) {
         await dbConnect();
+
         try {
+            const application = await this.Application.findOne({
+                _id: new ObjectId(applicationId),
+                ownerId: new ObjectId(userId),
+            });
+
+            if (!application) {
+                throw new Error('Application not found or unauthorized');
+            }
+
+            // Update the application status
             const updatedApplication = await this.Application.findByIdAndUpdate(
                 applicationId,
-                updates,
-                { new: true } // Return the updated document
+                { status },
+                { new: true }
             );
-            if (!updatedApplication) {
-                throw new Error('Application not found');
-            }
+
             return updatedApplication;
         } catch (error) {
-            console.error('Error updating application:', applicationId, error);
-            throw new Error('Failed to update application');
+            console.error('Error updating application status:', applicationId, error);
+            throw new Error('Failed to update application status');
         }
     }
 }

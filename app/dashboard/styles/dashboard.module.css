@@ -42,3 +42,11 @@
 .buttonSeperator>button:first-child {
     margin-right: 1rem;
 }
+
+.profileSummarySpace {
+    height: 50%;
+}
+
+.resumeIframeWrapper {
+    height: max-content;
+}

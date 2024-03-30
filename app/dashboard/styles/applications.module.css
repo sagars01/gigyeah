@@ -1,3 +1,22 @@
 .headerTitle {
     padding: 0.5rem 1rem;
 }
+
+.profileSummarySpace {
+    height: 30rem;
+}
+
+.resumeIframeWrapper {
+    height: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+    .profileSummarySpace {
+        height: 5rem;
+    }
+
+    .resumeIframeWrapper {
+        min-height: 40rem;
+        height: 100%;
+    }
+}

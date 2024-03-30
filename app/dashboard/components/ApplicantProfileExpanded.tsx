@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Row, Col, Button } from 'antd';
+import { Modal, Row, Col, Button, Alert, Skeleton } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined } from '@ant-design/icons';
 import { apiService } from '../../libs/request/apiservice'
+import Styles from '../styles/applications.module.css';
 
 const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jobDesc }) => {
 
@@ -53,27 +54,29 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
             onCancel={onClose}
             width={getModalWidth()}
             centered
+            footer={false}
         >
-            <Row gutter={16} style={{ height: '80vh' }}> {/* Add vertical gutter for better spacing on small screens */}
+            <Row gutter={16}> {/* Add vertical gutter for better spacing on small screens */}
                 <Col xs={24} md={12}>
-                    {/* Content scales down on small screens */}
                     <div>
                         <h3>{applicant?.name}</h3>
                         <p>Email: {applicant?.email}</p>
                         <p>Introduction: {applicant?.shortIntro}</p>
                     </div>
-                    <div>
+                    <div className={Styles.profileSummarySpace}>
                         {
                             summaryLoading && (
-                                <>Loading...</>
+                                <>
+                                    <Skeleton />
+                                </>
                             )
                         }
                         {
                             profileSummary && (
                                 <>
-                                    {
-                                        profileSummary
-                                    }
+                                    <div>
+                                        <div dangerouslySetInnerHTML={{ __html: profileSummary }} />
+                                    </div>
                                 </>
                             )
                         }
@@ -81,21 +84,26 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
                             errorProfileSummary && (
                                 <>
                                     {
-                                        errorProfileSummary
+                                        <Alert
+                                            message={"Its not you, it me. I am an AI sometimes I fail"}
+                                            description={errorProfileSummary}
+                                            type="error"
+                                        />
                                     }
                                 </>
                             )
                         }
                     </div>
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, margin: 8 }}>
+                    <div style={{ marginTop: '1rem' }}>
                         <Button onClick={handleShortlist} icon={<CheckCircleOutlined />} style={{ marginRight: 8 }}>Shortlist</Button>
                         <Button onClick={handleReject} danger icon={<CloseCircleOutlined />} style={{ marginRight: 8 }}>Reject</Button>
-                        <Button onClick={() => handleSummarize(applicant?.resumeUrl as string)} type="primary" icon={<FileTextOutlined />} style={{ marginRight: 8 }}>Summarize</Button>
+                        <Button loading={summaryLoading}
+                            onClick={() => handleSummarize(applicant?.resumeUrl as string)} type="primary" icon={<FileTextOutlined />} style={{ marginRight: 8 }}>Summarize</Button>
                     </div>
 
                 </Col>
                 <Col xs={24} md={12}>
-                    <div style={{ height: '100%' }}> {/* Adjust height for mobile */}
+                    <div className={Styles.resumeIframeWrapper}> {/* Adjust height for mobile */}
                         <iframe
                             src={applicant?.resumeUrl}
                             style={{ width: '100%', height: '100%', border: 'none' }}
