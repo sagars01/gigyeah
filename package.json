@@ -16,6 +16,7 @@
     "@react-pdf-viewer/core": "3.6.0",
     "@react-pdf-viewer/default-layout": "3.6.0",
     "@types/mongoose": "^5.11.97",
+    "@types/react-html-parser": "^2.0.6",
     "@vercel/blob": "^0.19.0",
     "@vercel/speed-insights": "^1.0.10",
     "antd": "^5.13.2",
@@ -37,6 +38,7 @@
     "postcss": "^8.1.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-html-parser": "^2.0.2",
     "react-pdf": "^7.7.1",
     "svix": "^1.17.0",
     "webpack": "^5.0.0"

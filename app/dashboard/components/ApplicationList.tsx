@@ -1,9 +1,10 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip, Pagination, Empty } from 'antd';
-import { CheckCircleOutlined, CheckSquareOutlined, CloseCircleOutlined, ExpandAltOutlined, ExpandOutlined, EyeOutlined } from '@ant-design/icons';
+import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip, Pagination, Empty, Collapse, Tag, Typography } from 'antd';
+import { CheckCircleOutlined, CheckSquareOutlined, CloseCircleOutlined, ExpandAltOutlined, ExpandOutlined, EyeOutlined, LoadingOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
 import ApplicantProfileExpand from './ApplicantProfileExpanded';
+import ReactHtmlParser from 'react-html-parser';
 
 interface Applicant {
     _id: string;
@@ -16,6 +17,7 @@ interface Applicant {
     resumeUrl: string;
     status: 'applied' | 'shortlisted' | 'rejected';
     applicationsReceived: number;
+    summary?: string;
 }
 
 interface Props {
@@ -85,6 +87,29 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
         }
     };
 
+    const [summarizeState, setSummarizeState] = useState<'loading' | 'error' | 'complete' | null>(null)
+    const [summaryApplicationId, setSummarizeApplicationId] = useState<string>('')
+    const handleSummarize = async (applicantId: string, resumeUrl: string) => {
+        const url = `/ai/summarize`;
+        const body = {
+            resumeUrl,
+            jobDescription: jobDesc
+        }
+        try {
+            setSummarizeApplicationId(applicantId)
+            setSummarizeState('loading')
+            const response: any = await apiService.post(url, body)
+            const { summary: { text } } = response;
+            setApplicants((prevApplicants) => prevApplicants.map((a) => a._id === applicantId ? { ...a, summary: text } : a))
+            setSummarizeState('complete')
+
+        } catch (error: any) {
+            setSummarizeState('error')
+        } finally {
+            setSummarizeState(null)
+        }
+    }
+
     const handleApplicationAction = async (applicant: Applicant, action: Action) => {
         switch (action) {
             case 'expand':
@@ -97,7 +122,7 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
                 await handleReject(applicant);
                 break;
             case 'summarize':
-                // Handle summarize action
+                handleSummarize(applicant._id, applicant.resumeUrl)
                 break;
         }
     };
@@ -153,48 +178,94 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
 
         return (
             <>
-                {visibleApplicants.map((applicant) => (
-                    <Card key={applicant._id}>
-                        <Row gutter={[16, 16]}>
-                            <Col span={18}>
-                                <p><strong>Name:</strong> {applicant.applicantName}</p>
-                                <p><strong>Email:</strong> {applicant.email}</p>
-                                <p><strong>Intro:</strong> {applicant.shortIntro}</p>
-                                <p><strong>Status:</strong> {applicant.status}</p>
-                            </Col>
-                            <Col span={6} style={{ alignContent: 'center', textAlign: 'right' }}>
+                {
+                    visibleApplicants.map((applicant) => (
+                        <Card key={applicant._id}>
+                            <Row gutter={[16, 16]}>
+                                <Col span={18}>
+                                    <p><strong>Name:</strong> {applicant.applicantName}</p>
+                                    <p><strong>Email:</strong> {applicant.email}</p>
+                                    <p><strong>Intro:</strong> {applicant.shortIntro}</p>
+                                    <p><strong>Status:</strong> {applicant.status}</p>
+                                </Col>
+                                <Col span={6} style={{ alignContent: 'center', textAlign: 'right' }}>
 
-                                <Tooltip title="Shortlist">
-                                    <Button shape="circle"
-                                        type='primary'
-                                        onClick={() => handleApplicationAction(applicant, 'shortlist')}
-                                        icon={<CheckCircleOutlined color='white' />} style={{ marginLeft: '10px' }} />
-                                </Tooltip>
-                                <Tooltip title="Reject">
-                                    <Button shape="circle"
-                                        type='default'
-                                        onClick={() => handleApplicationAction(applicant, 'reject')}
-                                        icon={<CloseCircleOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
-                                </Tooltip>
-                                <Tooltip title="Expand">
-                                    <Button onClick={() => handleApplicationAction(applicant, 'expand')} shape="circle" icon={<ExpandAltOutlined />} style={{ marginLeft: '10px', color: 'blue' }} />
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                        <Button type='primary' style={{ float: 'right' }}>
-                            Summarize
-                        </Button>
-                    </Card>
-                ))}
-                {filteredApplicants.length > 10 && pagination.current === 1 && (
-                    <Pagination
-                        style={{ marginTop: '16px', textAlign: 'center' }}
-                        current={pagination.current}
-                        pageSize={pagination.pageSize}
-                        total={filteredApplicants.length}
-                        onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
-                    />
-                )}
+                                    <Tooltip title="Shortlist">
+                                        <Button shape="circle"
+                                            type='primary'
+                                            onClick={() => handleApplicationAction(applicant, 'shortlist')}
+                                            icon={<CheckCircleOutlined color='white' />} style={{ marginLeft: '10px' }} />
+                                    </Tooltip>
+                                    <Tooltip title="Reject">
+                                        <Button shape="circle"
+                                            type='default'
+                                            onClick={() => handleApplicationAction(applicant, 'reject')}
+                                            icon={<CloseCircleOutlined />} style={{ marginLeft: '10px', color: 'red' }} />
+                                    </Tooltip>
+                                    <Tooltip title="Expand">
+                                        <Button onClick={() => handleApplicationAction(applicant, 'expand')} shape="circle" icon={<ExpandAltOutlined />} style={{ marginLeft: '10px', color: 'blue' }} />
+                                    </Tooltip>
+                                </Col>
+                            </Row>
+
+                            <Collapse
+                                style={{ marginTop: '1rem' }} size='large' >
+                                <Collapse.Panel showArrow={false} header={
+                                    <>
+                                        <Typography.Title level={5} style={{ display: 'inline-block', marginRight: '0.5rem' }}>Summarize Candidate Profile</Typography.Title>
+                                        {
+                                            applicant.summary && <Tag color="success">Ready</Tag>
+                                        }
+
+                                    </>
+                                } key="summary"
+                                    extra={
+                                        <Button type='primary' onClick={() => handleApplicationAction(applicant, 'summarize')}
+                                            icon={summaryApplicationId === applicant._id && summarizeState === 'loading' ? <LoadingOutlined /> : <></>}
+                                        >
+                                            Summarize
+                                        </Button>
+
+                                    }>
+                                    {
+                                        applicant.summary ? <>
+                                            <div>
+                                                {
+                                                    ReactHtmlParser(applicant.summary)
+                                                }
+                                            </div>
+                                        </> :
+                                            <>
+                                                <Empty description={
+                                                    <Typography.Title level={3}>
+                                                        Unlock Candidate Insights using AI
+                                                    </Typography.Title>
+                                                }>
+                                                    <Button type='primary' onClick={() => handleApplicationAction(applicant, 'summarize')}
+                                                        icon={summaryApplicationId === applicant._id && summarizeState === 'loading' ? <LoadingOutlined /> : <></>}
+                                                    >
+                                                        Generate Summary
+                                                    </Button>
+                                                </Empty>
+                                            </>
+
+                                    }
+
+                                </Collapse.Panel>
+                            </Collapse>
+                        </Card>
+                    ))
+                }
+                {
+                    filteredApplicants.length > 10 && pagination.current === 1 && (
+                        <Pagination
+                            style={{ marginTop: '16px', textAlign: 'center' }}
+                            current={pagination.current}
+                            pageSize={pagination.pageSize}
+                            total={filteredApplicants.length}
+                            onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
+                        />
+                    )}
             </>
         );
     };

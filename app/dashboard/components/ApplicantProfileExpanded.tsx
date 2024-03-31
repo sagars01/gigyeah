@@ -27,7 +27,6 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
     }
 
     const handleSummarize = async (resumeUrl: string) => {
-        debugger
         const url = `/ai/summarize`;
         const body = {
             resumeUrl,
@@ -46,6 +45,8 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
             setSummaryLoading(false)
         }
     }
+
+
     return (
         <Modal
             title="Applicant Details"
