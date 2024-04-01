@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Card, message, Dropdown, Menu, Button, Empty, Spin } from 'antd';
+import { Card, message, Dropdown, Menu, Button, Empty, Spin, Typography, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
 import { ApiResponse, apiService } from '@/app/libs/request/apiservice';
 import styles from "./styles/dashboard.module.css"
@@ -11,6 +11,7 @@ import URL from '@/app/constants/url/url';
 import EditJobDrawer from './editJob';
 
 interface Job {
+    status: 'active' | 'expired';
     _id: string;
     title: string;
     description: string;
@@ -59,6 +60,30 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
         fetchJobs();
     }, [shouldFetchJobs, jobId]);
 
+    const [jobUpdateLoad, setJobUpdate] = useState(false)
+    const [jobUpdateList, setJobUpdateList] = useState([''])
+
+    const handleJobExpiry = async (jobId: string, status: 'active' | 'expired') => {
+        try {
+            setJobUpdate(true)
+            await apiService.put(
+                `/job/update?jobId=${jobId}`,
+                {
+                    status: status
+                }
+            )
+            setJobUpdateList([...jobUpdateList, jobId])
+            setJobs((jobs) => jobs.map((a) => a._id === jobId ? { ...a, status: 'expired' } : a))
+
+        } catch (error) {
+
+        } finally {
+            setJobUpdateList(jobUpdateList.filter((id) => id === jobId))
+            setJobUpdate(false)
+        }
+
+    }
+
     const handleMenuClick = useCallback((jobId: string, action: string, jobDetails?: Job) => {
         console.log(`Action: ${action} on jobId: ${jobId}`);
 
@@ -67,7 +92,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
             setJobToEdit(jobDetails || null)
             setOpenEditDrawer(true)
         } else if (action === "expired") {
-            // call api to set expired
+            handleJobExpiry(jobId, 'expired')
         }
 
     }, []);
@@ -75,9 +100,25 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
     const jobActionsMenu = (jobId: string, jobDetail?: Job) => (
         <Menu onClick={({ key }) => handleMenuClick(jobId, key, jobDetail)}>
             <Menu.Item key="edit"> Edit Job <EditOutlined /></Menu.Item>
-            <Menu.Item key="expired"> Mark Expired <DeleteOutlined /></Menu.Item>
+            {jobDetail?.status !== 'expired' ? <Menu.Item key="expired"> Mark Expired <DeleteOutlined /></Menu.Item> : <></>}
         </Menu>
     );
+
+    const JobCardHeader = ({ jobTitle = "", jobStatus = "", jobId = "" }) => {
+        return (
+            <>
+                <Typography.Title level={5} style={{ marginRight: '0.5rem', display: 'inline-block' }}>{jobTitle}</Typography.Title>
+
+                {
+                    jobUpdateList.includes(jobId) && jobUpdateLoad ? <>
+                        <Tag color={'processing'} >processing..</Tag>
+                    </> : <Tag color={jobStatus === 'active' ? 'success' : 'red-inverse'} >{jobStatus}</Tag>
+                }
+            </>
+        )
+    }
+
+
 
     const JobListingCard = () => {
         return (
@@ -87,8 +128,11 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
 
                     jobs.length > 0 ? jobs.map((job) => (
                         <Card
+
                             key={job._id}
-                            title={job.title}
+                            title={
+                                <JobCardHeader jobTitle={job.title} jobStatus={job.status} jobId={job._id} />
+                            }
                             style={{ marginBottom: 16 }}
                             extra={
                                 <Dropdown overlay={jobActionsMenu(job._id, job)} trigger={['click']}>
@@ -103,9 +147,12 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
                                 <Button type='primary' icon={<EyeOutlined />}>
                                     <a href={`${URL.dashboard.viewJob}/${job._id}`}>View Job</a>
                                 </Button>
-                                <Button type='primary' icon={<SettingOutlined />}>
-                                    <a href={`${URL.dashboard.manageApplication}/${job._id}`}>Manage Applications</a>
-                                </Button>
+                                {
+                                    job.status !== 'expired' &&
+                                    <Button type='primary' icon={<SettingOutlined />}>
+                                        <a href={`${URL.dashboard.manageApplication}/${job._id}`}>Manage Applications</a>
+                                    </Button>
+                                }
                             </div>
                         </Card>
                     )) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

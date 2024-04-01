@@ -33,6 +33,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         // Get User Id from Database
         const jobDetails = await JobController.getJobsById(jobId);
+
+        if (jobDetails?.status === 'expired') {
+            return NextResponse.json({
+                message: 'Job has expired',
+
+            }, {
+                status: 400,
+                statusText: 'Invalid Reqeust'
+            })
+        }
         const ownerId = jobDetails?.createdBy.id as string;
 
         const dataStore = {

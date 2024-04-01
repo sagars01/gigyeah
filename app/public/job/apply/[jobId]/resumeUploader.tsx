@@ -1,7 +1,7 @@
 import { InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
-import buttonStyles from '../../../styles/components/Button.module.css';
+import buttonStyles from '../../../../styles/components/Button.module.css';
 import Link from 'next/link';
 
 const formItemLayout = {
@@ -96,19 +96,41 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
     );
 
     const FormFieldsResumeUpload = () => (
-
-        <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}
-            rules={[{ required: true, message: 'Attach relevant documents' }]}>
-            <Upload.Dragger name="files" beforeUpload={() => false} multiple={false} maxCount={1}>
+        <Form.Item
+            name="dragger"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            rules={[
+                {
+                    required: true,
+                    message: 'Attach relevant documents'
+                }
+            ]}
+        >
+            <Upload.Dragger
+                name="files"
+                beforeUpload={(file) => {
+                    const isPDF = file.type === 'application/pdf';
+                    if (!isPDF) {
+                        message.error('Only PDF files are allowed!');
+                    }
+                    return isPDF || Upload.LIST_IGNORE;
+                }}
+                multiple={false}
+                maxCount={1}
+            >
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>
-                <p className="ant-upload-text">Click or drag file to this area to upload. [PDF]</p>
-                <p className="ant-upload-hint">Upload your resume, proof of work,or relevant documents</p>
+                <p className="ant-upload-text">
+                    Click or drag file to this area to upload. [PDF]
+                </p>
+                <p className="ant-upload-hint">
+                    Upload your resume, proof of work, or relevant documents
+                </p>
             </Upload.Dragger>
         </Form.Item>
-
-    )
+    );
 
 
 
@@ -118,24 +140,25 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                 !isError && (
                     <>
                         {
-                            !showSuccess ? (<Card loading={isLoading}>
-                                <Form
-                                    form={form}
-                                    name="validate_other"
-                                    {...formItemLayout}
-                                    onFinish={onFinish}
-                                >
-                                    <FormFieldsForCandidateData />
-                                    <FormFieldsResumeUpload />
-                                    <Form.Item>
-                                        <Button icon={<RocketFilled />} type="primary"
-                                            className={buttonStyles.gradientButton}
-                                            htmlType="submit" loading={loading}>
-                                            Apply
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </Card>) : (
+                            !showSuccess ? (
+                                <Card loading={isLoading}>
+                                    <Form
+                                        form={form}
+                                        name="validate_other"
+                                        {...formItemLayout}
+                                        onFinish={onFinish}
+                                    >
+                                        <FormFieldsForCandidateData />
+                                        <FormFieldsResumeUpload />
+                                        <Form.Item>
+                                            <Button icon={<RocketFilled />} type="primary"
+                                                className={buttonStyles.gradientButton}
+                                                htmlType="submit" loading={loading}>
+                                                Apply
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </Card>) : (
                                 <>
                                     <Card hoverable>
                                         <div style={{ margin: '2rem 0' }}>

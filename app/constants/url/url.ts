@@ -1,7 +1,7 @@
 const URL = {
     dashboard: {
         root: '/dashboard',
-        viewJob: '/job/apply',
+        viewJob: 'public/job/apply',
         manageApplication: 'dashboard/job/manage'
     }
 }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Card, Typography, List, Empty } from 'antd';
+import { Card, Typography, List, Empty, Row } from 'antd';
 const { Title, Text } = Typography;
 
 const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
 
     const ListingCard = () => (
         <>
-            <Card bordered={false} loading={!jobContent}>
+
+            <Card loading={!jobContent}>
                 <Title level={2}>Job Listing</Title>
                 <Title level={3}>{jobContent?.title}</Title>
                 <Text strong>Hired By: </Text> <Text>{jobContent?.createdBy.name}</Text>
@@ -30,6 +31,8 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                     )}
                 />
             </Card>
+
+
         </>
     );
 
@@ -71,6 +74,7 @@ interface JobPosting {
         min: number
         max: number
     };
+    status: 'active' | 'expired'
 }
 
 interface IJobListingProps {

@@ -115,9 +115,9 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
                             rules={[{ required: true, message: 'Please select a currency' }]}
                         >
                             <Select placeholder="Select currency">
-                                <Option value="USD">USD</Option>
-                                <Option value="INR">INR</Option>
-                                <Option value="EUR">EUR</Option>
+                                <Select.Option value="USD">USD</Select.Option>
+                                <Select.Option value="INR">INR</Select.Option>
+                                <Select.Option value="EUR">EUR</Select.Option>
                             </Select>
                         </Form.Item>
                     </Col>
