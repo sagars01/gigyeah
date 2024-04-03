@@ -1,29 +1,67 @@
-import React, { useState } from 'react';
-import { Card, Typography, List, Empty, Row } from 'antd';
-const { Title, Text } = Typography;
+import React from 'react';
+import { Card, Typography, List, Empty, Space } from 'antd';
+import Link from 'next/link';
+import URL from '@/app/constants/url/url';
+const { Text } = Typography;
+
 
 const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
 
+    const spaceStyle = {
+        margin: '0.5rem 0',
+        display: 'block',
+    };
+    const publicProfile = URL.profile.public;
+
     const ListingCard = () => (
         <>
-
             <Card loading={!jobContent}>
-                <Title level={2}>Job Listing</Title>
-                <Title level={3}>{jobContent?.title}</Title>
-                <Text strong>Hired By: </Text> <Text>{jobContent?.createdBy.name}</Text>
-                <br />
-                <Text strong>Company Name:</Text> <Text>{jobContent?.createdBy.company.name}</Text>
-                <br />
-                <Text strong>Company Description:</Text> <Text>{jobContent?.createdBy.company.description}</Text>
-                <br />
-                <Text strong>Job Description:</Text>
-                <div>
-                    <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Hired By:</Text>
+                        <Text>
+                            <Link href={`${publicProfile}/${jobContent?.createdBy.id}`}>{jobContent?.createdBy.name}</Link>
+                        </Text>
+                    </Space>
                 </div>
-                <br />
-                <Text strong>Pay Range: {jobContent?.payRange.currency} {jobContent?.payRange.min} - {jobContent?.payRange.max}</Text>
-                <br />
-                <Text strong>Requirements:</Text>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Company Name:</Text>
+                        <Text>{jobContent?.createdBy.company.name}</Text>
+                    </Space>
+                </div>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Company Description:</Text>
+                        <Text>{jobContent?.createdBy.company.description}</Text>
+                    </Space>
+                </div>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Job Description:</Text>
+                        <div>
+                            <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
+                        </div>
+                    </Space>
+                </div>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Pay Range:</Text>
+                        <Text>{jobContent?.payRange.currency} {jobContent?.payRange.min} - {jobContent?.payRange.max}</Text>
+                    </Space>
+                </div>
+
+                <div style={spaceStyle}>
+                    <Space>
+                        <Text strong>Requirements:</Text>
+                    </Space>
+                </div>
+
                 <List
                     dataSource={jobContent?.requirements}
                     renderItem={item => (
@@ -56,9 +94,11 @@ interface JobPosting {
     company: {
         name: string;
         description: string;
+
     };
     _id: string;
     createdBy: {
+        id: string;
         name: string;
         company: {
             name: string;

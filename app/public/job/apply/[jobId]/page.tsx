@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import JobListing from './jobListing';
 import ResumeUploadForm from './resumeUploader';
 import { Row, Col } from 'antd';
+import Title from 'antd/es/typography/Title';
 
 
 async function getJobInformation(jobId: string) {
@@ -21,37 +22,48 @@ async function getJobInformation(jobId: string) {
 export default function JobApplicationPage({ params: { jobId = "" } }) {
     const [jobDetail, setJobDetails] = useState<any>(null);
     const [jobFetchError, setJobFetchError] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchJob = async () => {
+            setLoading(true)
             const { job, error } = await getJobInformation(jobId);
             if (!error) setJobDetails(job)
             else {
                 setJobFetchError(true)
             }
+            setLoading(false)
         }
         fetchJob()
     }, [jobId]);
     return (
         <>
-            <Row gutter={16}>
+            <Col lg={{
+                span: 16,
+                offset: 4
+            }}>
+                {!loading && !jobFetchError && <Title style={{ textAlign: 'center', margin: '0.5rem 0' }}>{jobDetail?.title} at {jobDetail?.createdBy.company.name}</Title>}
+            </Col>
+            <Row gutter={[8, 8]}>
                 {jobFetchError ? (
                     <Col span={24}>
                         <JobListing jobContent={jobDetail} error={jobFetchError} />
                     </Col>
                 ) : (
                     <>
+
                         <Col
                             xs={24}
-                            md={jobDetail?.status === 'expired' ? 12 : 16}
-                            lg={jobDetail?.status === 'expired' ? 12 : 16}
-                            offset={jobDetail?.status === 'expired' ? 6 : 0}
-                            style={{ maxHeight: '95vh', overflowY: 'auto' }}
+                            md={{ span: 8, offset: 4 }}
+                            lg={{ span: 8, offset: 4 }}
                         >
                             <JobListing jobContent={jobDetail} error={jobFetchError} />
                         </Col>
                         {jobDetail?.status !== 'expired' && (
-                            <Col xs={24} md={8} lg={8}>
+                            <Col xs={24}
+                                md={{ span: 8 }}
+                                lg={{ span: 8 }}
+                            >
                                 <ResumeUploadForm jobId={jobId} isLoading={!jobDetail} />
                             </Col>
                         )}

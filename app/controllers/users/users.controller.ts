@@ -1,4 +1,5 @@
 import userModel, { IUserModel } from "@/app/models/user/user.model";
+import jobsModel from "@/app/models/job/jobs.model";
 import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
 
@@ -38,6 +39,36 @@ class UserController {
         } catch (error) {
             console.error('Error retrieving user details:', error);
             throw new Error('Failed to retrieve user details');
+        }
+    }
+    static async getUserDetailsPublic(userId?: string): Promise<any> {
+        await dbConnect();
+        try {
+            let query = {};
+            if (userId) query = { _id: new mongoose.Types.ObjectId(userId) };
+
+            // Use the select method to exclude authProviderMetaData and authProviderIdentifier
+            const user: any = await userModel.findOne(query).select('-authProviderMetaData -authProviderIdentifier').lean();
+            if (!user) {
+                console.log('User not found');
+                return null;
+            }
+
+            // Fetch all jobs created by this user
+            const jobs = await jobsModel.find({ "createdBy.id": userId }).lean();
+
+            // Categorize jobs into active and expired
+            const jobDetails = {
+                active: jobs.filter(job => job.status === 'active'),
+                expired: jobs.filter(job => job.status === 'expired')
+            };
+
+            console.log('User details and job details retrieved successfully');
+            // Return both user details and job details
+            return { userDetails: user, jobDetails: jobDetails };
+        } catch (error) {
+            console.error('Error retrieving user and job details:', error);
+            throw new Error('Failed to retrieve user and job details');
         }
     }
 

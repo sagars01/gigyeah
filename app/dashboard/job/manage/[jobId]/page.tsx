@@ -32,7 +32,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
     return true;
 }
 
-export default async function Page({ params: { jobId } }: { params: { jobId: string } }, request: NextRequest) {
+export default async function Page({ params: { jobId } }: { params: { jobId: string } }) {
     const userDetails = await getSessionInformation();
     return (
         <>

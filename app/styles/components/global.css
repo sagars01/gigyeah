@@ -57,3 +57,36 @@ body {
     top: calc(50% - 30px);
     right: calc(50% - 15px);
 }
+
+.custom-list {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+.list-item {
+    padding: 16px 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.item-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-size: 16px;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.item-description {
+    font-size: 14px;
+    color: #595959;
+}
