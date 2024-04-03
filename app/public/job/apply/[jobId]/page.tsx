@@ -4,6 +4,7 @@ import JobListing from './jobListing';
 import ResumeUploadForm from './resumeUploader';
 import { Row, Col } from 'antd';
 import Title from 'antd/es/typography/Title';
+import PublicHeader from '@/app/libs/components/reusables/header.public';
 
 
 async function getJobInformation(jobId: string) {
@@ -38,11 +39,12 @@ export default function JobApplicationPage({ params: { jobId = "" } }) {
     }, [jobId]);
     return (
         <>
+            <PublicHeader />
             <Col lg={{
                 span: 16,
                 offset: 4
             }}>
-                {!loading && !jobFetchError && <Title style={{ textAlign: 'center', margin: '0.5rem 0' }}>{jobDetail?.title} at {jobDetail?.createdBy.company.name}</Title>}
+                {!loading && !jobFetchError && <Title style={{ margin: '2rem 0' }}>{jobDetail?.title} at {jobDetail?.createdBy.company.name}</Title>}
             </Col>
             <Row gutter={[8, 8]}>
                 {jobFetchError ? (

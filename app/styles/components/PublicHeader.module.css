@@ -1,0 +1,38 @@
+.header {
+    padding: 10px 50px;
+    background-color: #fff;
+    margin-bottom: 2rem;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+}
+
+.navList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+    /* Adjust the gap as needed */
+}
+
+.navItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Space between icon and text */
+}
+
+.loginButton {
+    border: none;
+    box-shadow: none;
+    /* Additional button styling as needed */
+}

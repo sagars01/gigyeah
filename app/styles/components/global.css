@@ -58,6 +58,10 @@ body {
     right: calc(50% - 15px);
 }
 
+/*
+    Custom List
+*/
+
 .custom-list {
     width: 100%;
     max-width: 600px;
