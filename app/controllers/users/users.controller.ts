@@ -22,14 +22,19 @@ type WebhookUserPayload = {
 
 class UserController {
 
-    static async getUserDetails(email?: string, userId?: string): Promise<any> {
+    static async getUserDetails(email?: string, userId?: string, lean?: boolean): Promise<any> {
         await dbConnect();
         try {
             let query = {};
             if (email) query = { ...query, email: email };
             if (userId) query = { ...query, _id: new mongoose.Types.ObjectId(userId) };
 
-            const user = await userModel.findOne(query);
+            let user;
+            if (lean) {
+                user = await userModel.findOne(query).lean();
+            } else {
+                user = await userModel.findOne(query);
+            }
             if (!user) {
                 console.log('User not found');
                 return null;

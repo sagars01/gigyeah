@@ -2,8 +2,12 @@
 
 import React, { useState } from 'react';
 import {
+    BookOutlined,
     DesktopOutlined,
+    DollarCircleOutlined,
     FileOutlined,
+    KeyOutlined,
+    MoneyCollectFilled,
     PieChartOutlined,
     TeamOutlined,
     UserOutlined,
@@ -11,6 +15,8 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
+import { SignOutButton, useClerk } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -39,16 +45,58 @@ const DashboardLink = () => {
     )
 }
 
+const ProfileLink = () => {
+    return (
+        <>
+            <BookOutlined style={{ paddingRight: '0.5rem' }} />
+            <Link href={"/user/profile"} />
+        </>
+    )
+}
+
+const SubscriptionLink = () => {
+    return (
+        <>
+            <DollarCircleOutlined style={{ paddingRight: '0.5rem' }} />
+            <Link href={"/user/profile"} />
+        </>
+    )
+}
+
+const UsageLink = () => {
+    return (
+        <>
+            <MoneyCollectFilled style={{ paddingRight: '0.5rem' }} />
+            <Link href={"/user/profile"} />
+        </>
+    )
+}
+
+
+const LogoutLink = () => {
+
+    return (
+        < >
+
+
+            <div>
+                <KeyOutlined style={{ paddingRight: '0.5rem' }} />
+            </div>
+
+        </>
+    )
+}
+
+
 const items: MenuItem[] = [
     getItem('Dashboard', '1', <DashboardLink />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
+    getItem('Jobs', '2', <DesktopOutlined />),
+    getItem('User', '3', <UserOutlined />, [
+        getItem('Profile', '3.1', <ProfileLink />),
+        getItem('Usage', '3.2', <UsageLink />),
+        getItem('Subscription', '3.3', <SubscriptionLink />),
     ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('Logout', '4', <LogoutLink />)
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { activeIndex: 1 }, content, header }) => {
@@ -57,15 +105,20 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const onMenuClick = () => {
+    const { signOut } = useClerk();
+    const router = useRouter()
 
+    const onMenuClick = (item: any) => {
+        if (item.key === '4') {
+            signOut(() => router.push("/"))
+        }
     }
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="demo-logo-vertical" />
-                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={onMenuClick} />
+                <Menu theme="dark" defaultSelectedKeys={[`${activeIndex || 1}`]} mode="inline" items={items} onClick={onMenuClick} />
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, background: colorBgContainer, position: 'relative', marginBottom: '1rem' }} >
@@ -93,7 +146,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
 
 interface LayoutProps {
     menu?: {
-        activeIndex: number;
+        activeIndex: string;
     },
     content: React.ReactNode,
     header?: React.ReactNode,
