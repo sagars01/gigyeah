@@ -1,4 +1,21 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const withAntdLess = require('next-plugin-antd-less');
+const nextConfig = {
+    compiler: {
 
-module.exports = nextConfig
+    },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
+    images: {
+        domains: ['img.clerk.com'],
+    },
+    webpack: (config) => {
+        config.resolve.alias.canvas = false;
+        return config
+    }
+}
+
+module.exports = withAntdLess(nextConfig)
