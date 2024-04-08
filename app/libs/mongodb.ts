@@ -29,7 +29,9 @@ async function dbConnect(): Promise<typeof mongoose> {
     }
 
     if (!cached.promise) {
-        const opts: mongoose.ConnectOptions = {};
+        const opts: mongoose.ConnectOptions = {
+            dbName: 'main'
+        };
         logger.log(LogLevel.INFO, "Mongoose Connection initiated..")
         cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
             logger.log(LogLevel.INFO, "Mongoose Connection Successful")
