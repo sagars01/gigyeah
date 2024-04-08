@@ -44,7 +44,8 @@
     "react-pdf": "^7.7.1",
     "svix": "^1.17.0",
     "validator": "^13.11.0",
-    "webpack": "^5.0.0"
+    "webpack": "^5.0.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@types/node": "^20",

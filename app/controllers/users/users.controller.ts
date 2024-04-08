@@ -2,6 +2,7 @@ import userModel, { IUserModel } from "@/app/models/user/user.model";
 import jobsModel from "@/app/models/job/jobs.model";
 import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
+import { ErrorHandler, handleError } from "@/app/utils/logging/errorHandler";
 
 type WebhookUserPayload = {
     id: string;
@@ -53,16 +54,16 @@ class UserController {
             if (userId) query = { _id: new mongoose.Types.ObjectId(userId) };
 
             const user: any = await userModel.findOne(query).select('-authProviderIdentifier').lean();
-            const userImageUrl = user.authProviderMetaData.image_url;
-            delete user.authProviderMetaData;
+            if (!user) {
+                throw new ErrorHandler(404, "User not found", user, "Not Found");
+            }
+            const userImageUrl = user?.authProviderMetaData.image_url;
+            delete user?.authProviderMetaData;
             const leanUpdatedUser = {
                 ...user,
                 image_url: userImageUrl
             }
-            if (!user) {
-                console.log('User not found');
-                return null;
-            }
+
 
             // Fetch all jobs created by this user
             const jobs = await jobsModel.find({ "createdBy.id": userId }).lean();
@@ -74,9 +75,8 @@ class UserController {
 
             console.log('User details and job details retrieved successfully');
             return { userDetails: leanUpdatedUser, jobDetails: jobDetails };
-        } catch (error) {
-            console.error('Error retrieving user and job details:', error);
-            throw new Error('Failed to retrieve user and job details');
+        } catch (error: any) {
+            throw handleError(error)
         }
     }
 
