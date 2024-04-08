@@ -1,7 +1,9 @@
 
 
 import { UserContext, useUser } from "@/app/libs/contexts/UserProfileContext";
-import { Typography, Card, Avatar } from "antd";
+import { LinkOutlined } from "@ant-design/icons";
+import { Typography, Card, Avatar, Button } from "antd";
+import Link from "next/link";
 import { useContext, useEffect } from "react";
 
 
@@ -15,7 +17,13 @@ const ProfileVisualizer: React.FC = () => {
     }, [userData])
 
     return (
-        <Card loading={loading}>
+        <Card loading={loading} extra={
+            <>
+                <Link href={`/public/profile/${userData.id}`} target="_blank">
+                    <Button type="primary" icon={<LinkOutlined />}>View Public Profile</Button>
+                </Link>
+            </>
+        }>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Avatar src={userData.image_url} size={128}></Avatar>
                 <Title level={3}>{userData.name}</Title>

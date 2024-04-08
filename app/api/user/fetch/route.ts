@@ -5,10 +5,10 @@ export async function GET(request: NextRequest) {
     try {
         const userSessionInformation = await getSessionInformation(request, true);
         const { profileImg } = userSessionInformation;
-        const { name, title, email, company, socialMedia, intro } = userSessionInformation.customerCache;
+        const { name, title, email, company, socialMedia, intro, _id } = userSessionInformation.customerCache;
 
         return NextResponse.json({
-
+            id: _id,
             name,
             title,
             email,

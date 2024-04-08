@@ -52,8 +52,13 @@ class UserController {
             let query = {};
             if (userId) query = { _id: new mongoose.Types.ObjectId(userId) };
 
-            // Use the select method to exclude authProviderMetaData and authProviderIdentifier
-            const user: any = await userModel.findOne(query).select('-authProviderMetaData -authProviderIdentifier').lean();
+            const user: any = await userModel.findOne(query).select('-authProviderIdentifier').lean();
+            const userImageUrl = user.authProviderMetaData.image_url;
+            delete user.authProviderMetaData;
+            const leanUpdatedUser = {
+                ...user,
+                image_url: userImageUrl
+            }
             if (!user) {
                 console.log('User not found');
                 return null;
@@ -62,15 +67,13 @@ class UserController {
             // Fetch all jobs created by this user
             const jobs = await jobsModel.find({ "createdBy.id": userId }).lean();
 
-            // Categorize jobs into active and expired
             const jobDetails = {
                 active: jobs.filter(job => job.status === 'active'),
                 expired: jobs.filter(job => job.status === 'expired')
             };
 
             console.log('User details and job details retrieved successfully');
-            // Return both user details and job details
-            return { userDetails: user, jobDetails: jobDetails };
+            return { userDetails: leanUpdatedUser, jobDetails: jobDetails };
         } catch (error) {
             console.error('Error retrieving user and job details:', error);
             throw new Error('Failed to retrieve user and job details');

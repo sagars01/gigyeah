@@ -9,6 +9,9 @@ const nextConfig = {
             fullUrl: true,
         },
     },
+    images: {
+        domains: ['img.clerk.com'],
+    },
     webpack: (config) => {
         config.resolve.alias.canvas = false;
         return config

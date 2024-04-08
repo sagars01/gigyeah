@@ -10,6 +10,7 @@ interface UserContextType {
 }
 
 let initialUserData: IUserModel = {
+    id: '',
     name: '',
     title: '',
     email: '',
@@ -67,6 +68,7 @@ interface ISocialMedia {
 }
 
 export interface IUserModel {
+    id: string;
     name: string;
     title: string;
     email: string;

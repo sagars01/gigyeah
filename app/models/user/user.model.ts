@@ -78,6 +78,11 @@ const UserSchema = new Schema<IUserModel>({
         default: Date.now,
     },
     authProviderMetaData: mongoose.Schema.Types.Mixed
-});
-
+}
+);
+UserSchema.index({
+    'authProviderMetaData.clerkId': 1
+}, {
+    unique: false
+})
 export default mongoose.models.User || mongoose.model<IUserModel>('User', UserSchema);
