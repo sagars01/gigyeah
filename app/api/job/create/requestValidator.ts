@@ -13,7 +13,7 @@ const jobSchema = Joi.object({
         id: Joi.string().required()
     },
     title: Joi.string().required(),
-    description: Joi.string().required().max(300),
+    description: Joi.string().required().max(1000),
     requirements: Joi.array().items(
         Joi.string().required()
     ).max(3),

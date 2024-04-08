@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
         const { error, value: jobDetailsValue } = jobSchema.validate(jobData);
 
         if (error) {
+            console.error(error);
             return NextResponse.json({ error: error.details[0].message }, { status: 419, statusText: "Validation Failed!" });
         }
 

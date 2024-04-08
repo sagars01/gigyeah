@@ -13,7 +13,7 @@ const CreatedBySchema = new Schema<CreatedByType>({
 const JobSchema = new Schema<IJob>({
     createdBy: CreatedBySchema,
     title: { type: String, required: true },
-    description: { type: String, required: true, maxlength: 300 }, // Max 300 characters
+    description: { type: String, required: true, maxlength: 1000 }, // Max 300 characters
     requirements: {
         type: [{ type: String, required: true }],
         validate: [arrayLimit, 'Requirements exceeds the limit of 3'] // Custom validator
