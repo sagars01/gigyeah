@@ -6,13 +6,14 @@ import { ConfigProvider, theme } from 'antd';
 import './styles/components/global.css';
 import { WindowDimensionsProvider } from '@/app/utils/ui/getWindowDims.utils';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-
+import { Analytics } from '@vercel/analytics/react'
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
     <body>
+      <Analytics />
       <ClerkProvider>
         <ClerkLoading>
           <div className="loader"></div>
