@@ -34,10 +34,6 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
     const [applicantData, setApplicantData] = useState<Applicant | null>(null);
     const [selectedKey, setSelectedKey] = useState('all');
 
-    useEffect(() => {
-        fetchApplicants();
-    }, [jobId]);
-
     const fetchApplicants = async () => {
         setLoading(true);
         try {
@@ -49,6 +45,11 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
             message.error('Failed to fetch applicants');
         }
     };
+    useEffect(() => {
+        fetchApplicants();
+    }, [jobId, fetchApplicants]);
+
+
 
     const updateApplicationStatus = async (applicantId: string, status: 'shortlisted' | 'rejected') => {
         const updateResponse = await apiService.put(`/application/update`, {

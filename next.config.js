@@ -10,7 +10,7 @@ const nextConfig = {
         },
     },
     images: {
-        domains: ['img.clerk.com'],
+        domains: ['img.clerk.com']
     },
     webpack: (config) => {
         config.resolve.alias.canvas = false;

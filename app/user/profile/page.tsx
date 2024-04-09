@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Col, Row } from 'antd';
 import UserProfileEditor from './components/UserProfileEditor';
 import DashboardLayout from '@/app/libs/components/reusables/dashboard.layout';

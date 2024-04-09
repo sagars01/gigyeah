@@ -3,6 +3,8 @@ import jobsModel from "@/app/models/job/jobs.model";
 import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
 import { ErrorHandler, handleError } from "@/app/utils/logging/errorHandler";
+import { log } from "console";
+import logger, { LogLevel } from "@/app/utils/logging/logger";
 
 type WebhookUserPayload = {
     id: string;
@@ -37,14 +39,13 @@ class UserController {
                 user = await userModel.findOne(query);
             }
             if (!user) {
-                console.log('User not found');
-                return null;
+                throw new ErrorHandler(404, "User not found", user, "Not Found");
             }
-            console.log('User details retrieved successfully');
+            logger.log(LogLevel.INFO, 'User details retrieved successfully');
             return user;
-        } catch (error) {
-            console.error('Error retrieving user details:', error);
-            throw new Error('Failed to retrieve user details');
+        } catch (error: any) {
+            logger.log(LogLevel.ERROR, 'GetUserDetails: Failed to get user details : ' + error);
+            throw handleError(error)
         }
     }
     static async getUserDetailsPublic(userId?: string): Promise<any> {

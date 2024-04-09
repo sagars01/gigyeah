@@ -11,7 +11,7 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
         margin: '0.5rem 0',
         display: 'block',
     };
-    const publicProfile = URL.profile.public;
+    const publicProfile = URL.user.public;
 
     const ListingCard = () => (
         <>
@@ -41,12 +41,12 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                 </div>
 
                 <div style={spaceStyle}>
-                    <Space>
-                        <Text strong>Job Description:</Text>
-                        <div>
-                            <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
-                        </div>
-                    </Space>
+
+                    <Text strong>Job Description:</Text>
+                    <div>
+                        <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
+                    </div>
+
                 </div>
 
                 <div style={spaceStyle}>

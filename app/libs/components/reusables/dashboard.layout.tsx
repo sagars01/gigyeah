@@ -15,8 +15,9 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
-import { SignOutButton, useClerk } from '@clerk/nextjs';
+import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import URL from '@/app/constants/url/url';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -40,7 +41,7 @@ const DashboardLink = () => {
     return (
         <div>
             <PieChartOutlined style={{ paddingRight: '0.5rem' }} />
-            <Link href={"/dashboard"} />
+            <Link href={URL.dashboard.root} />
         </div>
     )
 }
@@ -49,7 +50,7 @@ const ProfileLink = () => {
     return (
         <>
             <BookOutlined style={{ paddingRight: '0.5rem' }} />
-            <Link href={"/user/profile"} />
+            <Link href={URL.user.profile} />
         </>
     )
 }
@@ -58,7 +59,7 @@ const SubscriptionLink = () => {
     return (
         <>
             <DollarCircleOutlined style={{ paddingRight: '0.5rem' }} />
-            <Link href={"/user/profile"} />
+            <Link href={URL.user.subscription} />
         </>
     )
 }
@@ -67,7 +68,7 @@ const UsageLink = () => {
     return (
         <>
             <MoneyCollectFilled style={{ paddingRight: '0.5rem' }} />
-            <Link href={"/user/profile"} />
+            <Link href={URL.user.usage} />
         </>
     )
 }
