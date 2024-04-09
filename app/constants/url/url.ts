@@ -1,13 +1,17 @@
+const DOMAIN = process.env.DOMAIN || 'https:///www.withjenni.com';
+
 const URL = {
     dashboard: {
-        root: '/dashboard',
-        viewJob: 'public/job/apply',
-        manageApplication: 'dashboard/job/manage'
+        root: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/dashboard` : '/dashboard',
+        viewJob: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/public/job/apply` : '/public/job/apply',
+        manageApplication: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/dashboard/job/manage` : '/dashboard/job/manage',
     },
-    profile: {
-        public: '/public/profile',
-        userProfile: '/user/profile'
-    }
-}
+    user: {
+        public: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/public/profile` : '/public/profile',
+        profile: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/profile` : '/user/profile',
+        subscription: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/subscription` : '/user/subscription',
+        usage: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/usage` : '/user/usage',
+    },
+};
 
 export default URL;

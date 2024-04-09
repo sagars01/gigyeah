@@ -1,5 +1,6 @@
 
 
+import URL from "@/app/constants/url/url";
 import { UserContext, useUser } from "@/app/libs/contexts/UserProfileContext";
 import { LinkOutlined } from "@ant-design/icons";
 import { Typography, Card, Avatar, Button } from "antd";
@@ -19,7 +20,7 @@ const ProfileVisualizer: React.FC = () => {
     return (
         <Card loading={loading} extra={
             <>
-                <Link href={`/public/profile/${userData.id}`} target="_blank">
+                <Link href={`${URL.user.public}/${userData.id}`} target="_blank">
                     <Button type="primary" icon={<LinkOutlined />}>View Public Profile</Button>
                 </Link>
             </>

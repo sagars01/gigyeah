@@ -11,7 +11,7 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
         margin: '0.5rem 0',
         display: 'block',
     };
-    const publicProfile = URL.profile.public;
+    const publicProfile = URL.user.public;
 
     const ListingCard = () => (
         <>
