@@ -4,6 +4,7 @@
 import { Button, Row, Col } from 'antd';
 import { HomeOutlined, DollarOutlined, PhoneOutlined, LoginOutlined } from '@ant-design/icons';
 import styles from '../../../styles/components/PublicHeader.module.css'; // Import your CSS module for styling
+import Image from 'next/image';
 
 
 interface IHeaderProps {
@@ -18,7 +19,7 @@ const PublicHeader: React.FC<IHeaderProps> = ({ hideOption = true }) => {
         <div className={styles.header}>
             <Row justify="space-between" align="middle" className={styles.row}>
                 <Col>
-                    <img src="/icon-large.png" alt="Company Logo" className={styles.logo} />
+                    <Image src="/icon-large.png" alt="Company Logo" className={styles.logo} />
                 </Col>
                 <Col >
                     {

@@ -44,7 +44,6 @@ export async function POST(req: NextRequest) {
                 await UserController.handleUserUpdated(verifiedPayload.data);
                 return NextResponse.json({ message: "User updated successfully" }, { status: 200 });
             case "user.deleted":
-                // Assuming the payload contains an 'id' for deletion
                 await UserController.handleUserDeleted(verifiedPayload.data.id);
                 return NextResponse.json({ message: "User deleted successfully" }, { status: 200 });
             default:
