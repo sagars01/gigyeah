@@ -19,7 +19,7 @@ const PublicHeader: React.FC<IHeaderProps> = ({ hideOption = true }) => {
         <div className={styles.header}>
             <Row justify="space-between" align="middle" className={styles.row}>
                 <Col>
-                    <Image src="/icon-large.png" alt="Company Logo" className={styles.logo} />
+                    <Image width="150" height="120" src="/icon-large.png" alt="Company Logo" className={styles.logo} />
                 </Col>
                 <Col >
                     {

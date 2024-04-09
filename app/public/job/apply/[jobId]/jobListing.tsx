@@ -41,12 +41,12 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                 </div>
 
                 <div style={spaceStyle}>
-                    <Space>
-                        <Text strong>Job Description:</Text>
-                        <div>
-                            <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
-                        </div>
-                    </Space>
+
+                    <Text strong>Job Description:</Text>
+                    <div>
+                        <div dangerouslySetInnerHTML={{ __html: jobContent?.description || '' }}></div>
+                    </div>
+
                 </div>
 
                 <div style={spaceStyle}>
