@@ -25,12 +25,13 @@ export interface ISessionInformation {
 
 export const getSessionInformation = async (request?: NextRequest, lean?: boolean): Promise<ISessionInformation | any> => {
 
-    const authSessionData: any = request ? getAuth(request) : auth();
-
-    const { sessionClaims: { email, profileImg, userId } } = authSessionData;
-    if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401, statusText: "Unauthorized" });
 
     try {
+        const authSessionData: any = request ? getAuth(request) : auth();
+
+        const { sessionClaims: { email, profileImg, userId } } = authSessionData;
+        if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401, statusText: "Unauthorized" });
+
         const userProfileData = await UserController.getUserDetails(email, undefined, lean);
         const { id, company, name } = userProfileData;
         return {

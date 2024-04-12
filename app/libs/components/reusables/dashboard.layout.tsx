@@ -5,7 +5,6 @@ import {
     BookOutlined,
     DesktopOutlined,
     DollarCircleOutlined,
-    FileOutlined,
     KeyOutlined,
     MoneyCollectFilled,
     PieChartOutlined,
@@ -52,9 +51,8 @@ const redirect = (url: string) => {
 
 const ProfileLink = () => {
     return (
-        <div onClick={() => redirect(URL.user.profile)}>
+        <div>
             <BookOutlined style={{ paddingRight: '0.5rem' }} />
-            {/* <Link href={URL.user.profile} /> */}
         </div>
     )
 }
@@ -116,6 +114,10 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
     const onMenuClick = (item: any) => {
         if (item.key === '4') {
             signOut(() => router.push("/"))
+        }
+
+        if (item.key === '3.1') {
+            router.push("/user/profile")
         }
     }
 
