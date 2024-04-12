@@ -36,34 +36,36 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
     const [openEditDrawer, setOpenEditDrawer] = useState(false)
     const [jobToEdit, setJobToEdit] = useState<Job | any>(null);
 
-    const fetchJobs = async () => {
+    const fetchJobs = useCallback(async () => {
         try {
-            setLoading(true)
+            setLoading(true);
             const url = jobId ? `/job/fetch?jobId=${jobId}` : `/job/fetch`;
             const response: any = await apiService.get<ApiResponse<JobResponse>>(url);
             const { jobs: job } = response;
-            let updatedJob: any = []
+            let updatedJob: any = [];
             if (Array.isArray(job)) {
-                updatedJob = [...jobs, ...job]
+                updatedJob = [...jobs, ...job];
             } else {
-                updatedJob = [...jobs, job]
+                updatedJob = [...jobs, job];
             }
             setJobs(updatedJob);
         } catch (error) {
             message.error('Failed to fetch jobs');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    };
+    }, [jobId]);
 
     useEffect(() => {
+
         fetchJobs();
-    }, [shouldFetchJobs, jobId]);
+
+    }, [fetchJobs, shouldFetchJobs]);
 
     const [jobUpdateLoad, setJobUpdate] = useState(false)
     const [jobUpdateList, setJobUpdateList] = useState([''])
 
-    const handleJobExpiry = async (jobId: string, status: 'active' | 'expired') => {
+    const handleJobExpiry = useCallback(async (jobId: string, status: 'active' | 'expired') => {
         try {
             setJobUpdate(true)
             await apiService.put(
@@ -82,7 +84,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
             setJobUpdate(false)
         }
 
-    }
+    }, [jobUpdateList])
 
     const handleMenuClick = useCallback((jobId: string, action: string, jobDetails?: Job) => {
         console.log(`Action: ${action} on jobId: ${jobId}`);
@@ -95,7 +97,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
             handleJobExpiry(jobId, 'expired')
         }
 
-    }, []);
+    }, [handleJobExpiry]);
 
     const jobActionsMenu = (jobId: string, jobDetail?: Job) => (
         <Menu onClick={({ key }) => handleMenuClick(jobId, key, jobDetail)}>

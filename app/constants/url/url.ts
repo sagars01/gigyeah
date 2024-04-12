@@ -1,16 +1,21 @@
 const DOMAIN = process.env.DOMAIN || 'www.withjessi.com';
 
+function createURL(path: string) {
+
+    return path;
+}
+
 const URL = {
     dashboard: {
-        root: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/dashboard` : '/dashboard',
-        viewJob: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/public/job/apply` : '/public/job/apply',
-        manageApplication: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/dashboard/job/manage` : '/dashboard/job/manage',
+        root: createURL('/dashboard'),
+        viewJob: createURL('/public/job/apply'),
+        manageApplication: createURL('/dashboard/job/manage'),
     },
     user: {
-        public: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/public/profile` : '/public/profile',
-        profile: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/profile` : '/user/profile',
-        subscription: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/subscription` : '/user/subscription',
-        usage: process.env.NODE_ENV === 'production' ? `https://${DOMAIN}/user/usage` : '/user/usage',
+        public: createURL('/public/profile'),
+        profile: createURL('/user/profile'),
+        subscription: createURL('/user/subscription'),
+        usage: createURL('/user/usage'),
     },
 };
 

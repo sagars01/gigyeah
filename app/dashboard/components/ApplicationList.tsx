@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Button, Space, Spin, message, Menu, Col, Row, Tooltip, Pagination, Empty, Collapse, Tag, Typography } from 'antd';
 import { CheckCircleOutlined, CheckSquareOutlined, CloseCircleOutlined, ExpandAltOutlined, ExpandOutlined, EyeOutlined, LoadingOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
@@ -34,7 +34,7 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
     const [applicantData, setApplicantData] = useState<Applicant | null>(null);
     const [selectedKey, setSelectedKey] = useState('all');
 
-    const fetchApplicants = async () => {
+    const fetchApplicants = useCallback(async () => {
         setLoading(true);
         try {
             const response: any = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobId}`);
@@ -44,7 +44,9 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
             setLoading(false);
             message.error('Failed to fetch applicants');
         }
-    };
+    }, [jobId]);
+
+
     useEffect(() => {
         fetchApplicants();
     }, [jobId, fetchApplicants]);
