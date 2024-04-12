@@ -14,7 +14,7 @@ const ProfileVisualizer: React.FC = () => {
     const { userData, loading } = useContext(UserContext);
 
     useEffect(() => {
-
+        console.log(userData)
     }, [userData])
 
     return (

@@ -1,23 +1,22 @@
 "use client"
-import React, { useContext, useState } from 'react';
-import { Avatar, Button, Form, Input, Upload } from 'antd';
-import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
-import Card from 'antd/es/card/Card';
-import { EditOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useContext } from 'react';
+import { Button, Form, Input, Upload, Card } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 import Link from 'next/link';
+import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
 
 const UserProfileEditor: React.FC = () => {
     const [form] = Form.useForm();
     const { userData, setUserData, loading } = useContext(UserContext);
 
-    const onFormValuesChange = (changedValues: any, allValues: IUserModel) => {
+    const onFormValuesChange = (_: any, allValues: IUserModel) => {
         setUserData(allValues);
     };
 
     React.useEffect(() => {
         form.setFieldsValue(userData);
     }, [userData, form]);
-
 
     return (
         <Card loading={loading}>
@@ -29,11 +28,11 @@ const UserProfileEditor: React.FC = () => {
                 <Form.Item
                     name="image_url"
                 >
-                    <Avatar size={128} src={userData.image_url} />
-                    <Link href={process.env.NEXT_PUBLIC_USER_PROFILE as string} target='_blank'>
-                        <Button type='primary' style={{ position: 'absolute', bottom: 0, left: '20%' }} size='small' icon={
-                            <EditOutlined />
-                        }></Button>
+                    <div style={{ marginBottom: '10px' }}>
+                        <Image src={userData.image_url || '/fallback.png'} alt="Profile Image" width={128} height={128} style={{ borderRadius: '50%' }} />
+                    </div>
+                    <Link href="/profile/edit" passHref>
+                        <Button icon={<EditOutlined />} type="primary">Edit Profile</Button>
                     </Link>
                 </Form.Item>
                 <Form.Item
