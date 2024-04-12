@@ -17,7 +17,7 @@ const EditProfilePage = () => {
                     <UserProfileEditor />
                 </Col>
                 <Col span={12}>
-                    {/* <ProfileVisualizer /> */}
+                    <ProfileVisualizer />
                 </Col>
             </Row>
         )
