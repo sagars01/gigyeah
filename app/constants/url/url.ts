@@ -1,4 +1,4 @@
-const DOMAIN = process.env.DOMAIN || 'https:///www.withjenni.com';
+const DOMAIN = process.env.DOMAIN || 'www.withjessi.com';
 
 const URL = {
     dashboard: {
