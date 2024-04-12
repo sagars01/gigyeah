@@ -14,10 +14,10 @@ const EditProfilePage = () => {
         return (
             <Row gutter={16}>
                 <Col span={12}>
-                    <UserProfileEditor />
+                    {/* <UserProfileEditor /> */}
                 </Col>
                 <Col span={12}>
-                    <ProfileVisualizer />
+                    {/* <ProfileVisualizer /> */}
                 </Col>
             </Row>
         )
