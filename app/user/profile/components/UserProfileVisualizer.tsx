@@ -1,7 +1,7 @@
 
 
 import URL from "@/app/constants/url/url";
-import { UserContext, useUser } from "@/app/libs/contexts/UserProfileContext";
+import { UserContext, useUser } from "@/app/user/profile/contexts/UserProfileContext";
 import { LinkOutlined } from "@ant-design/icons";
 import { Typography, Card, Avatar, Button } from "antd";
 import Link from "next/link";

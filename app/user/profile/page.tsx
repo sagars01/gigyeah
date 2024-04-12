@@ -3,7 +3,7 @@ import React from 'react';
 import { Col, Row } from 'antd';
 import UserProfileEditor from './components/UserProfileEditor';
 import DashboardLayout from '@/app/libs/components/reusables/dashboard.layout';
-import { UserProvider } from '@/app/libs/contexts/UserProfileContext';
+import { UserProvider } from '@/app/user/profile/contexts/UserProfileContext';
 import ProfileVisualizer from './components/UserProfileVisualizer';
 
 

@@ -46,12 +46,16 @@ const DashboardLink = () => {
     )
 }
 
+const redirect = (url: string) => {
+    window.location.href = url;
+}
+
 const ProfileLink = () => {
     return (
-        <>
+        <div onClick={() => redirect(URL.user.profile)}>
             <BookOutlined style={{ paddingRight: '0.5rem' }} />
-            <Link href={URL.user.profile} />
-        </>
+            {/* <Link href={URL.user.profile} /> */}
+        </div>
     )
 }
 

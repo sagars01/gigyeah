@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Avatar, Button, Form, Input, Upload } from 'antd';
-import { IUserModel, UserContext } from '@/app/libs/contexts/UserProfileContext';
+import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
 import Card from 'antd/es/card/Card';
 import { EditOutlined, UploadOutlined } from '@ant-design/icons';
 import Link from 'next/link';
