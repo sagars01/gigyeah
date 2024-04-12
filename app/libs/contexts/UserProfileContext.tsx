@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ApiResponse, apiService } from '../request/apiservice';
-import { currentUser } from '@clerk/nextjs';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { apiService } from '../request/apiservice';
+
 
 interface UserContextType {
     userData: IUserModel;
@@ -38,7 +38,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(false);
 
 
-    const fetchUserData = async () => {
+    const fetchUserData = useCallback(async () => {
         setLoading(true);
         try {
             const response = await apiService.get<IUserModel>('/user/fetch');
@@ -48,11 +48,11 @@ export const UserProvider: React.FC<any> = ({ children }) => {
             console.error('Failed to fetch user data:', error);
             setLoading(false);
         }
-    };
+    }, [])
 
     useEffect(() => {
         fetchUserData();
-    }, []);
+    }, [fetchUserData]);
 
     return (
         <UserContext.Provider value={{ userData, setUserData, loading, setLoading }}>
