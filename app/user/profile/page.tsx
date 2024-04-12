@@ -25,15 +25,15 @@ const EditProfilePage = () => {
 
 
     return (
-        <UserProvider>
-            <DashboardLayout menu={{
-                activeIndex: '3.1'
-            }} content={
-                <MainContent />
-            }>
+        // <UserProvider>
+        <DashboardLayout menu={{
+            activeIndex: '3.1'
+        }} content={
+            <MainContent />
+        }>
 
-            </DashboardLayout>
-        </UserProvider>
+        </DashboardLayout>
+        // </UserProvider>
     );
 };
 
