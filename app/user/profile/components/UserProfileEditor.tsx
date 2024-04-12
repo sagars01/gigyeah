@@ -1,3 +1,4 @@
+"use client"
 import React, { useContext, useState } from 'react';
 import { Avatar, Button, Form, Input, Upload } from 'antd';
 import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
