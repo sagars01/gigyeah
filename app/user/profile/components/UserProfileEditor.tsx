@@ -1,17 +1,34 @@
 "use client"
-import React, { useContext } from 'react';
-import { Button, Form, Input, Upload, Card } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import Image from 'next/image';
+import React, { useContext, useState } from 'react';
+import { Button, Form, Input, Card, Avatar, Col, Row, message } from 'antd';
+import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
+import URL from '@/app/constants/url/url';
+import { apiService } from '@/app/libs/request/apiservice';
 
 const UserProfileEditor: React.FC = () => {
     const [form] = Form.useForm();
     const { userData, setUserData, loading } = useContext(UserContext);
+    const [submitting, setSubmitting] = useState(false);
 
     const onFormValuesChange = (_: any, allValues: IUserModel) => {
         setUserData(allValues);
+    };
+
+    const onFormSubmit = async () => {
+        try {
+            setSubmitting(true);
+            const values = await form.validateFields();
+            console.log('Submitting form data:', values);
+            await apiService.post('/user/update', values)
+            message.success('Profile updated successfully!');
+        } catch (errorInfo) {
+            console.error('Failed to submit form:', errorInfo);
+            message.error('Failed to update profile. Please check your inputs.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     React.useEffect(() => {
@@ -23,18 +40,28 @@ const UserProfileEditor: React.FC = () => {
             <Form
                 form={form}
                 layout="vertical"
-                onValuesChange={onFormValuesChange} // Attach the onValuesChange handler
+                onValuesChange={onFormValuesChange}
+                onFinish={onFormSubmit}
             >
-                <Form.Item
-                    name="image_url"
-                >
-                    <div style={{ marginBottom: '10px' }}>
-                        <Image src={userData.image_url || '/fallback.png'} alt="Profile Image" width={128} height={128} style={{ borderRadius: '50%' }} />
-                    </div>
-                    <Link href="/profile/edit" passHref>
-                        <Button icon={<EditOutlined />} type="primary">Edit Profile</Button>
-                    </Link>
-                </Form.Item>
+                <Row gutter={[16, 16]} style={{ marginBottom: '1rem' }}>
+                    <Col span={12}>
+                        <Avatar src={userData.image_url || '/fallback.png'} alt="Profile Image" size={130} />
+                        <Link href={URL.user.profile} passHref style={{ position: 'absolute', bottom: 0, left: 100 }}>
+                            <Button icon={<EditOutlined />} type="primary"></Button>
+                        </Link>
+                    </Col>
+                    <Col span={12}>
+                        <Button
+                            icon={<SaveOutlined />}
+                            style={{ float: 'right' }}
+                            type="primary"
+                            htmlType="submit"
+                            loading={submitting}
+                        >
+                            Save Changes
+                        </Button>
+                    </Col>
+                </Row>
                 <Form.Item
                     name="name"
                     label="Name"
@@ -49,7 +76,7 @@ const UserProfileEditor: React.FC = () => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                     name="email"
                     label="Email"
                     rules={[
@@ -57,8 +84,8 @@ const UserProfileEditor: React.FC = () => {
                         { type: 'email', message: 'Please enter a valid email!' }
                     ]}
                 >
-                    <Input />
-                </Form.Item>
+                    <Input disabled />
+                </Form.Item> */}
                 <Form.Item
                     name="intro"
                     label="Introduction"
@@ -76,11 +103,6 @@ const UserProfileEditor: React.FC = () => {
                     label="Company Description"
                 >
                     <Input.TextArea rows={4} />
-                </Form.Item>
-                <Form.Item>
-                    <Button style={{ float: 'right' }} type="primary" htmlType="submit">
-                        Save Changes
-                    </Button>
                 </Form.Item>
             </Form>
         </Card>

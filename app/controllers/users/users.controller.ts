@@ -3,7 +3,6 @@ import jobsModel from "@/app/models/job/jobs.model";
 import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
 import { ErrorHandler, handleError } from "@/app/utils/logging/errorHandler";
-import { log } from "console";
 import logger, { LogLevel } from "@/app/utils/logging/logger";
 
 type WebhookUserPayload = {
@@ -48,6 +47,7 @@ class UserController {
             throw handleError(error)
         }
     }
+
     static async getUserDetailsPublic(userId?: string): Promise<any> {
         await dbConnect();
         try {
@@ -74,13 +74,13 @@ class UserController {
                 expired: jobs.filter(job => job.status === 'expired')
             };
 
-            console.log('User details and job details retrieved successfully');
+            logger.log(LogLevel.INFO, 'User details and job details retrieved successfully');
             return { userDetails: leanUpdatedUser, jobDetails: jobDetails };
         } catch (error: any) {
+            logger.log(LogLevel.ERROR, 'GetUserDetails: Failed to get user details : ' + error);
             throw handleError(error)
         }
     }
-
 
     static async handleUserCreated(payload: WebhookUserPayload): Promise<void> {
         await dbConnect();
@@ -101,6 +101,37 @@ class UserController {
         }
     }
 
+    /**
+     * 
+     * @param id 
+     * @param userProfileData 
+     * @description handles updating the user profile that is done from the user profile UI
+     * @returns 
+     */
+    static async handleUserProfileUpdateFromUI(id: string, userProfileData: IUserModel) {
+        await dbConnect();
+        try {
+
+            const updatedJob = await userModel.findOneAndUpdate(
+                { _id: id },
+                { $set: userProfileData },
+                { new: true, runValidators: true }
+            );
+
+            logger.log(LogLevel.INFO, 'handleUserProfileUpdateFromUI: User details and job details updated successfully');
+            return updatedJob;
+        } catch (error: any) {
+            logger.log(LogLevel.ERROR, 'handleUserProfileUpdateFromUI: User Details update failed');
+            handleError(error)
+        }
+    }
+
+    /**
+     * 
+     * @param payload sent by Clerk via Webhook
+     * @returns updatedModel
+     */
+
     static async handleUserUpdated(payload: WebhookUserPayload): Promise<IUserModel> {
         await dbConnect();
         try {
@@ -110,10 +141,10 @@ class UserController {
                 authProviderMetaData: payload,
             };
             const updateModel = await userModel.findOneAndUpdate({ authProviderIdentifier: payload.id }, updateDoc, { new: true });
-            console.log('User updated successfully');
+            logger.log(LogLevel.INFO, 'handleUserUpdate : User updated successfully');
             return updateModel;
         } catch (error) {
-            console.error('Error updating user:', error);
+            logger.log(LogLevel.ERROR, 'handleUserUpdate: Failed to update user details : ' + error);
             throw new Error('Failed to update user');
         }
     }
