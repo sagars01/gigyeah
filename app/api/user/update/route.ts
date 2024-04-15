@@ -3,15 +3,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/app/models/user/user.model";
+import User from "@/app/libs/models/user/user.model";
 import { UpdateUserValidatorSchema } from "./validator";
 import dbConnect from "@/app/libs/mongodb";
 import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
-import UserController from "@/app/controllers/users/users.controller";
+import UserController from "@/app/libs/controllers/users/users.controller";
 
 export async function POST(request: NextRequest) {
 
-    // TODO: Fix the user Profile update
+    // TODO: Fix the user Profile update so that the image doesn't get updated on Input change
 
     /**
      * @description Allow Users to update there First Name Last Name and the social links in the application
@@ -24,16 +24,12 @@ export async function POST(request: NextRequest) {
             const userDetail: ISessionInformation = await getSessionInformation(request);
 
             const body = await request.json();
-            const { error, value: data } = await UpdateUserValidatorSchema.validate(body);
+            const { error, value: sanitizedData } = await UpdateUserValidatorSchema.validate(body);
             if (error) {
                 return NextResponse.json({ error }, { status: 422, statusText: 'Validation Error' });
             }
 
-            const payload: any = {
-                id: userDetail.userId,
-                profileUpdates: body
-            }
-            const updateUser = await UserController.handleUserUpdated(payload)
+            const updateUser = await UserController.handleUserProfileUpdateFromUI(userDetail.userId, sanitizedData)
 
             if (!updateUser) {
                 return NextResponse.json({ error: 'User not found or update failed' }, { status: 404 });

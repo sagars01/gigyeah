@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Typography, List, Empty, Space } from 'antd';
 import Link from 'next/link';
-import URL from '@/app/constants/url/url';
+import URL from '@/app/utils/constants/url/url';
 const { Text } = Typography;
 
 

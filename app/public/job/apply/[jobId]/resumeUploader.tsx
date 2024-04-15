@@ -1,7 +1,7 @@
 import { InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
-import buttonStyles from '../../../../styles/components/Button.module.css';
+import buttonStyles from '../../../../libs/styles/components/Button.module.css';
 import Link from 'next/link';
 
 const formItemLayout = {

@@ -1,4 +1,4 @@
-import AISummarize from "@/app/controllers/ai/summarize.controller";
+import AISummarize from "@/app/libs/controllers/ai/summarize.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 import { NextRequest, NextResponse } from "next/server";
 

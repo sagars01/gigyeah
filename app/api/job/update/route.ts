@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import JobController from '@/app/controllers/jobs/jobs.controller';
+import JobController from '@/app/libs/controllers/jobs/jobs.controller';
 import jobValidator from './requestValidator';
 import { getSessionInformation } from '@/app/utils/auth/getUserSessionData';
 

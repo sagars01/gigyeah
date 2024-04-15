@@ -1,12 +1,11 @@
+import LandingPageV1 from "./libs/components/landingPage/v1/landingPage.v1";
+
+
 export default function Home() {
 
   return (
     <main>
-      <div>
-        <h1>
-          Welcome to Crazy Frog
-        </h1>
-      </div>
+      <LandingPageV1 />
     </main>
   )
 }

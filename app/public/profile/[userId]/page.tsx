@@ -3,7 +3,7 @@ import { Space, Divider, Row, Col, Card, Tabs, Button, Menu, MenuProps, Result }
 import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
-import UserController from '@/app/controllers/users/users.controller';
+import UserController from '@/app/libs/controllers/users/users.controller';
 import CustomList from '@/app/utils/ui/list.utils';
 import Layout, { Content, Footer, Header } from 'antd/es/layout/layout';
 import PublicHeader from '@/app/libs/components/reusables/header.public';

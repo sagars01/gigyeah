@@ -1,0 +1,53 @@
+.hero {
+    background-color: #fff;
+    /* Replace with your background color */
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    color: #003a8c;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    color: #555;
+    /* Adjust the color to match your design */
+    margin-bottom: 30px;
+}
+
+.hero-cta {
+    background-color: #1890ff;
+    /* Ant Design primary color */
+    border-color: #1890ff;
+    font-size: 1rem;
+    padding: 10px 30px;
+    /* Add more styles as needed */
+}
+
+/* Responsive styles */
+@media only screen and (min-width: 768px) {
+    .hero {
+        padding: 60px 20px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-cta {
+        font-size: 1.2rem;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+}

@@ -3,7 +3,7 @@
 
 import { Button, Row, Col } from 'antd';
 import { HomeOutlined, DollarOutlined, PhoneOutlined, LoginOutlined } from '@ant-design/icons';
-import styles from '../../../styles/components/PublicHeader.module.css'; // Import your CSS module for styling
+import styles from '../../../libs/styles/components/PublicHeader.module.css'; // Import your CSS module for styling
 import Image from 'next/image';
 
 
@@ -19,7 +19,7 @@ const PublicHeader: React.FC<IHeaderProps> = ({ hideOption = true }) => {
         <div className={styles.header}>
             <Row justify="space-between" align="middle" className={styles.row}>
                 <Col>
-                    <Image width="150" height="120" src="/icon-large.png" alt="Company Logo" className={styles.logo} />
+                    <Image onClick={() => navigateTo('/')} width="150" height="120" src="/icon-large.png" alt="Company Logo" className={styles.logo} />
                 </Col>
                 <Col >
                     {
