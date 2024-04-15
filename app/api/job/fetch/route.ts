@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
-import JobController from "@/app/controllers/jobs/jobs.controller";
+import JobController from "@/app/libs/controllers/jobs/jobs.controller";
 
 export async function GET(request: NextRequest) {
 

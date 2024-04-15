@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import dbConnect from '@/app/libs/mongodb';
-import applicationModel, { IApplication } from '@/app/models/application/application.model';
+import applicationModel, { IApplication } from '@/app/libs/models/application/application.model';
 
 class ApplicationsController {
     static async createApplication(application: IApplication) {

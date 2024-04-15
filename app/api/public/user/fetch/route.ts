@@ -1,4 +1,4 @@
-import UserController from "@/app/controllers/users/users.controller";
+import UserController from "@/app/libs/controllers/users/users.controller";
 import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { RequestValidationSchema } from "./requestValidator";

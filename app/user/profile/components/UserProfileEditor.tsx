@@ -4,7 +4,7 @@ import { Button, Form, Input, Card, Avatar, Col, Row, message } from 'antd';
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
-import URL from '@/app/constants/url/url';
+import URL from '@/app/utils/constants/url/url';
 import { apiService } from '@/app/libs/request/apiservice';
 
 const UserProfileEditor: React.FC = () => {

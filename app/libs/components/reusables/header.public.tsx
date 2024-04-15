@@ -3,7 +3,7 @@
 
 import { Button, Row, Col } from 'antd';
 import { HomeOutlined, DollarOutlined, PhoneOutlined, LoginOutlined } from '@ant-design/icons';
-import styles from '../../../styles/components/PublicHeader.module.css'; // Import your CSS module for styling
+import styles from '../../../libs/styles/components/PublicHeader.module.css'; // Import your CSS module for styling
 import Image from 'next/image';
 
 

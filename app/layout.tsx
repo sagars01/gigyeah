@@ -3,7 +3,7 @@ import React from 'react';
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from '@clerk/nextjs';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider, theme } from 'antd';
-import './styles/components/global.css';
+import './libs/styles/components/global.css';
 import { WindowDimensionsProvider } from '@/app/utils/ui/getWindowDims.utils';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'

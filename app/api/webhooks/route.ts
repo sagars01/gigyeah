@@ -2,7 +2,7 @@ import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import { NextResponse, NextRequest } from 'next/server'
-import UserController from '@/app/controllers/users/users.controller'
+import UserController from '@/app/libs/controllers/users/users.controller'
 export async function POST(req: NextRequest) {
 
     const WEBHOOK_SECRET = process.env.USER_EVT_WEBHOOK_SECRET

@@ -16,7 +16,7 @@ import { Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import URL from '@/app/constants/url/url';
+import URL from '@/app/utils/constants/url/url';
 
 const { Header, Content, Footer, Sider } = Layout;
 

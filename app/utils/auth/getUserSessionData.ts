@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import { auth, currentUser } from "@clerk/nextjs";
-import UserController from "@/app/controllers/users/users.controller";
+import UserController from "@/app/libs/controllers/users/users.controller";
 
 // Define the structure for company object
 interface ICompany {

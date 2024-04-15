@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import jobsModel from "@/app/models/job/jobs.model";
+import jobsModel from "@/app/libs/models/job/jobs.model";
 
 
 const getJobWithCreator = async (jobId: string) => {

@@ -3,11 +3,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/app/models/user/user.model";
+import User from "@/app/libs/models/user/user.model";
 import { UpdateUserValidatorSchema } from "./validator";
 import dbConnect from "@/app/libs/mongodb";
 import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
-import UserController from "@/app/controllers/users/users.controller";
+import UserController from "@/app/libs/controllers/users/users.controller";
 
 export async function POST(request: NextRequest) {
 

@@ -1,5 +1,5 @@
-import userModel, { IUserModel } from "@/app/models/user/user.model";
-import jobsModel from "@/app/models/job/jobs.model";
+import userModel, { IUserModel } from "@/app/libs/models/user/user.model";
+import jobsModel from "@/app/libs/models/job/jobs.model";
 import dbConnect from "@/app/libs/mongodb";
 import mongoose from "mongoose";
 import { ErrorHandler, handleError } from "@/app/utils/logging/errorHandler";

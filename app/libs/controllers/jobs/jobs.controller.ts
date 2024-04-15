@@ -1,5 +1,5 @@
 import dbConnect from "@/app/libs/mongodb";
-import jobsModel, { IJob } from "@/app/models/job/jobs.model";
+import jobsModel, { IJob } from "@/app/libs/models/job/jobs.model";
 
 class JobController {
     static async getJobsByUser(userId: string, jobId?: string) {

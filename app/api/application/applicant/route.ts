@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import ApplicationsController from "@/app/controllers/applications/applications.controller";
+import ApplicationsController from "@/app/libs/controllers/applications/applications.controller";
 import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 
 

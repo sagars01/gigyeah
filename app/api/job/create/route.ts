@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/app/libs/mongodb';
-import jobsModel, { CreatedByType } from '@/app/models/job/jobs.model';
+import jobsModel, { CreatedByType } from '@/app/libs/models/job/jobs.model';
 import jobSchema from './requestValidator';
 import { getSessionInformation } from '@/app/utils/auth/getUserSessionData';
 
