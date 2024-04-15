@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import URL from '@/app/utils/constants/url/url';
+import Image from 'next/image';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -124,7 +125,9 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div className="demo-logo-vertical" />
+                <div className="demo-logo-vertical" style={{ padding: "0.5rem" }}>
+                    <img src="/icon-large.png" width={"100%"} height={"auto"} />
+                </div>
                 <Menu theme="dark" defaultSelectedKeys={[`${activeIndex || 1}`]} mode="inline" items={items} onClick={onMenuClick} />
             </Sider>
             <Layout>
@@ -144,7 +147,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
-                    Gigyeah ©{new Date().getFullYear()} Built by Sagar from India
+                    WithJessi ©{new Date().getFullYear()} Built by Sagar from India
                 </Footer>
             </Layout>
         </Layout>
