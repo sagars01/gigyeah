@@ -7,5 +7,11 @@ export const UpdateUserValidatorSchema = Joi.object({
     company: Joi.object({
         name: Joi.string().trim().optional(),
         description: Joi.string().trim().optional()
-    }).optional()
+    }).optional(),
+    socialMedia: Joi.array().items(
+        Joi.object({
+            platform: Joi.string().valid('Twitter', 'LinkedIn', 'Instagram').optional(),
+            url: Joi.string().uri().trim().optional()
+        })
+    ).optional()
 });

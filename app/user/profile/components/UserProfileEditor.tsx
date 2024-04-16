@@ -1,7 +1,7 @@
 "use client"
 import React, { useContext, useState } from 'react';
-import { Button, Form, Input, Card, Avatar, Col, Row, message } from 'antd';
-import { EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Card, Avatar, Col, Row, message, Select } from 'antd';
+import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { IUserModel, UserContext } from '@/app/user/profile/contexts/UserProfileContext';
 import URL from '@/app/utils/constants/url/url';
@@ -11,9 +11,10 @@ const UserProfileEditor: React.FC = () => {
     const [form] = Form.useForm();
     const { userData, setUserData, loading } = useContext(UserContext);
     const [submitting, setSubmitting] = useState(false);
+    const { Option } = Select;
 
-    const onFormValuesChange = (_: any, allValues: IUserModel) => {
-        setUserData(allValues);
+    const onFormValuesChange = (currentChange: any, allValues: IUserModel) => {
+        setUserData({ ...userData, ...allValues });
     };
 
     const onFormSubmit = async () => {
@@ -36,30 +37,31 @@ const UserProfileEditor: React.FC = () => {
     }, [userData, form]);
 
     return (
-        <Card loading={loading}>
+        <Card loading={loading} extra={
+            <Button
+                icon={<SaveOutlined />}
+                style={{ float: 'right' }}
+                type="primary"
+                htmlType="submit"
+                loading={submitting}
+                disabled={loading}
+                onClick={onFormSubmit}
+            >
+                Save Changes
+            </Button>
+        }>
             <Form
                 form={form}
                 layout="vertical"
                 onValuesChange={onFormValuesChange}
                 onFinish={onFormSubmit}
             >
-                <Row gutter={[16, 16]} style={{ marginBottom: '1rem' }}>
+                <Row gutter={[16, 16]} align="middle" justify="center" style={{ marginBottom: '1rem' }}>
                     <Col span={12}>
                         <Avatar src={userData.image_url || '/fallback.png'} alt="Profile Image" size={130} />
                         <Link href={URL.user.profile} passHref style={{ position: 'absolute', bottom: 0, left: 100 }}>
                             <Button icon={<EditOutlined />} type="primary"></Button>
                         </Link>
-                    </Col>
-                    <Col span={12}>
-                        <Button
-                            icon={<SaveOutlined />}
-                            style={{ float: 'right' }}
-                            type="primary"
-                            htmlType="submit"
-                            loading={submitting}
-                        >
-                            Save Changes
-                        </Button>
                     </Col>
                 </Row>
                 <Form.Item
@@ -76,16 +78,6 @@ const UserProfileEditor: React.FC = () => {
                 >
                     <Input />
                 </Form.Item>
-                {/* <Form.Item
-                    name="email"
-                    label="Email"
-                    rules={[
-                        { required: true, message: 'Please input your email!' },
-                        { type: 'email', message: 'Please enter a valid email!' }
-                    ]}
-                >
-                    <Input disabled />
-                </Form.Item> */}
                 <Form.Item
                     name="intro"
                     label="Introduction"
@@ -104,6 +96,59 @@ const UserProfileEditor: React.FC = () => {
                 >
                     <Input.TextArea rows={4} />
                 </Form.Item>
+                <Form.List name="socialMedia">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(field => (
+                                <Row key={field.key} gutter={[16, 16]}>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            {...field}
+                                            name={[field.name, 'platform']}
+                                            key={field.key}
+                                            label="Platform"
+                                            rules={[{ required: true, message: 'Please select platform!' }]}
+                                        >
+                                            <Select placeholder="Select a platform">
+                                                <Option value="Twitter">Twitter</Option>
+                                                <Option value="LinkedIn">LinkedIn</Option>
+                                                <Option value="Instagram">Instagram</Option>
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={14}>
+                                        <Form.Item
+                                            {...field}
+                                            name={[field.name, 'url']}
+                                            key={field.key}
+                                            label="URL"
+                                            rules={[
+                                                { required: true, message: 'Please input URL!' },
+                                                { type: 'url', message: 'Please enter a valid URL!' }
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={2}>
+                                        <Button
+                                            style={{ marginTop: '1.8rem' }}
+                                            icon={<DeleteOutlined />} onClick={() => remove(field.name)}></Button>
+                                    </Col>
+                                </Row>
+                            ))}
+
+
+                            <Form.Item >
+                                <Button
+                                    disabled={fields.length > 2}
+                                    type="dashed" onClick={() => add(null)} block>Add Social Media</Button>
+                            </Form.Item>
+
+
+                        </>
+                    )}
+                </Form.List>
             </Form>
         </Card>
     );

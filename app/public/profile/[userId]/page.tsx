@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Space, Divider, Row, Col, Card, Tabs, Button, Menu, MenuProps, Result } from 'antd';
-import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined } from '@ant-design/icons';
+import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined, InstagramOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
 import UserController from '@/app/libs/controllers/users/users.controller';
@@ -89,6 +89,31 @@ const getServerSideProps = async (userId: string): Promise<{ props: IUserPublicP
 const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
     const { props: userInfo } = await getServerSideProps(userId);
 
+    const SocialMediaIcons = ({ socialMedia }: any) => {
+        const iconMap: { [key in SocialMedia['platform']]: JSX.Element } = {
+            Twitter: <TwitterOutlined style={{
+                fontSize: '1.5rem'
+            }} />,
+            LinkedIn: <LinkedinOutlined style={{
+                fontSize: '1.5rem'
+            }} />,
+            Instagram: <InstagramOutlined style={{
+                fontSize: '1.5rem'
+            }} />,
+        };
+
+        return (
+            <div style={{ display: 'flex', gap: '1rem' }}>
+                {socialMedia?.map(({ platform, url }: SocialMedia, index: number) => (
+                    <a key={index} href={url} target="_blank" rel="noopener">
+                        {iconMap[platform]}
+                    </a>
+                ))}
+            </div>
+        );
+    };
+
+
     if (!userInfo) {
         return (<>
             <>
@@ -154,11 +179,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                                     {userDetails.company.name}
                                 </div>
                                 <Divider />
-                                <Space>
-                                    <LinkedinOutlined style={largeIconStyle} />
-                                    <TwitterOutlined style={largeIconStyle} />
-                                    <GithubOutlined style={largeIconStyle} />
-                                </Space>
+                                <SocialMediaIcons socialMedia={userDetails.socialMedia} />
                             </div>
                         </Card>
                     </Col>
