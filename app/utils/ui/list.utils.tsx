@@ -1,7 +1,9 @@
+import { ArrowRightOutlined } from '@ant-design/icons';
 import Button from 'antd/es/button';
 import Empty from 'antd/es/empty';
 import Col from 'antd/es/grid/col';
 import Row from 'antd/es/row';
+import Paragraph from 'antd/es/typography/Paragraph';
 import React from 'react';
 
 
@@ -20,7 +22,13 @@ const CustomList: React.FC<CustomListProps> = ({ items }) => {
                             <Row gutter={[6, 6]}>
                                 <Col lg={18}>
                                     <div className="item-title">{item.title}</div>
-                                    <div className="item-description">{item.description}</div>
+                                    <Paragraph ellipsis={{
+                                        rows: 3,
+                                        expandable: true,
+                                        symbol: 'more'
+                                    }}>
+                                        {item.description}
+                                    </Paragraph>
                                 </Col>
                                 {item?.status === 'active' && (
                                     <Col lg={6}>

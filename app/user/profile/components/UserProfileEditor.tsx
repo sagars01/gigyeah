@@ -59,7 +59,7 @@ const UserProfileEditor: React.FC = () => {
                 <Row gutter={[16, 16]} align="middle" justify="center" style={{ marginBottom: '1rem' }}>
                     <Col span={12}>
                         <Avatar src={userData.image_url || '/fallback.png'} alt="Profile Image" size={130} />
-                        <Link href={URL.user.profile} passHref style={{ position: 'absolute', bottom: 0, left: 100 }}>
+                        <Link href={URL.user.clerkUser} style={{ position: 'absolute', bottom: 0, left: 100 }}>
                             <Button icon={<EditOutlined />} type="primary"></Button>
                         </Link>
                     </Col>

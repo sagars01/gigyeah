@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Space, Divider, Row, Col, Card, Tabs, Button, Menu, MenuProps, Result } from 'antd';
-import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined, InstagramOutlined } from '@ant-design/icons';
+import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined, InstagramOutlined, DesktopOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
 import UserController from '@/app/libs/controllers/users/users.controller';
@@ -146,7 +146,8 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
         name: '',
         socialMedia: [],
         company: {
-            name: ''
+            name: '',
+            description: ''
         },
         intro: '',
         image_url: null
@@ -175,9 +176,17 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                                 <Text>
                                     {userDetails.intro}
                                 </Text>
-                                <div className='company-details'>
-                                    {userDetails.company.name}
-                                </div>
+                                <Space style={{ marginTop: '0.5rem' }}>
+                                    <Text className='company-details'>
+                                        {userDetails.company.name}
+                                    </Text>
+                                </Space>
+
+                                <Space style={{ marginTop: '0.5rem' }}>
+                                    <Text className='company-details'>
+                                        {userDetails.company.description}
+                                    </Text>
+                                </Space>
                                 <Divider />
                                 <SocialMediaIcons socialMedia={userDetails.socialMedia} />
                             </div>
