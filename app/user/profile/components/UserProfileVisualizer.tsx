@@ -58,7 +58,6 @@ const ProfileVisualizer: React.FC = () => {
                 <Title level={3}>{userData.name}</Title>
                 <Title level={4}>{userData.title}</Title>
                 <Text>{userData.intro}</Text>
-                <Title level={4}>Company</Title>
                 <Text>{userData.company.name}</Text>
                 <Text>{userData.company.description}</Text>
                 <SocialMediaVisualizer socialMedia={userData.socialMedia} />
