@@ -4,7 +4,7 @@ import Loading from "@/app/libs/components/reusables/loading";
 import Unauthorized from "@/app/libs/components/reusables/unauthorized";
 import { NextRequest } from "next/server";
 import { Suspense } from "react";
-import DashboardLayout from "@/app/libs/components/reusables/dashboard.layout";
+import DashboardLayout from "@/app/dashboard/components/dashboard.layout";
 import ApplicationList from "../../../components/ApplicationList";
 import ContentHeader from "../../../components/ContentHeader";
 import { IJob } from "@/app/libs/models/job/jobs.model";
