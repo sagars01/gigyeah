@@ -13,6 +13,7 @@
     "@ant-design/icons": "^5.2.6",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@clerk/nextjs": "^4.29.6",
+    "@headlessui/react": "^1.7.19",
     "@react-pdf-viewer/core": "3.6.0",
     "@react-pdf-viewer/default-layout": "3.6.0",
     "@types/mongoose": "^5.11.97",
@@ -22,6 +23,7 @@
     "@vercel/blob": "^0.19.0",
     "@vercel/speed-insights": "^1.0.10",
     "antd": "^5.13.2",
+    "aos": "^2.3.4",
     "axios": "^1.6.7",
     "canvas": "^2.11.2",
     "crawler-request": "^1.2.2",
@@ -37,7 +39,7 @@
     "node-fetch": "^3.3.2",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^2.15.349",
-    "postcss": "^8.1.0",
+    "postcss": "^8.4.38",
     "react": "^18",
     "react-dom": "^18",
     "react-html-parser": "^2.0.2",
@@ -48,13 +50,15 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
+    "autoprefixer": "^10.4.19",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "tailwindcss": "^3.4.3",
     "typescript": "^5"
   }
 }
