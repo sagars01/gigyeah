@@ -1,6 +1,4 @@
 "use client";
-
-// import { useWindowDimensions } from '@/utils/ui/getWindowDims.utils';
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -8,7 +6,7 @@ import { Button } from 'antd';
 import CreateJob from './createJob';
 import GetJobsComponent from './getJobs';
 
-import DashboardLayout from '@/app/libs/components/reusables/dashboard.layout';
+import DashboardLayout from '@/app/dashboard/components/dashboard.layout';
 
 
 const DashboardComponent: React.FC = () => {
