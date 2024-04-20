@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export interface IApplication {
     jobId: mongoose.Schema.Types.ObjectId;
@@ -14,7 +14,7 @@ export interface IApplication {
 const ApplicationsSchema = new Schema<IApplication>({
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
     applicantName: { type: String, required: true },
     shortIntro: { type: String, required: true },
     resumeUrl: { type: String, required: true },

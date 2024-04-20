@@ -1,8 +1,11 @@
-import React from 'react';
-import { Card, Typography, List, Empty, Space } from 'antd';
+"use server"
+import React, { ReactNode } from 'react';
+import { Card, Empty, Space } from 'antd';
+import Text from 'antd/es/typography/Text';
 import Link from 'next/link';
 import URL from '@/app/utils/constants/url/url';
-const { Text } = Typography;
+import List from '../../../../libs/components/reusables/List';
+
 
 
 const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
@@ -61,13 +64,10 @@ const JobListing: React.FC<IJobListingProps> = ({ jobContent, error }) => {
                         <Text strong>Requirements:</Text>
                     </Space>
                 </div>
+                <List items={jobContent?.requirements}>
 
-                <List
-                    dataSource={jobContent?.requirements}
-                    renderItem={item => (
-                        <List.Item>{item}</List.Item>
-                    )}
-                />
+                </List>
+
             </Card>
 
 

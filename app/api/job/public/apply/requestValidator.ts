@@ -1,7 +1,6 @@
 import Joi from 'joi';
-import { NextRequest } from 'next/server';
 
-const jobApplicationSchema = Joi.object({
+const JobApplicationValidatorSchema = Joi.object({
     email: Joi.string().email().required().messages({
         'string.email': 'Invalid email address',
         'any.required': 'Email is required',
@@ -19,15 +18,16 @@ const jobApplicationSchema = Joi.object({
         'string.empty': 'Short introduction is required',
         'any.required': 'Short introduction is required',
     }),
-    // Assuming you handle file validation separately, as Joi cannot validate file objects directly
+    file: Joi.object({
+        type: Joi.string().valid('application/pdf').required().messages({
+            'string.valid': 'Only PDF files are allowed',
+            'any.required': 'Resume file is required'
+        }),
+        size: Joi.number().max(5242880).required().messages({ // 5MB limit
+            'number.max': 'File must be less than 5MB',
+            'any.required': 'Resume file is required'
+        })
+    }).unknown(true)
 });
 
-export const runValidation = async (request: NextRequest) => {
-    try {
-        const data = await request.json(); // Assuming you're extracting JSON body from the NextRequest
-        await jobApplicationSchema.validateAsync(data, { abortEarly: false });
-        return false; // Indicate no errors
-    } catch (error: any) {
-        return { errors: error.details.map((detail: { message: any; path: any; }) => ({ message: detail.message, path: detail.path })) };
-    }
-}
+export default JobApplicationValidatorSchema

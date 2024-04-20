@@ -20,8 +20,6 @@ const getJobWithCreator = async (jobId: string) => {
 
 export async function GET(request: NextRequest) {
 
-    await dbConnect();
-
     try {
         if (request.method !== 'GET') {
             NextResponse.json({ error: 'Method Not Allowed' }, { status: 409 });
