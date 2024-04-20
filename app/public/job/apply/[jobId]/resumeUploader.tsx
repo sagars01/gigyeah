@@ -1,21 +1,10 @@
+'use client'
 import { InboxOutlined, RocketFilled, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, Typography, Upload, message } from 'antd';
 import buttonStyles from '../../../../libs/styles/components/Button.module.css';
 import Link from 'next/link';
-
-const formItemLayout = {
-
-};
-
-const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e?.fileList;
-};
-
-
+import URL from '@/app/utils/constants/url/url';
 
 const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading = true, isError = false }) => {
     const [loading, setLoading] = useState(false);
@@ -42,25 +31,26 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
             return;
         }
         try {
-            const response = await fetch(`/api/job/apply`, {
+            const response = await fetch(URL.api.public.job.apply, {
                 method: 'POST',
                 body: formData,
             });
 
             if (!response.ok) {
                 const errorBody = await response.json();
-                const errorMessage = errorBody?.error || 'Unexpected issue occured while applying job';
+                const errorMessage = errorBody?.error || 'Unexpected issue occurred while applying job';
                 message.error(errorMessage);
                 throw new Error(errorMessage);
             }
 
             await response.json();
             message.success('Job Applied Successfully!');
+            setShowSuccess(true);
         } catch (error: any) {
             console.error(error);
         } finally {
             setLoading(false);
-            form.resetFields()
+            form.resetFields();
         }
     };
 
@@ -99,7 +89,12 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
         <Form.Item
             name="dragger"
             valuePropName="fileList"
-            getValueFromEvent={normFile}
+            getValueFromEvent={e => {
+                if (Array.isArray(e)) {
+                    return e;
+                }
+                return e?.fileList;
+            }}
             rules={[
                 {
                     required: true,
@@ -113,17 +108,19 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                     const isPDF = file.type === 'application/pdf';
                     if (!isPDF) {
                         message.error('Only PDF files are allowed!');
+                        return false;
                     }
-                    return isPDF || Upload.LIST_IGNORE;
+                    return false; // do not automatically upload
                 }}
                 multiple={false}
                 maxCount={1}
+                accept=".pdf" // accept only PDF files
             >
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
-                    Click or drag file to this area to upload. [PDF]
+                    Click or drag file to this area to upload. [PDF only]
                 </p>
                 <p className="ant-upload-hint">
                     Upload your resume, proof of work, or relevant documents
@@ -131,8 +128,6 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
             </Upload.Dragger>
         </Form.Item>
     );
-
-
 
     return (
         <>
@@ -145,7 +140,6 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                                     <Form
                                         form={form}
                                         name="validate_other"
-                                        {...formItemLayout}
                                         onFinish={onFinish}
                                     >
                                         <FormFieldsForCandidateData />
@@ -158,20 +152,19 @@ const ResumeUploadComponent: React.FC<IResumeUploadProps> = ({ jobId, isLoading 
                                             </Button>
                                         </Form.Item>
                                     </Form>
-                                </Card>) : (
-                                <>
-                                    <Card hoverable>
-                                        <div style={{ margin: '2rem 0' }}>
-                                            <Typography.Title level={2} >Congratulations <RocketOutlined /></Typography.Title>
-                                            <Typography.Paragraph type='success' style={{
-                                                fontSize: '1rem'
-                                            }}>Your application is on its way</Typography.Paragraph>
-                                        </div>
-                                        <Link href={'/'}>
-                                            <Meta title="Apply to other interesting jobs!" description="www.gigyeah.com" />
-                                        </Link>
-                                    </Card>
-                                </>
+                                </Card>
+                            ) : (
+                                <Card hoverable>
+                                    <div style={{ margin: '2rem 0' }}>
+                                        <Typography.Title level={2}>Congratulations <RocketOutlined /></Typography.Title>
+                                        <Typography.Paragraph type='success' style={{
+                                            fontSize: '1rem'
+                                        }}>Your application is on its way</Typography.Paragraph>
+                                    </div>
+                                    <Link href={'/'}>
+                                        <Meta title="Apply to other interesting jobs!" description="www.gigyeah.com" />
+                                    </Link>
+                                </Card>
                             )
                         }
                     </>

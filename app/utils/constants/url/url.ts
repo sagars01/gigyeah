@@ -17,6 +17,13 @@ const URL = {
         subscription: createURL('/user/subscription'),
         usage: createURL('/user/usage'),
     },
+    api: {
+        public: {
+            job: {
+                apply: '/api/job/public/apply'
+            }
+        }
+    }
 };
 
 export default URL;
