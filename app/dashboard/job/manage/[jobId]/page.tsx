@@ -4,10 +4,12 @@ import Loading from "@/app/libs/components/reusables/loading";
 import Unauthorized from "@/app/libs/components/reusables/unauthorized";
 import { Suspense } from "react";
 import DashboardLayout from "@/app/dashboard/components/common/dashboard.layout";
-import ApplicationList from "../../../components/applicant/ApplicationList";
+import ApplicationList from "../../../components/manage/ApplicationList";
+import ApplicantManagement from "../../../components/manage/ApplicantManagement"
 import { IJob } from "@/app/libs/models/job/jobs.model";
 import DashboardHeader from "@/app/dashboard/components/common/dashboard.header";
 import URL from "@/app/utils/constants/url/url";
+
 
 
 async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
@@ -38,7 +40,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
             <>
                 <DashboardLayout
                     header={<HeaderOptions />}
-                    content={<ApplicationList jobId={jobId} jobDesc={description} />} />
+                    content={<ApplicantManagement jobId={jobId} />} />
             </>
         )
     }

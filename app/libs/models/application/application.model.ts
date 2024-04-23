@@ -3,11 +3,11 @@ import Job from '@/app/libs/models/job/jobs.model';
 
 
 enum CandidateInterviewJourneyStatus {
-    applied = 1,
-    shortlisted = 2,
-    interview = 3,
-    rejected = 4,
-    hired = 5
+    applied = "Applied",
+    shortlisted = "Shortlisted",
+    interview = "Interview",
+    rejected = "Rejected",
+    hired = "Hired"
 }
 
 export interface IApplication {
@@ -18,7 +18,7 @@ export interface IApplication {
     shortIntro: string;
     resumeUrl: string;
     applicationsReceived: number;
-    status: number;
+    status: string;
 }
 
 const ApplicationsSchema = new Schema<IApplication>({
@@ -29,7 +29,7 @@ const ApplicationsSchema = new Schema<IApplication>({
     shortIntro: { type: String, required: true },
     resumeUrl: { type: String, required: true },
     status: {
-        type: Number,
+        type: String,
         default: CandidateInterviewJourneyStatus.applied
     },
     applicationsReceived: {

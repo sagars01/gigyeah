@@ -1,4 +1,5 @@
 export interface ApiResponse<T> {
+    applicants: never[];
     data: T;
     message?: string;
 }
