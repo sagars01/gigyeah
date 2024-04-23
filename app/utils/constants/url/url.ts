@@ -22,6 +22,17 @@ const URL = {
             job: {
                 apply: '/api/job/public/apply'
             }
+        },
+        private: {
+            jobs: {
+                fetch: '/job/fetch'
+            }
+        }
+    },
+    assets: {
+        branding: {
+            logoh: '/img/logo/logo_h.png',
+            logov: '/img/logo/logo_v.png'
         }
     }
 };

@@ -12,12 +12,12 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import URL from '@/app/utils/constants/url/url';
-import Image from 'next/image';
+import ResponsiveLogo from '@/app/libs/components/reusables/Logo';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -78,61 +78,52 @@ const UsageLink = () => {
 
 
 const LogoutLink = () => {
-
+    const { signOut } = useClerk();
+    const router = useRouter()
+    const handleLogout = () => {
+        signOut(() => {
+            router.push('/')
+        })
+    }
     return (
         < >
 
-
-            <div>
-                <KeyOutlined style={{ paddingRight: '0.5rem' }} />
-            </div>
-
+            <Button
+                onClick={handleLogout}
+                aria-label="Logout">
+                Logout
+            </Button>
         </>
     )
 }
 
 
-const items: MenuItem[] = [
-    getItem('Dashboard', '1', <DashboardLink />),
-    getItem('Jobs', '2', <DesktopOutlined />),
-    getItem('User', '3', <UserOutlined />, [
-        getItem('Profile', '3.1', <ProfileLink />),
-        getItem('Usage', '3.2', <UsageLink />),
-        getItem('Subscription', '3.3', <SubscriptionLink />),
-    ]),
-    getItem('Logout', '4', <LogoutLink />)
-];
+const DashboardLayout: React.FC<LayoutProps> = ({ content, header }) => {
 
-const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { activeIndex: 1 }, content, header }) => {
-    const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const { signOut } = useClerk();
-    const router = useRouter()
-
-    const onMenuClick = (item: any) => {
-        if (item.key === '4') {
-            signOut(() => router.push("/"))
-        }
-
-        if (item.key === '3.1') {
-            router.push("/user/profile")
-        }
-    }
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div className="demo-logo-vertical" style={{ padding: "0.5rem" }}>
-                    <img src="/icon-large.png" width={"100%"} height={"auto"} />
-                </div>
-                <Menu theme="dark" defaultSelectedKeys={[`${activeIndex || 1}`]} mode="inline" items={items} onClick={onMenuClick} />
-            </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer, position: 'relative', marginBottom: '1rem' }} >
-                    {header}
+                <Header style={{ padding: 0, background: colorBgContainer, position: 'relative', marginBottom: '1rem' }}>
+
+                    <div className="flex justify-between items-center w-full">
+                        <div className="shrink-0 ml-4">
+                            <Link href="/">
+                                <ResponsiveLogo />
+                            </Link>
+                        </div>
+                        <div className="flex-grow">
+                            {header}
+                        </div>
+                        <div className='pr-4'>
+                            <LogoutLink />
+                        </div>
+                    </div>
+
                 </Header>
                 <Content style={{ margin: '0 16px' }}>
                     <div
@@ -155,9 +146,6 @@ const DashboardLayout: React.FC<LayoutProps> = ({ menu: { activeIndex } = { acti
 };
 
 interface LayoutProps {
-    menu?: {
-        activeIndex: string;
-    },
     content: React.ReactNode,
     header?: React.ReactNode,
 }

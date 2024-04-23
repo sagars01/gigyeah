@@ -33,7 +33,6 @@ class PublicJobsController {
         try {
             const { jobId, email } = applicationData;
 
-            // Log the attempt to find existing applications
             logger.log(LogLevel.DEBUG, `Checking existing applications for job ID: ${jobId} and email: ${email}`);
 
             const existingApplication = await Application.findOne({

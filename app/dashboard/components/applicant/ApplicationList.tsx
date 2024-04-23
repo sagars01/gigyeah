@@ -276,7 +276,7 @@ const ApplicationList: React.FC<Props> = ({ jobId, jobDesc }) => {
     const FilterPanel = () => {
         return (
             <>
-                <Card title="Quick View" style={{ position: 'sticky', top: 0 }}>
+                <Card title="Quick Filters" style={{ position: 'sticky', top: 0 }}>
                     <Menu
                         mode="vertical"
                         defaultSelectedKeys={[selectedKey]}

@@ -1,55 +1,33 @@
 "use client";
 import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
-import CreateJob from './createJob';
-import GetJobsComponent from './getJobs';
+import CreateJob from './components/job/createJob';
+import GetJobsComponent from './components/job/getJobs';
 
-import DashboardLayout from '@/app/dashboard/components/dashboard.layout';
+import DashboardLayout from '@/app/dashboard/components/common/dashboard.layout';
+import MainAdminDashboard from './components/admin/MainAdminDashboard';
+import DashboardHeader from './components/common/dashboard.header';
+import URL from '../utils/constants/url/url';
+
 
 
 const DashboardComponent: React.FC = () => {
+    const links = [
+        { title: "Dashboard", link: URL.dashboard.root, isActive: true },
+        { title: "Profile", link: URL.user.profile, isActive: false }
+    ];
 
-
-
-    const [shouldFetchJobs, setFetchJob] = useState(false);
-    const [jobId, setJobId] = useState<any>(null);
-
-    // const { width, height } = useWindowDimensions();
-
-
-    const [openDrawer, setOpenDrawer] = useState(false);
-    const showDrawer = () => {
-        setOpenDrawer(true)
-    }
-
-    const onDrawerClose = () => {
-        setOpenDrawer(false)
-    }
-
-    const onJobCreatedSuccessfully = (response: any) => {
-        const { jobId } = response;
-        setJobId(jobId);
-        setFetchJob(true);
-        setOpenDrawer(false);
-    }
-
-    const CreateNewJob = () => {
-        return (
-            <Button style={{ bottom: '25%', right: 15, position: 'absolute' }} type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-                Create New Job
-            </Button>
-        )
-    }
+    const HeaderOptions = () => (
+        <div className="flex justify-end">
+            <DashboardHeader links={links} />
+        </div>
+    )
 
     return (
         <>
-            <CreateJob jobCreatedEvt={onJobCreatedSuccessfully} openDrawer={openDrawer} onDrawerClose={onDrawerClose} />
             <DashboardLayout
-                header={<CreateNewJob />}
-                content={<GetJobsComponent
-                    shouldFetchJobs={shouldFetchJobs} jobId={jobId} />} />
+                header={<HeaderOptions />}
+                content={<MainAdminDashboard />} />
         </>
     );
 };

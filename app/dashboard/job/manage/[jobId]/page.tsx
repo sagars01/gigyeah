@@ -2,16 +2,29 @@ import JobController from "@/app/libs/controllers/jobs/jobs.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 import Loading from "@/app/libs/components/reusables/loading";
 import Unauthorized from "@/app/libs/components/reusables/unauthorized";
-import { NextRequest } from "next/server";
 import { Suspense } from "react";
-import DashboardLayout from "@/app/dashboard/components/dashboard.layout";
-import ApplicationList from "../../../components/ApplicationList";
-import ContentHeader from "../../../components/ContentHeader";
+import DashboardLayout from "@/app/dashboard/components/common/dashboard.layout";
+import ApplicationList from "../../../components/applicant/ApplicationList";
 import { IJob } from "@/app/libs/models/job/jobs.model";
+import DashboardHeader from "@/app/dashboard/components/common/dashboard.header";
+import URL from "@/app/utils/constants/url/url";
 
 
 async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
     const jobDetails = await JobController.getJobsById(jobId);
+
+    const links = [
+        { title: "Dashboard", link: URL.dashboard.root, isActive: false },
+        { title: "Profile", link: URL.user.profile, isActive: false },
+        { title: "Manage Application", link: '', isActive: true },
+    ];
+
+    const HeaderOptions = () => (
+        <div className="flex justify-end">
+            <DashboardHeader links={links} />
+        </div>
+    )
+
 
     const { title, description } = jobDetails as IJob
     if (jobDetails?.createdBy.id !== id) {
@@ -24,7 +37,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
         return (
             <>
                 <DashboardLayout
-                    header={<ContentHeader jobTitle={title} jobDesc={description} />}
+                    header={<HeaderOptions />}
                     content={<ApplicationList jobId={jobId} jobDesc={description} />} />
             </>
         )

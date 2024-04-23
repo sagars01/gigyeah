@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Row, Col, Button, Alert, Skeleton } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined } from '@ant-design/icons';
-import { apiService } from '../../libs/request/apiservice'
-import Styles from '../styles/applications.module.css';
+import { apiService } from '../../../libs/request/apiservice'
 
 const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jobDesc }) => {
 
@@ -64,7 +63,7 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
                         <p>Email: {applicant?.email}</p>
                         <p>Introduction: {applicant?.shortIntro}</p>
                     </div>
-                    <div className={Styles.profileSummarySpace}>
+                    <div>
                         {
                             summaryLoading && (
                                 <>
@@ -104,7 +103,7 @@ const ApplicantProfileExpand: React.FC<IProps> = ({ applicant, open, onClose, jo
 
                 </Col>
                 <Col xs={24} md={12}>
-                    <div className={Styles.resumeIframeWrapper}> {/* Adjust height for mobile */}
+                    <div> {/* Adjust height for mobile */}
                         <iframe
                             src={applicant?.resumeUrl}
                             style={{ width: '100%', height: '100%', border: 'none' }}
