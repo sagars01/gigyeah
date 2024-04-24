@@ -20,12 +20,19 @@ const URL = {
     api: {
         public: {
             job: {
-                apply: '/api/job/public/apply'
+                apply: '/api/job/public/apply',
             }
         },
         private: {
             jobs: {
-                fetch: '/job/fetch'
+                fetch: '/job/fetch',
+                update: '/job/update'
+            },
+            application: {
+                update: '/application/update'
+            },
+            ai: {
+                summarize: '/ai/summarize'
             }
         }
     },

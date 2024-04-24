@@ -3,6 +3,7 @@ import ApplicationsController from "@/app/libs/controllers/applications/applicat
 import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 import ValidationSchema from "./requestValidator";
 
+// TODO: Check if the application Id and the JobId matches
 
 export async function PUT(request: NextRequest) {
     const userDetails: ISessionInformation = await getSessionInformation(request);

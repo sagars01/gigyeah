@@ -2,11 +2,11 @@ import Joi from 'joi';
 
 const updateApplicationStatusValidationSchema = Joi.object({
     status: Joi.string()
-        .valid('shortlisted', 'rejected')
+        .valid('applied', 'rejected', 'interview', 'shortlisted', 'hired')
         .required()
         .messages({
             'any.required': 'Status is required',
-            'any.only': 'Status must be either "shortlisted" or "rejected"',
+            'any.only': 'Incorrect Status',
         }),
     applicantId: Joi.string()
         .required()

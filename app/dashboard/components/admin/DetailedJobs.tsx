@@ -9,7 +9,13 @@ import { useState } from "react";
 import { any } from "joi";
 
 
-const DetailedJob: React.FC<any> = ({ openJobs, allJobsData }) => {
+interface DetailedJobProps {
+    openJobs: any[],
+    allJobsData: any[],
+    onEditJobSuccess: (status: boolean) => void;
+}
+
+const DetailedJob: React.FC<DetailedJobProps> = ({ openJobs, allJobsData, onEditJobSuccess }) => {
 
     const router = useRouter();
     const onManageJobClick = (jobId: string) => {
@@ -79,9 +85,15 @@ const DetailedJob: React.FC<any> = ({ openJobs, allJobsData }) => {
         setJobToEdit(jobToEdit || null)
         setOpenEditDrawer(true)
     }
+
+    const onJobEditedSuccessful = () => {
+        setOpenEditDrawer(false);
+        onEditJobSuccess(true);
+    }
+
     return (
         <>
-            <EditJobDrawer jobUpdatedEvt={() => setOpenEditDrawer(false)} openDrawer={openEditDrawer} jobDetails={jobToEdit} onDrawerClose={() => {
+            <EditJobDrawer jobUpdatedEvt={onJobEditedSuccessful} openDrawer={openEditDrawer} jobDetails={jobToEdit} onDrawerClose={() => {
                 setOpenEditDrawer(false)
                 setJobToEdit(null)
             }} />

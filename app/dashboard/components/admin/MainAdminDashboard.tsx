@@ -75,7 +75,7 @@ const MainAdminDashboard = () => {
         return (
             <>
 
-                <div className="flex justify-end mb-4"> {/* Utilizing flexbox for alignment */}
+                <div className="flex justify-end mb-4">
                     <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
                         Create New Job
                     </Button>
@@ -99,7 +99,7 @@ const MainAdminDashboard = () => {
 
                             <CreateNewJob />
                             <OverviewSection openJobs={openJobs} closedJobs={closedJobs} />
-                            <DetailedJob openJobs={openJobs} allJobsData={allJobsData} />
+                            <DetailedJob openJobs={openJobs} allJobsData={allJobsData} onEditJobSuccess={() => { setFetchJob(true) }} />
                         </>
                     )
                 }

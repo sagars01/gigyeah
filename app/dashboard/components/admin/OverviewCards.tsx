@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRightOutlined } from "@ant-design/icons";
 
 export interface OverviewCardProps {
+    key: string
     title: string | React.ReactNode;
     description: string;
     actionButtonLink?: string;

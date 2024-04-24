@@ -3,11 +3,11 @@ import Job from '@/app/libs/models/job/jobs.model';
 
 
 enum CandidateInterviewJourneyStatus {
-    applied = "Applied",
-    shortlisted = "Shortlisted",
-    interview = "Interview",
-    rejected = "Rejected",
-    hired = "Hired"
+    applied = "applied",
+    shortlisted = "shortlisted",
+    interview = "interview",
+    rejected = "rejected",
+    hired = "hired"
 }
 
 export interface IApplication {
