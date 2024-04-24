@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 
-import CreateJob from './components/job/createJob';
-import GetJobsComponent from './components/job/getJobs';
 
 import DashboardLayout from '@/app/dashboard/components/common/dashboard.layout';
 import MainAdminDashboard from './components/admin/MainAdminDashboard';
 import DashboardHeader from './components/common/dashboard.header';
 import URL from '../utils/constants/url/url';
-
+import './styles/dashboard.module.css'
 
 
 const DashboardComponent: React.FC = () => {

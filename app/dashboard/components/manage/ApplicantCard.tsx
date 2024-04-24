@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Card, Col, Button, Tooltip, Tag, Typography, Input, message } from 'antd';
+import { Card, Col, Button, Tooltip, Tag, Typography, Input, message, Modal } from 'antd';
 import { ArrowRightOutlined, CloseOutlined, FileOutlined, SaveOutlined, EditOutlined, CheckOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
 import SummaryModal from './SummaryModal';
 import URL from '@/app/utils/constants/url/url';
+
 
 interface Applicant {
     skills?: string[];
@@ -23,7 +24,6 @@ interface ApplicantCardProps {
     applicant: Applicant;
     handleMoveToNextStage: (applicant: Applicant) => void;
     handleReject: (applicant: Applicant) => void;
-    handleResume: (resumeUrl: string) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
     handleUpdateNotes: (id: string, notes: string) => void;
 }
@@ -32,7 +32,6 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     applicant,
     handleMoveToNextStage,
     handleReject,
-    handleResume,
     handleSaveForFuture,
     handleUpdateNotes
 }) => {
@@ -43,6 +42,8 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     const [modalVisible, setModalVisible] = useState(false);
     const [summarizing, setSummarizing] = useState(false);
 
+    const [viewResume, setViewResume] = useState<any>(null)
+
     const toggleEditMode = () => {
         setEditMode(!editMode);
         if (editMode && notes !== applicant.notes) {
@@ -50,9 +51,9 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         }
     };
     const handleSummarize = async (resumeUrl: string) => {
-
         const body = {
-            resumeUrl
+            resumeUrl,
+            jobDescription: 'I am looking for Staff Software Engineer'
         }
         try {
 
@@ -68,7 +69,7 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     const summarizeApplicant = async () => {
         setSummarizing(true);
         try {
-            const summaryText = "await handleSummarize(applicant.resumeUrl)";
+            const summaryText = await handleSummarize(applicant.resumeUrl);
             setSummary(summaryText);
             message.success('Summary is ready.');
         } catch (error) {
@@ -82,6 +83,9 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         setModalVisible(!modalVisible);
     };
 
+    const handleResume = (resumeUrl: string) => {
+        setViewResume(resumeUrl)
+    }
 
     const handleNotesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNotes(e.target.value);
@@ -89,6 +93,44 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
 
     return (
         <><SummaryModal visible={modalVisible} summary={summary} onClose={toggleModal} />
+            <Modal
+                centered={true}
+                styles={{
+                    header: {
+                        padding: '1rem',
+                        backgroundColor: '#f0f2f5',
+                    },
+                    body: {
+                        padding: '1rem',
+                        height: '80vh',
+                    },
+                    footer: {
+                        padding: '10px',
+                        backgroundColor: '#f0f2f5',
+                    },
+                    mask: {
+                        backgroundColor: 'rgba(0,0,0,0.5)'
+                    }
+                }}
+                footer={null}
+                open={!!viewResume}
+                onCancel={() => {
+                    setViewResume(null)
+                }}
+                destroyOnClose={true}
+
+
+            >
+                {
+                    viewResume &&
+                    <iframe
+                        className="w-full h-full"
+                        src={viewResume}>
+
+                    </iframe>
+                }
+
+            </Modal>
             <Col lg={8} md={12} xs={24}>
                 <Card
                     title={applicant.name}

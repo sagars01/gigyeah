@@ -1,12 +1,12 @@
 import { apiService } from "@/app/libs/request/apiservice";
 import URL from "@/app/utils/constants/url/url";
-import { ArrowRightOutlined, DeleteOutlined, EditOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Space, Table } from "antd"
+import { ArrowRightOutlined, DeleteOutlined, EditOutlined, LoadingOutlined, SettingOutlined } from "@ant-design/icons";
+import { Button, Col, Row, Space, Table, message } from "antd"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import EditJobDrawer from "../job/editJob";
 import { useState } from "react";
-import { any } from "joi";
+
 
 
 interface DetailedJobProps {
@@ -20,6 +20,28 @@ const DetailedJob: React.FC<DetailedJobProps> = ({ openJobs, allJobsData, onEdit
     const router = useRouter();
     const onManageJobClick = (jobId: string) => {
         router.push(URL.dashboard.manageApplication + "/" + jobId)
+    }
+
+    const [loading, setLoading] = useState(false)
+
+    const onDeleteJob = async (jobId: string) => {
+        try {
+            setLoading(true)
+            const response = await apiService.put(URL.api.private.jobs.update + "?jobId=" + jobId, {
+                status: 'expired'
+            })
+
+            if (response.message) {
+                message.success(
+                    "Job successfully deleted!"
+                )
+            }
+            onEditJobSuccess(true)
+        } catch (error) {
+            message.error("Could not process request!")
+        } finally {
+            setLoading(false)
+        }
     }
 
     const columns = [
@@ -69,7 +91,9 @@ const DetailedJob: React.FC<DetailedJobProps> = ({ openJobs, allJobsData, onEdit
                                 icon={<ArrowRightOutlined />}
                                 className="text-blue-500 hover:text-blue-700">View</Button>
                         </Link>
-                        <Button icon={<DeleteOutlined />} className="text-red-500 hover:text-red-700">Close Job</Button>
+                        <Button
+                            onClick={() => onDeleteJob(record.key)}
+                            icon={loading ? <LoadingOutlined /> : <DeleteOutlined />} className="text-red-500 hover:text-red-700">Close Job</Button>
                     </Space>
                 </>
             )

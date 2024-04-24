@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
-import Loading from '../libs/components/reusables/loading';
+import './styles/dashboard.module.css'
 import Head from 'next/head';
 
 const DashboardLayout = ({ children }: React.PropsWithChildren) => {

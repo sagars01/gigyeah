@@ -136,11 +136,6 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
         }
     };
 
-
-    const handleResume = (resumeUrl: string) => {
-
-    }
-
     const handleUpdateNotes = (notes: string) => {
 
     }
@@ -192,7 +187,6 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                                         applicant={applicant}
                                         handleMoveToNextStage={handleMoveToNextStage}
                                         handleReject={handleReject}
-                                        handleResume={handleResume}
                                         handleSaveForFuture={handleSaveForFuture}
                                         handleUpdateNotes={handleUpdateNotes}
                                     />

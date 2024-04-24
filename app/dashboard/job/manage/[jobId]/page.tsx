@@ -1,6 +1,5 @@
 import JobController from "@/app/libs/controllers/jobs/jobs.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
-import Loading from "@/app/libs/components/reusables/loading";
 import Unauthorized from "@/app/libs/components/reusables/unauthorized";
 import { Suspense } from "react";
 import DashboardLayout from "@/app/dashboard/components/common/dashboard.layout";
@@ -8,6 +7,7 @@ import ApplicantManagement from "../../../components/manage/ApplicantManagement"
 import { IJob } from "@/app/libs/models/job/jobs.model";
 import DashboardHeader from "@/app/dashboard/components/common/dashboard.header";
 import URL from "@/app/utils/constants/url/url";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 
 
@@ -51,7 +51,7 @@ export default async function Page({ params: { jobId } }: { params: { jobId: str
     return (
         <>
 
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading3QuartersOutlined />}>
                 <JobDetails id={userDetails.userId} jobId={jobId} />
             </Suspense>
         </>
