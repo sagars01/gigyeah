@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, RightSquareOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
+import URL from '@/app/utils/constants/url/url';
 
 
 const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, onDrawerClose, jobUpdatedEvt }) => {
@@ -19,6 +20,7 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
             const skillsArray = convertSkillsFormObject(jobDetails.requirements);
 
             form.setFieldsValue({
+                title: jobDetails.title,
                 description: jobDetails?.description,
                 payRange: {
                     currency: jobDetails?.payRange.currency,
@@ -42,13 +44,14 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
     const onSubmit = async (e: any) => {
 
         try {
+            setLoading(true);
             const formData = form.getFieldsValue();
             const updatedRequirementModel = convertSkillsArray(formData.requirements);
             formData.requirements = updatedRequirementModel;
 
             setLoading(true)
             const response = await apiService.put(
-                `/job/update?jobId=${jobDetails?._id}`,
+                `${URL.api.private.jobs.update}?jobId=${jobDetails?._id}`,
                 formData
             )
             message.success("Job Updated successfully!")
@@ -57,7 +60,6 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
 
             form.resetFields();
             onClose();
-            setLoading(false);
         } catch (error) {
             console.log(error)
             message.error("Unexpected error ocurred. Try Again!")
@@ -96,13 +98,30 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
                     <Button onClick={onClose} style={{ marginRight: 8 }}>
                         Cancel
                     </Button>
-                    <Button onClick={() => form.submit()} type="primary">
+                    <Button disabled={loading}
+                        icon={
+                            <>{
+                                loading ?
+                                    <LoadingOutlined />
+                                    : <RightSquareOutlined />
+                            }</>
+                        }
+                        onClick={() => form.submit()} type="primary">
                         Submit
                     </Button>
                 </div>
             }
         >
             <Form form={form} layout="vertical" onFinish={onSubmit}>
+                <Col span={24}>
+                    <Form.Item
+                        name="title"
+                        label="Job Title"
+                        rules={[{ required: true, message: 'Please enter job title' }]}
+                    >
+                        <Input placeholder="Please enter job title" />
+                    </Form.Item>
+                </Col>
                 <Form.Item name="description" label="Description" rules={[{ required: true }]}>
                     <Input.TextArea rows={4} placeholder="Job description" />
                 </Form.Item>
@@ -170,7 +189,7 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
                                         <MinusCircleOutlined onClick={() => remove(name)} />
                                     </Space>
                                 ))}
-                                <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                                <Button disabled={loading} type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
                                     Add Skill
                                 </Button>
                             </>
@@ -186,6 +205,7 @@ export default EditJobDrawer;
 
 interface JobDetails {
     _id: string;
+    title: string;
     description: string;
     payRange: {
         min: number;

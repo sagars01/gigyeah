@@ -1,11 +1,10 @@
 import { del, put } from '@vercel/blob';
-import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import PublicJobsController from '../controllers/publicjob.controller';
 import JobRequestValidatorSchema from './requestValidator'; // Ensure correct path and usage
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-    let blobUrl = null;
+    let blobUrl: any = null;
     try {
         if (req.method !== "POST") {
             return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });

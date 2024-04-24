@@ -1,4 +1,10 @@
+import { number } from 'joi';
 import mongoose, { Schema, Document } from 'mongoose';
+
+export enum JOB_STATUS {
+    active = 'active',
+    expired = 'expired'
+}
 
 const CreatedBySchema = new Schema<CreatedByType>({
     name: { type: String, required: true },
@@ -38,7 +44,11 @@ const JobSchema = new Schema<IJob>({
         },
     },
     postedAt: { type: Date, default: Date.now },
-    status: { type: String, required: true, default: 'active' }
+    status: { type: String, required: true, default: JOB_STATUS.active },
+    applicationCount: {
+        type: Number,
+        required: false
+    }
 });
 
 function arrayLimit(val: string[]) {
@@ -76,7 +86,8 @@ export interface IJob {
     company: {
         name: string;
         description: string;
-    }
+    },
+    applicationCount: number;
 }
 
 export type CreatedByType = {

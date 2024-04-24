@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
-import Loading from '../libs/components/reusables/loading';
+import './styles/dashboard.module.css'
+import Head from 'next/head';
 
 const DashboardLayout = ({ children }: React.PropsWithChildren) => {
 
@@ -14,35 +15,26 @@ const DashboardLayout = ({ children }: React.PropsWithChildren) => {
 
     return (
         <html lang="en">
+            <Head>
+                <title>Dashboard</title>
+                <meta property="og:title" content="My page title" key="title" />
+            </Head>
+            <Head>
+                <meta property="og:title" content="My new title" key="title" />
+            </Head>
             <body>
                 {
                     isClient && (
-                        <ClerkProvider>
-                            <ClerkLoading>
-                                <Loading />
-                            </ClerkLoading>
+                        <>
+
                             {children}
-                        </ClerkProvider>
+
+                        </>
                     )
                 }
-
             </body>
         </html>
     )
 };
 
 export default DashboardLayout;
-
-/**
- * 
- * <ClerkProvider>
-                <ClerkLoading>
-                    <div className="loader"></div>
-                </ClerkLoading>
-                <ClerkLoaded>
-                    {children}
-                </ClerkLoaded>
-            </ClerkProvider>
- * 
- * 
- */

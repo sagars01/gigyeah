@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, Typography, message } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
 
 interface ICreateJobProps {
@@ -27,6 +27,8 @@ const { Option } = Select;
 const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClose, jobCreatedEvt }) => {
     const [open, setOpen] = useState(openDrawer);
 
+    const [loading, setLoading] = useState(false);
+
     const [form] = Form.useForm();
 
     const onClose = () => {
@@ -41,6 +43,7 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
     }, [openDrawer]);
 
     const onSubmit = async (e: any) => {
+        setLoading(true)
         const formData: IJob = form.getFieldsValue();
         const updatedRequirementModel = convertSkillsArray(formData.requirements);
         formData.requirements = updatedRequirementModel;
@@ -55,9 +58,10 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
             form.resetFields();
 
         } catch (error) {
-            // TODO: Point out exactly where the error is on the form
             console.log(error)
             message.error("Unexpected error ocurred. Try Again!")
+        } finally {
+            setLoading(false)
         }
 
     }
@@ -89,14 +93,18 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                 }}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={onSubmit} type="primary">
+                        <Button disabled={loading}
+                            onClick={onClose}>Cancel</Button>
+                        <Button
+                            icon={loading && <LoadingOutlined />}
+                            disabled={loading} onClick={onSubmit} type="primary">
                             Submit
                         </Button>
                     </Space>
                 }
             >
-                <Form form={form} layout="vertical" requiredMark="optional" onFinish={onSubmit}>
+                <Form
+                    form={form} layout="vertical" requiredMark="optional" onFinish={onSubmit}>
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item

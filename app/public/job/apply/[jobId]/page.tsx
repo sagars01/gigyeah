@@ -31,7 +31,7 @@ export default async function JobApplicationPage({ params: { jobId = "" } }) {
                 span: 16,
                 offset: 4
             }}>
-                {!error && <Title style={{ margin: '2rem 0' }}>{jobDetail?.title} at {jobDetail?.createdBy.company.name}</Title>}
+                {!error && <Title style={{ margin: '2rem 0' }}>{jobDetail?.title}</Title>}
             </Col>
             <Row gutter={[8, 8]}>
                 {error ? (

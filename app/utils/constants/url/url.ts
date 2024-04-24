@@ -20,8 +20,29 @@ const URL = {
     api: {
         public: {
             job: {
-                apply: '/api/job/public/apply'
+                apply: '/api/job/public/apply',
             }
+        },
+        private: {
+            jobs: {
+                fetch: '/job/fetch',
+                update: '/job/update'
+            },
+            application: {
+                update: '/application/update'
+            },
+            applicant: {
+                update: '/application/applicant/update'
+            },
+            ai: {
+                summarize: '/ai/summarize'
+            }
+        }
+    },
+    assets: {
+        branding: {
+            logoh: '/img/logo/logo_h.png',
+            logov: '/img/logo/logo_v.png'
         }
     }
 };

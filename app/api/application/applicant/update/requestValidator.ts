@@ -1,9 +1,9 @@
 import Joi from 'joi';
 
-const updateApplicationStatusValidationSchema = Joi.object({
+const updateApplicantDataValidationSchema = Joi.object({
     status: Joi.string()
         .valid('applied', 'rejected', 'interview', 'shortlisted', 'hired')
-        .required()
+        .optional()
         .messages({
             'any.required': 'Status is required',
             'any.only': 'Incorrect Status',
@@ -14,6 +14,7 @@ const updateApplicationStatusValidationSchema = Joi.object({
             'any.required': 'ApplicantId is required',
             'any.only': 'applicantId must be an uuid "',
         }),
+
 });
 
-export default updateApplicationStatusValidationSchema;
+export default updateApplicantDataValidationSchema;
