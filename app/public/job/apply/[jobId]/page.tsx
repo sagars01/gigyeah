@@ -1,42 +1,29 @@
-'use client';
-import { useEffect, useState } from 'react';
+'use server'
 import JobListing from './jobListing';
 import ResumeUploadForm from './resumeUploader';
-import { Row, Col } from 'antd';
 import Title from 'antd/es/typography/Title';
 import PublicHeader from '@/app/libs/components/reusables/header.public';
+import PublicJobsController from '@/app/api/job/public/controllers/publicjob.controller';
+import Col from 'antd/es/col';
+import Row from 'antd/es/row';
 
 
 async function getJobInformation(jobId: string) {
     try {
-        const res = await fetch(`/api/job/public?jobId=${jobId}`);
-        if (!res.ok) {
-            throw new Error(`Failed to fetch job, received status ${res.status}`);
+        const response = await PublicJobsController.getJobDetails(jobId);
+        return {
+            job: { ...response },
+            error: null
         }
-        const job = await res.json();
-        return { job, error: null };
     } catch (error: any) {
         return { job: null, error: error.message };
     }
 }
 
-export default function JobApplicationPage({ params: { jobId = "" } }) {
-    const [jobDetail, setJobDetails] = useState<any>(null);
-    const [jobFetchError, setJobFetchError] = useState<boolean>(false);
-    const [loading, setLoading] = useState(false);
+export default async function JobApplicationPage({ params: { jobId = "" } }) {
 
-    useEffect(() => {
-        const fetchJob = async () => {
-            setLoading(true)
-            const { job, error } = await getJobInformation(jobId);
-            if (!error) setJobDetails(job)
-            else {
-                setJobFetchError(true)
-            }
-            setLoading(false)
-        }
-        fetchJob()
-    }, [jobId]);
+    const { job: jobDetail, error }: any = await getJobInformation(jobId);
+
     return (
         <>
             <PublicHeader />
@@ -44,12 +31,12 @@ export default function JobApplicationPage({ params: { jobId = "" } }) {
                 span: 16,
                 offset: 4
             }}>
-                {!loading && !jobFetchError && <Title style={{ margin: '2rem 0' }}>{jobDetail?.title} at {jobDetail?.createdBy.company.name}</Title>}
+                {!error && <Title style={{ margin: '2rem 0' }}>{jobDetail?.title}</Title>}
             </Col>
             <Row gutter={[8, 8]}>
-                {jobFetchError ? (
+                {error ? (
                     <Col span={24}>
-                        <JobListing jobContent={jobDetail} error={jobFetchError} />
+                        <JobListing jobContent={jobDetail} error={error} />
                     </Col>
                 ) : (
                     <>
@@ -59,7 +46,7 @@ export default function JobApplicationPage({ params: { jobId = "" } }) {
                             md={{ span: 8, offset: 4 }}
                             lg={{ span: 8, offset: 4 }}
                         >
-                            <JobListing jobContent={jobDetail} error={jobFetchError} />
+                            <JobListing jobContent={jobDetail} error={error} />
                         </Col>
                         {jobDetail?.status !== 'expired' && (
                             <Col xs={24}

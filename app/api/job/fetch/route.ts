@@ -5,8 +5,6 @@
 
 export const dynamic = 'force-dynamic';
 
-// TODO: Move all these functions from the route to the controller.
-
 import dbConnect from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";

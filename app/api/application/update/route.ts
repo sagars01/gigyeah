@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import ApplicationsController from "@/app/libs/controllers/applications/applications.controller";
 import { ISessionInformation, getSessionInformation } from "@/app/utils/auth/getUserSessionData";
 import ValidationSchema from "./requestValidator";
+import logger from "@/app/utils/logging/logger";
 
+// TODO: Check if the application Id and the JobId matches
 
 export async function PUT(request: NextRequest) {
     const userDetails: ISessionInformation = await getSessionInformation(request);
@@ -33,6 +35,7 @@ export async function PUT(request: NextRequest) {
 
         return NextResponse.json({ ...updatedApplication }, { status: 200 });
     } catch (error) {
+        logger.error(error);
         return NextResponse.json({ error: 'Failed to update application status' }, { status: 500 });
     }
 }

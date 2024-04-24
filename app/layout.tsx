@@ -2,6 +2,7 @@ import React from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
+import { ClerkProvider } from '@clerk/nextjs';
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
@@ -11,7 +12,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
     }}>
       <Analytics />
       <SpeedInsights />
-      {children}
+      <ClerkProvider>
+        {children}
+      </ClerkProvider>
     </body>
   </html >
 );

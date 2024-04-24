@@ -1,5 +1,6 @@
 import AISummarize from "@/app/libs/controllers/ai/summarize.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
+import { AxiosRequestConfig } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -11,6 +12,8 @@ export async function POST(request: NextRequest) {
                 reason: "User is not a premium user"
             })
         }
+
+        const bearerToken = request.cookies.get('__session')?.value;
         const {
             resumeUrl,
             jobDescription
@@ -35,8 +38,12 @@ export async function POST(request: NextRequest) {
                 statusText: "Invalid_Request"
             })
         }
-
-        const summary = await AISummarize.getSummary(resumeUrl, jobDescription);
+        const config: AxiosRequestConfig = {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`
+            }
+        }
+        const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
         return NextResponse.json({
             ...summary
         })
