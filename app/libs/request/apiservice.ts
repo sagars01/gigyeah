@@ -1,3 +1,4 @@
+
 export interface ApiResponse<T> {
     applicants: never[];
     data: T;
@@ -9,7 +10,8 @@ interface ApiError {
     statusCode?: number;
 }
 
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+
 
 class ApiService {
     private axiosInstance: AxiosInstance;
@@ -23,9 +25,9 @@ class ApiService {
         });
     }
 
-    async get<T>(url: string): Promise<ApiResponse<T>> {
+    async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.axiosInstance.get<ApiResponse<T>>(url);
+            const response = await this.axiosInstance.get<ApiResponse<T>>(url, config);
             return response.data
         } catch (error: any) {
             const apiError: ApiError = this.handleError(error);
@@ -33,9 +35,9 @@ class ApiService {
         }
     }
 
-    async post<T>(path: string, data: unknown): Promise<ApiResponse<T>> {
+    async post<T>(path: string, data: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.axiosInstance.post<ApiResponse<T>>(path, data);
+            const response = await this.axiosInstance.post<ApiResponse<T>>(path, data, config);
             return response.data;
         } catch (error: any) {
             const apiError: ApiError = this.handleError(error);
@@ -43,9 +45,9 @@ class ApiService {
         }
     }
 
-    async put<T>(url: string, data: unknown): Promise<any> {
+    async put<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<any> {
         try {
-            const response = await this.axiosInstance.put<ApiResponse<T>>(url, data);
+            const response = await this.axiosInstance.put<ApiResponse<T>>(url, data, config);
             return response.data;
         } catch (error: any) {
             const apiError: ApiError = this.handleError(error);

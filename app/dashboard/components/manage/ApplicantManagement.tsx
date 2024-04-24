@@ -54,7 +54,6 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     const fetchApplicants = async () => {
         setLoading(true);
         try {
-            debugger
             const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobId}`);
             const applicantMap: any = {};
 
