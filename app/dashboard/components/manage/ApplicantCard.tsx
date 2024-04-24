@@ -4,6 +4,8 @@ import { ArrowRightOutlined, CloseOutlined, FileOutlined, SaveOutlined, EditOutl
 import { apiService } from '@/app/libs/request/apiservice';
 import SummaryModal from './SummaryModal';
 import URL from '@/app/utils/constants/url/url';
+import Paragraph from 'antd/es/typography/Paragraph';
+import TextArea from 'antd/es/input/TextArea';
 
 
 interface Applicant {
@@ -25,15 +27,13 @@ interface ApplicantCardProps {
     handleMoveToNextStage: (applicant: Applicant) => void;
     handleReject: (applicant: Applicant) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
-    handleUpdateNotes: (id: string, notes: string) => void;
 }
 
 const ApplicantCard: React.FC<ApplicantCardProps> = ({
     applicant,
     handleMoveToNextStage,
     handleReject,
-    handleSaveForFuture,
-    handleUpdateNotes
+    handleSaveForFuture
 }) => {
     const [editMode, setEditMode] = useState(false);
     const [notes, setNotes] = useState(applicant.notes || '');
@@ -46,9 +46,6 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
-        if (editMode && notes !== applicant.notes) {
-            handleUpdateNotes(applicant._id, notes);
-        }
     };
     const handleSummarize = async (resumeUrl: string) => {
         const body = {
@@ -87,9 +84,24 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         setViewResume(resumeUrl)
     }
 
-    const handleNotesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNotes(e.target.value);
     };
+    const [saving, setSavingNotes] = useState(false);
+    const handleSaveNotes = async () => {
+        try {
+            setSavingNotes(true)
+            await apiService.post(URL.api.private.applicant.update + `?applicantId=${applicant._id}`, {
+                notes
+            })
+
+        } catch (error) {
+            message.error("Could not save notes");
+        } finally {
+            setSavingNotes(false)
+            toggleEditMode();
+        }
+    }
 
     return (
         <><SummaryModal visible={modalVisible} summary={summary} onClose={toggleModal} />
@@ -180,22 +192,26 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
                             {applicant.skills.map((skill) => <Tag color="blue" key={skill}>{skill}</Tag>)}
                         </div>
                     )}
-                    <div className="mt-2">
+                    <hr className='mt-4' />
+                    <div className="mt-4">
+
                         {editMode ? (
-                            <Input
-                                value={notes}
-                                onChange={handleNotesChange}
-                                suffix={
-                                    <Tooltip title="Save">
-                                        <CheckOutlined onClick={toggleEditMode} />
-                                    </Tooltip>
-                                }
-                            />
+                            <div className='flex space-x-2'>
+                                <TextArea
+                                    disabled={saving}
+                                    value={notes}
+                                    rows={2}
+                                    onChange={handleNotesChange}
+                                />
+                                <Button onClick={handleSaveNotes} className='mt-2 float-end top-3' type='default' icon={<SaveOutlined />}></Button>
+                            </div>
                         ) : (
-                            <Typography.Text onClick={toggleEditMode}>
-                                {notes || 'Add notes...'}
-                                <EditOutlined className="ml-2" />
-                            </Typography.Text>
+                            <Paragraph>
+                                <Typography.Text onClick={toggleEditMode}>
+                                    {notes || 'Add notes...'}
+                                    <EditOutlined className="ml-2" />
+                                </Typography.Text>
+                            </Paragraph>
                         )}
                     </div>
                 </Card>

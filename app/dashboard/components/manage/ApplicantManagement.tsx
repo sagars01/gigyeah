@@ -54,6 +54,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     const fetchApplicants = async () => {
         setLoading(true);
         try {
+            debugger
             const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobId}`);
             const applicantMap: any = {};
 
@@ -136,10 +137,6 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
         }
     };
 
-    const handleUpdateNotes = (notes: string) => {
-
-    }
-
     const handleMoveToNextStage = async (applicant: Applicant) => {
         try {
             await updateApplicationStatus(applicant, applicant._id, nextStatus[applicant.status])
@@ -188,7 +185,6 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                                         handleMoveToNextStage={handleMoveToNextStage}
                                         handleReject={handleReject}
                                         handleSaveForFuture={handleSaveForFuture}
-                                        handleUpdateNotes={handleUpdateNotes}
                                     />
                                 )) :
                                 <div className="flex justify-center items-center w-full h-4/5 mt-4 mb-4">

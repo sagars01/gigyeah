@@ -19,6 +19,7 @@ export interface IApplication {
     resumeUrl: string;
     applicationsReceived: number;
     status: string;
+    notes: string;
 }
 
 const ApplicationsSchema = new Schema<IApplication>({
@@ -35,6 +36,10 @@ const ApplicationsSchema = new Schema<IApplication>({
     applicationsReceived: {
         type: Number,
         default: 0
+    },
+    notes: {
+        type: String,
+        required: false
     }
 });
 

@@ -31,6 +31,9 @@ const URL = {
             application: {
                 update: '/application/update'
             },
+            applicant: {
+                update: '/application/applicant/update'
+            },
             ai: {
                 summarize: '/ai/summarize'
             }

@@ -65,7 +65,7 @@ export default function MobileMenu() {
         >
           <ul className="px-5 py-2">
             <li>
-              <Link href="/signin" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Sign in</Link>
+              <Link href="/sign-in" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Sign in</Link>
             </li>
             <li>
               <Link href="/signup" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 w-full my-2" onClick={() => setMobileNavOpen(false)}>
@@ -75,7 +75,7 @@ export default function MobileMenu() {
                 </svg>
               </Link>
             </li>
-          </ul>          
+          </ul>
         </Transition>
       </div>
     </div>
