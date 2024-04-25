@@ -5,6 +5,7 @@ import { AxiosRequestConfig } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+    const LOG_LEVEL = process.env.LOG_LEVEL;
     try {
         const userInformation = await getSessionInformation(request);
         if (userInformation.subscriptionLevel === 0) {
@@ -46,8 +47,9 @@ export async function POST(request: NextRequest) {
                 Authorization: `Bearer ${bearerToken}`
             }
         }
-
-        logger.log(LogLevel.INFO, config.headers?.Authorization)
+        if (LOG_LEVEL === "debug") {
+            logger.log(LogLevel.INFO, config.headers?.Authorization)
+        }
         const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
         return NextResponse.json({
             ...summary
