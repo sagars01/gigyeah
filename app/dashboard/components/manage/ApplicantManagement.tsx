@@ -179,6 +179,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                             {applicants?.length > 0 ?
                                 applicants?.map(applicant => (
                                     <ApplicantCard
+                                        jobDescription={jobDesc}
                                         key={applicant._id}
                                         applicant={applicant}
                                         handleMoveToNextStage={handleMoveToNextStage}
