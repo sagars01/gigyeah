@@ -1,5 +1,6 @@
 import AISummarize from "@/app/libs/controllers/ai/summarize.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
+import logger, { LogLevel } from "@/app/utils/logging/logger";
 import { AxiosRequestConfig } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -18,6 +19,8 @@ export async function POST(request: NextRequest) {
             resumeUrl,
             jobDescription
         } = await request.json();
+
+
 
         if (!resumeUrl || !jobDescription) {
             return NextResponse.json({
@@ -43,6 +46,8 @@ export async function POST(request: NextRequest) {
                 Authorization: `Bearer ${bearerToken}`
             }
         }
+
+        logger.log(LogLevel.INFO, config.headers?.Authorization)
         const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
         return NextResponse.json({
             ...summary
