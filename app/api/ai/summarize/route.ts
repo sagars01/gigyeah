@@ -1,5 +1,6 @@
 import AISummarize from "@/app/libs/controllers/ai/summarize.controller";
 import { getSessionInformation } from "@/app/utils/auth/getUserSessionData";
+import logger, { LogLevel } from "@/app/utils/logging/logger";
 import { AxiosRequestConfig } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
                 reason: "User is not a premium user"
             })
         }
-
+        logger.log(LogLevel.INFO, "API AI Summarize: Request Received")
         const bearerToken = request.cookies.get('__session')?.value;
         const {
             resumeUrl,
@@ -43,11 +44,13 @@ export async function POST(request: NextRequest) {
                 Authorization: `Bearer ${bearerToken}`
             }
         }
+        logger.log(LogLevel.INFO, "API AI Summarize: Sent to AI Engine")
         const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
         return NextResponse.json({
             ...summary
         })
     } catch (error: any) {
+        logger.error(LogLevel.FATAL, `Failed to generate response : ${error}`)
         return NextResponse.json({
             message: "FAIL",
             reason: error

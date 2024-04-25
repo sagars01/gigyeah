@@ -35,7 +35,10 @@ const URL = {
                 update: '/application/applicant/update'
             },
             ai: {
-                summarize: '/ai/summarize'
+                summarize: '/ai/summarize',
+                engine: {
+                    summarize: '/api/v1/summarize'
+                }
             }
         }
     },
