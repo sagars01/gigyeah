@@ -27,13 +27,15 @@ interface ApplicantCardProps {
     handleMoveToNextStage: (applicant: Applicant) => void;
     handleReject: (applicant: Applicant) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
+    jobDescription: string;
 }
 
 const ApplicantCard: React.FC<ApplicantCardProps> = ({
     applicant,
     handleMoveToNextStage,
     handleReject,
-    handleSaveForFuture
+    handleSaveForFuture,
+    jobDescription
 }) => {
     const [editMode, setEditMode] = useState(false);
     const [notes, setNotes] = useState(applicant.notes || '');
@@ -50,7 +52,7 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     const handleSummarize = async (resumeUrl: string) => {
         const body = {
             resumeUrl,
-            jobDescription: 'I am looking for Staff Software Engineer'
+            jobDescription
         }
         try {
 
