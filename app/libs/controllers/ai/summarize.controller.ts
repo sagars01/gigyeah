@@ -24,9 +24,7 @@ class AISummarize {
         try {
             logger.log(LogLevel.INFO, "Summarize Controller : Request Recieved")
             const extractedTextFromPDF = await extractTextFromPDF(pdfUrl, jobDescription, config);
-            return {
-                summary: extractedTextFromPDF
-            }
+            return extractedTextFromPDF;
         } catch (error) {
             logger.log(LogLevel.ERROR, "Summarize Controller Failed: Error Processing Request: " + error)
             console.error('Error summarizing PDF:', error);

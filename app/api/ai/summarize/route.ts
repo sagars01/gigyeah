@@ -52,9 +52,7 @@ export async function POST(request: NextRequest) {
         }
         logger.log(LogLevel.INFO, "API AI Summarize: Sent to AI Engine")
         const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
-        return NextResponse.json({
-            ...summary
-        })
+        return NextResponse.json(summary)
     } catch (error: any) {
         logger.error(LogLevel.FATAL, `Failed to generate response : ${error}`)
         return NextResponse.json({
