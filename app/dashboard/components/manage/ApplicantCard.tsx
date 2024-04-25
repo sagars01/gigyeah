@@ -57,8 +57,7 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         try {
 
             const response: any = await apiService.post(URL.api.private.ai.summarize, body)
-            const { summary: { text } } = response;
-            return text
+            return response
 
         } catch (error: any) {
             throw new Error("Could not process request")

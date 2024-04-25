@@ -2,6 +2,16 @@ import Joi from 'joi';
 
 // TODO: Phase 2: User Profile where onclick on the postedBy people should be redirected to User LinkTree Page
 
+const wordCount = (value, helpers) => {
+    const wordLimit = 500;
+    const wordCount = value.trim().split(/\s+/).length;
+    if (wordCount > wordLimit) {
+        return helpers.message(`"description" exceeds the word limit of ${wordLimit}`);
+    }
+    return value;
+};
+
+
 const jobSchema = Joi.object({
     createdBy: {
         name: Joi.string().required(),
@@ -13,7 +23,7 @@ const jobSchema = Joi.object({
         id: Joi.string().required()
     },
     title: Joi.string().required(),
-    description: Joi.string().required().max(1000),
+    description: Joi.string().required().custom(wordCount),
     requirements: Joi.array().items(
         Joi.string().required()
     ).max(3),
