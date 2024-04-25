@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
                 reason: "User is not a premium user"
             })
         }
-
+        logger.log(LogLevel.INFO, "API AI Summarize: Request Received")
         const bearerToken = request.cookies.get('__session')?.value;
         const {
             resumeUrl,
@@ -50,11 +50,13 @@ export async function POST(request: NextRequest) {
         if (LOG_LEVEL === "debug") {
             logger.log(LogLevel.INFO, config.headers?.Authorization)
         }
+        logger.log(LogLevel.INFO, "API AI Summarize: Sent to AI Engine")
         const summary = await AISummarize.getSummary(resumeUrl, jobDescription, config);
         return NextResponse.json({
             ...summary
         })
     } catch (error: any) {
+        logger.error(LogLevel.FATAL, `Failed to generate response : ${error}`)
         return NextResponse.json({
             message: "FAIL",
             reason: error
