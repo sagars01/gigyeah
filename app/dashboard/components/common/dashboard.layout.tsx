@@ -17,9 +17,9 @@ import Link from 'next/link';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import URL from '@/app/utils/constants/url/url';
-import ResponsiveLogo from '@/app/libs/components/reusables/Logo';
+import ResponsiveLogo from '@/app/libs/components/reusables/ResponsiveLogo';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 

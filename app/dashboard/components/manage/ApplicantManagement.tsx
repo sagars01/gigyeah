@@ -1,13 +1,15 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Spin, Button, message, Row, Col, Empty, Tooltip, Tag } from 'antd';
-import { ArrowRightOutlined, DownOutlined, CloseOutlined, FileOutlined, HeartOutlined, CheckCircleOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Card, Spin, Button, message, Row, Col, Empty, Space } from 'antd';
+import { LoadingOutlined, DatabaseOutlined, RightOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
 import Stages from './Stages';
 import Title from 'antd/es/typography/Title';
 import ApplicantCard from './ApplicantCard';
 import URL from '@/app/utils/constants/url/url';
 import Paragraph from 'antd/es/typography/Paragraph';
+import RejectedPool from './RejectedPool';
+import Link from 'next/link';
 
 
 enum CandidateInterviewJourneyStatus {
@@ -47,11 +49,12 @@ interface ApplicationManagementProps {
 
 const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobDesc, jobTitle }) => {
     const [applicants, setApplicants] = useState<Applicant[]>([]);
+    const [viewStage, setViewStage] = useState<string>('applied')
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [allApplicants, setAllApplicants] = useState<any>({});
 
-    const fetchApplicants = async () => {
+    const fetchApplicants = async (updateState?: boolean) => {
         setLoading(true);
         try {
             const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobId}`);
@@ -66,7 +69,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                 });
             }
             setAllApplicants(applicantMap);
-            setApplicants(applicantMap['applied'])
+            setApplicants(applicantMap[viewStage])
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -89,10 +92,11 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
             applicants = allApplicants[stageName]
         }
         setApplicants(applicants);
+        setViewStage(stageName)
     }
 
 
-    const updateApplicationStatus = async (applicant: Applicant, applicantId: string, status: string) => {
+    const updateApplicationStatus = async (applicantId: string, status: string) => {
         const updateResponse = await apiService.put(URL.api.private.application.update, {
             applicantId,
             status
@@ -103,11 +107,14 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
 
     const handleReject = async (applicant: Applicant) => {
         try {
-            await updateApplicationStatus(applicant, applicant._id, CandidateInterviewJourneyStatus.rejected);
+            setLoading(true)
+            await updateApplicationStatus(applicant._id, CandidateInterviewJourneyStatus.rejected);
             updateLocalApplicantStatus(applicant._id, applicant.status, CandidateInterviewJourneyStatus.rejected);
             message.success(`${applicant.applicantName} has been rejected.`);
         } catch (error) {
             message.error('Failed to reject applicant.');
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -138,12 +145,26 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
 
     const handleMoveToNextStage = async (applicant: Applicant) => {
         try {
-            await updateApplicationStatus(applicant, applicant._id, nextStatus[applicant.status])
+            await updateApplicationStatus(applicant._id, nextStatus[applicant.status])
             updateLocalApplicantStatus(applicant._id, applicant.status, nextStatus[applicant.status])
             message.success(`${applicant.applicantName} has moved to ${nextStatus[applicant.status]}`)
         } catch (error) {
             message.error(`Could not process request at the moment!`)
         }
+    }
+
+    const handleMoveBackToShortlist = async (applicantId: string, previousStage: string, newStage: string) => {
+        try {
+            setLoading(true)
+            await updateApplicationStatus(applicantId, newStage);
+            updateLocalApplicantStatus(applicantId, previousStage, newStage)
+            message.success(`Candidate moved back to the race!`)
+        } catch (error) {
+            message.error(`Could not process request at the moment!`)
+        } finally {
+            setLoading(false)
+        }
+
     }
 
     const handleSaveForFuture = (applicants: Applicant) => {
@@ -152,9 +173,14 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
 
     return (
         <>
-            <div className='mb-8'>
+            <div className='mb-8 inline-block'>
                 <Title level={3}>
-                    {jobTitle}
+                    <Link
+                        className='text-blue-500'
+                        target='_blank'
+                        href={URL.dashboard.viewJob + `/${jobId}`}>
+                        {jobTitle}
+                    </Link>
                 </Title>
                 <Paragraph
                     ellipsis={{
@@ -168,11 +194,16 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                     {jobDesc}
                 </Paragraph>
             </div>
+            <RejectedPool applicantData={allApplicants['rejected']}
+                openRejectPool={true}
+                loading={loading}
+                onDrawerClose={() => fetchApplicants()}
+                updateApplicantStatus={handleMoveBackToShortlist} />
             <Stages onChangeEvt={onStageChange} />
             {
                 loading ?
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '20vh' }}>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: '2rem' }} spin />} />
                     </div> :
                     <div className='mt-4 mb-4'>
                         <Row gutter={[16, 16]}>
