@@ -122,7 +122,7 @@ const DetailedJob: React.FC<DetailedJobProps> = ({ openJobs, allJobsData, onEdit
                 setJobToEdit(null)
             }} />
             <Row className="mt-4 mb-4">
-                <Col lg={24} md={24} xs={24} className="mt-4 mb-4">
+                <Col lg={24} md={24} xs={24} className="mt-4 mb-4 overflow-x-auto">
                     <Table dataSource={openJobs} columns={columns} pagination={false} />
                 </Col>
             </Row>

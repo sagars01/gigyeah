@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Steps } from 'antd';
 
 
@@ -39,7 +39,7 @@ const App: React.FC<StagesProps> = ({ onChangeEvt }) => {
                 current={current}
                 onChange={onChange}
                 responsive={true}
-                className="site-navigation-steps"
+                className="site-navigation-steps mb-10"
                 items={stagesList}
             />
 
@@ -50,5 +50,6 @@ const App: React.FC<StagesProps> = ({ onChangeEvt }) => {
 export default App;
 
 interface StagesProps {
-    onChangeEvt: (stageName: string) => void
+    onChangeEvt: (stageName: string) => void;
+    currentStage?: number //TODO: Update stage based on route query param
 }
