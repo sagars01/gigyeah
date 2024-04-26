@@ -5,6 +5,9 @@ import { Button, Row, Col } from 'antd';
 import { HomeOutlined, DollarOutlined, PhoneOutlined, LoginOutlined } from '@ant-design/icons';
 import styles from '../../../libs/styles/components/PublicHeader.module.css'; // Import your CSS module for styling
 import Image from 'next/image';
+import URL from '@/app/utils/constants/url/url';
+import ResponsiveLogo from './ResponsiveLogo';
+import Footer from '@/app/home/components/ui/footer';
 
 
 interface IHeaderProps {
@@ -18,9 +21,6 @@ const PublicHeader: React.FC<IHeaderProps> = ({ hideOption = true }) => {
     return (
         <div className={styles.header}>
             <Row justify="space-between" align="middle" className={styles.row}>
-                <Col>
-                    <Image onClick={() => navigateTo('/')} width="150" height="120" src="/icon-large.png" alt="Company Logo" className={styles.logo} />
-                </Col>
                 <Col >
                     {
                         !hideOption && (

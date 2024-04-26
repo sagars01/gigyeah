@@ -10,6 +10,7 @@ import URL from '@/app/utils/constants/url/url';
 import Paragraph from 'antd/es/typography/Paragraph';
 import RejectedPool from './RejectedPool';
 import Link from 'next/link';
+import ApplicantSummarizer from './ApplicantSummarizer';
 
 
 enum CandidateInterviewJourneyStatus {
@@ -53,6 +54,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [allApplicants, setAllApplicants] = useState<any>({});
+    const [comparingApplicant, setComparingApplicant] = useState<Applicant[]>([])
 
     const fetchApplicants = async (updateState?: boolean) => {
         setLoading(true);
@@ -168,8 +170,24 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     }
 
     const handleSaveForFuture = (applicants: Applicant) => {
-
+        // TODO: Repository
     }
+
+    const handleSetupForComparison = (applicant: Applicant) => {
+        // Check if the applicant is already in the comparingApplicant array
+        if (comparingApplicant.length <= 2) {
+
+            const index = comparingApplicant.findIndex(a => a._id === applicant._id);
+
+            if (index === -1) {
+                // Applicant not found in the array, add them
+                setComparingApplicant([...comparingApplicant, applicant]);
+            } else {
+                // Applicant found, remove them from the array
+                setComparingApplicant(current => current.filter(a => a._id !== applicant._id));
+            }
+        }
+    };
 
     return (
         <>
@@ -194,11 +212,16 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                     {jobDesc}
                 </Paragraph>
             </div>
-            <RejectedPool applicantData={allApplicants['rejected']}
-                openRejectPool={true}
-                loading={loading}
-                onDrawerClose={() => fetchApplicants()}
-                updateApplicantStatus={handleMoveBackToShortlist} />
+            <div>
+                <Space>
+                    <ApplicantSummarizer jobTitle={jobTitle} applicants={comparingApplicant} />
+                    <RejectedPool applicantData={allApplicants['rejected']}
+                        openRejectPool={true}
+                        loading={loading}
+                        onDrawerClose={() => fetchApplicants()}
+                        updateApplicantStatus={handleMoveBackToShortlist} />
+                </Space>
+            </div>
             <Stages onChangeEvt={onStageChange} />
             {
                 loading ?
@@ -210,6 +233,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                             {applicants?.length > 0 ?
                                 applicants?.map(applicant => (
                                     <ApplicantCard
+                                        setUpForSummary={handleSetupForComparison}
                                         jobDescription={jobDesc}
                                         key={applicant._id}
                                         applicant={applicant}

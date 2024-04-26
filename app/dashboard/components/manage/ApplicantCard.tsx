@@ -28,6 +28,7 @@ interface ApplicantCardProps {
     handleReject: (applicant: Applicant) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
     jobDescription: string;
+    setUpForSummary: (applicant: Applicant) => void
 }
 
 const ApplicantCard: React.FC<ApplicantCardProps> = ({
@@ -35,7 +36,8 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     handleMoveToNextStage,
     handleReject,
     handleSaveForFuture,
-    jobDescription
+    jobDescription,
+
 }) => {
     const [editMode, setEditMode] = useState(false);
     const [notes, setNotes] = useState(applicant.notes || '');
