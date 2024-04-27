@@ -168,7 +168,8 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                                     alt="Profile Image"
                                     width={200}
                                     height={200}
-                                    style={{ objectFit: 'cover', borderRadius: '50%' }}
+                                    className="border-x-fuchsia-50"
+                                    style={{ borderRadius: '20%' }}
                                 />
                                 <Title level={3} style={{ marginTop: '1rem' }}>
                                     {userDetails.name}
