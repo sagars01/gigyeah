@@ -29,7 +29,10 @@ const nextStatus: any = {
 
 
 
-interface Applicant {
+export interface Applicant {
+    notes: string;
+    c: boolean | undefined;
+    skills: any[];
     _id: string;
     jobId: string;
     ownerId: string;
@@ -39,6 +42,7 @@ interface Applicant {
     shortIntro: string;
     resumeUrl: string;
     status: string;
+    checkedForSummary?: boolean
 }
 
 interface ApplicationManagementProps {
@@ -56,7 +60,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     const [allApplicants, setAllApplicants] = useState<any>({});
     const [comparingApplicant, setComparingApplicant] = useState<Applicant[]>([])
 
-    const fetchApplicants = async (updateState?: boolean) => {
+    const fetchApplicants = async () => {
         setLoading(true);
         try {
             const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobId}`);
@@ -173,20 +177,18 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
         // TODO: Repository
     }
 
-    const handleSetupForComparison = (applicant: Applicant) => {
-        // Check if the applicant is already in the comparingApplicant array
-        if (comparingApplicant.length <= 2) {
 
-            const index = comparingApplicant.findIndex(a => a._id === applicant._id);
+    const handleSetupForComparison = (rowIdx: number) => {
+        const updateApplicantsData = [...applicants];
+        updateApplicantsData[rowIdx].checkedForSummary = !updateApplicantsData[rowIdx].checkedForSummary;
+        const compareStack = comparingApplicant;
 
-            if (index === -1) {
-                // Applicant not found in the array, add them
-                setComparingApplicant([...comparingApplicant, applicant]);
-            } else {
-                // Applicant found, remove them from the array
-                setComparingApplicant(current => current.filter(a => a._id !== applicant._id));
-            }
+
+        if (compareStack.length <= 2) {
+            compareStack.push(updateApplicantsData[rowIdx]);
+
         }
+        setApplicants(updateApplicantsData);
     };
 
     return (
@@ -213,8 +215,8 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                 </Paragraph>
             </div>
             <div>
-                <Space>
-                    <ApplicantSummarizer jobTitle={jobTitle} applicants={comparingApplicant} />
+                <Space className='flex justify-end'>
+                    <ApplicantSummarizer jobDesc={jobDesc} jobTitle={jobTitle} applicants={comparingApplicant} />
                     <RejectedPool applicantData={allApplicants['rejected']}
                         openRejectPool={true}
                         loading={loading}
@@ -231,11 +233,12 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                     <div className='mt-4 mb-4'>
                         <Row gutter={[16, 16]}>
                             {applicants?.length > 0 ?
-                                applicants?.map(applicant => (
+                                applicants?.map((applicant, idx) => (
                                     <ApplicantCard
                                         setUpForSummary={handleSetupForComparison}
                                         jobDescription={jobDesc}
                                         key={applicant._id}
+                                        rowIdx={idx}
                                         applicant={applicant}
                                         handleMoveToNextStage={handleMoveToNextStage}
                                         handleReject={handleReject}
