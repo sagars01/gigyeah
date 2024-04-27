@@ -30,9 +30,9 @@ const ComparisonView: React.FC<ComparisonProps> = ({ viewSummary, hideComparison
             {compareData && (
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
                     {Object.entries(compareData).map(([candidate, details], index) => (
-                        <Col lg={12}>
+                        <Col key={candidate} lg={12}>
                             <div key={index} style={{ flex: '1 1 45%', margin: '1rem 0' }}>
-                                <Title level={4}>{applicants[index]?.applicantName}</Title>
+                                <Title key={candidate} level={4}>{applicants[index]?.applicantName}</Title>
                                 {Object.entries(details).map(([key, value], idx) => (
                                     <div key={idx}>
 
