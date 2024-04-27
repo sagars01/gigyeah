@@ -42,8 +42,10 @@ const URL = {
             },
             ai: {
                 summarize: '/ai/summarize',
+                compare: '/ai/compare',
                 engine: {
-                    summarize: '/api/v1/summarize'
+                    summarize: '/api/v1/summarize',
+                    compare: '/api/v1/compare'
                 }
             }
         }

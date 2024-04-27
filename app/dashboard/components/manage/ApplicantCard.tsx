@@ -1,33 +1,23 @@
 import React, { useState } from 'react';
-import { Card, Col, Button, Tooltip, Tag, Typography, Input, message, Modal } from 'antd';
-import { ArrowRightOutlined, CloseOutlined, FileOutlined, SaveOutlined, EditOutlined, CheckOutlined } from '@ant-design/icons';
+import { Card, Col, Button, Tooltip, Tag, Typography, Input, message, Modal, Checkbox, Space } from 'antd';
+import { ArrowRightOutlined, CloseOutlined, FileOutlined, SaveOutlined, EditOutlined, CheckOutlined, InfoCircleFilled, InfoCircleOutlined, RocketOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
 import SummaryModal from './SummaryModal';
 import URL from '@/app/utils/constants/url/url';
 import Paragraph from 'antd/es/typography/Paragraph';
 import TextArea from 'antd/es/input/TextArea';
+import ViewResumeDetails from './ViewResumeDetails';
+import { Applicant } from './ApplicantManagement';
 
-
-interface Applicant {
-    skills?: string[];
-    _id: string;
-    jobId: string;
-    ownerId: string;
-    email: string;
-    name: string;
-    applicantName: string;
-    shortIntro: string;
-    resumeUrl: string;
-    status: string;
-    notes?: string;
-}
 
 interface ApplicantCardProps {
     applicant: Applicant;
+    rowIdx: number;
     handleMoveToNextStage: (applicant: Applicant) => void;
     handleReject: (applicant: Applicant) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
     jobDescription: string;
+    setUpForSummary: (rowIdx: number) => void
 }
 
 const ApplicantCard: React.FC<ApplicantCardProps> = ({
@@ -35,7 +25,10 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
     handleMoveToNextStage,
     handleReject,
     handleSaveForFuture,
-    jobDescription
+    jobDescription,
+    setUpForSummary,
+    rowIdx
+
 }) => {
     const [editMode, setEditMode] = useState(false);
     const [notes, setNotes] = useState(applicant.notes || '');
@@ -104,118 +97,108 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         }
     }
 
-    return (
-        <><SummaryModal visible={modalVisible} summary={summary} onClose={toggleModal} />
-            <Modal
-                centered={true}
-                styles={{
-                    header: {
-                        padding: '1rem',
-                        backgroundColor: '#f0f2f5',
-                    },
-                    body: {
-                        padding: '1rem',
-                        height: '80vh',
-                    },
-                    footer: {
-                        padding: '10px',
-                        backgroundColor: '#f0f2f5',
-                    },
-                    mask: {
-                        backgroundColor: 'rgba(0,0,0,0.5)'
-                    }
-                }}
-                footer={null}
-                open={!!viewResume}
-                onCancel={() => {
-                    setViewResume(null)
-                }}
-                destroyOnClose={true}
+
+    const CandidateCard = () => {
+        const handleCheckCandidateCardForComparison = () => {
+            setUpForSummary(rowIdx)
+        }
 
 
-            >
-                {
-                    viewResume &&
-                    <iframe
-                        className="w-full h-full"
-                        src={viewResume}>
+        return (
+            <Card
+                title={<>
+                    <Space>
+                        <Checkbox
+                            id={applicant._id}
+                            key={applicant._id}
+                            onChange={handleCheckCandidateCardForComparison}
+                            checked={applicant.checkedForSummary}
+                        />
+                        <Tooltip className='ml-1' title="Select to compare">
+                            <InfoCircleOutlined />
+                        </Tooltip>
+                    </Space>
+                </>}
+                actions={[
+                    <div key={1}>
+                        {
+                            !summary ? <Button className='float-right right-5' type="primary" onClick={summarizeApplicant}
+                                icon={<RocketOutlined />}
+                                disabled={summarizing}>
+                                {summary ? 'View Summary' : 'Summarize'}
+                            </Button> : <Button
+                                className='float-right right-5' type="primary"
+                                onClick={() => toggleModal()}>
+                                View Summary
+                            </Button>
+                        }
 
-                    </iframe>
-                }
-
-            </Modal>
-            <Col lg={8} md={12} xs={24}>
-                <Card
-                    title={applicant.name}
-                    actions={[
-                        <div key={1}>
-                            {
-                                !summary ? <Button className='float-right right-5' type="primary" onClick={summarizeApplicant} disabled={summarizing}>
-                                    {summary ? 'View Summary' : 'Summarize'}
-                                </Button> : <Button
-                                    className='float-right right-5' type="primary"
-                                    onClick={() => toggleModal()}>
-                                    View Summary
-                                </Button>
-                            }
-
-                        </div>
-
-                    ]}
-                    extra={
-                        <div className="flex space-x-2">
-                            {
-                                applicant.status !== "hired" &&
-                                <Tooltip title="Move to Next Stage">
-                                    <Button shape="circle" icon={<ArrowRightOutlined />} onClick={() => handleMoveToNextStage(applicant)} />
-                                </Tooltip>
-                            }
-                            {
-                                applicant.status !== 'hired' &&
-                                <Tooltip title="Reject">
-                                    <Button shape="circle" icon={<CloseOutlined />} onClick={() => handleReject(applicant)} danger />
-                                </Tooltip>
-                            }
-
-                            <Tooltip title="Open Resume">
-                                <Button shape="circle" icon={<FileOutlined />} onClick={() => handleResume(applicant.resumeUrl)} />
-                            </Tooltip>
-                            <Tooltip title="Save for Future Roles">
-                                <Button shape="circle" icon={<SaveOutlined />} onClick={() => handleSaveForFuture(applicant)} />
-                            </Tooltip>
-                        </div>
-                    }
-                >
-                    <Typography.Title level={4}>{applicant.applicantName}</Typography.Title>
-                    <p>{applicant.shortIntro}</p>
-                    {applicant.skills && (
-                        <div className="flex flex-wrap gap-2">
-                            {applicant.skills.map((skill) => <Tag color="blue" key={skill}>{skill}</Tag>)}
-                        </div>
-                    )}
-                    <hr className='mt-4' />
-                    <div className="mt-4">
-
-                        {editMode ? (
-                            <div className='flex space-x-2'>
-                                <TextArea
-                                    disabled={saving}
-                                    value={notes}
-                                    rows={2}
-                                    onChange={handleNotesChange}
-                                />
-                                <Button onClick={handleSaveNotes} className='mt-2 float-end top-3' type='default' icon={<SaveOutlined />}></Button>
-                            </div>
-                        ) : (
-                            <Paragraph>
-                                <Typography.Text onClick={toggleEditMode}>
-                                    {notes || 'Add notes...'}
-                                    <EditOutlined className="ml-2" />
-                                </Typography.Text>
-                            </Paragraph>
-                        )}
                     </div>
-                </Card>
+
+                ]}
+                extra={
+                    <div className="flex space-x-2">
+                        {
+                            applicant.status !== "hired" &&
+                            <Tooltip title="Move to Next Stage">
+                                <Button shape="circle" icon={<ArrowRightOutlined />} onClick={() => handleMoveToNextStage(applicant)} />
+                            </Tooltip>
+                        }
+                        {
+                            applicant.status !== 'hired' &&
+                            <Tooltip title="Reject">
+                                <Button shape="circle" icon={<CloseOutlined />} onClick={() => handleReject(applicant)} danger />
+                            </Tooltip>
+                        }
+
+                        <Tooltip title="Open Resume">
+                            <Button shape="circle" icon={<FileOutlined />} onClick={() => handleResume(applicant.resumeUrl)} />
+                        </Tooltip>
+                        <Tooltip title="Save for Future Roles">
+                            <Button shape="circle" icon={<SaveOutlined />} onClick={() => handleSaveForFuture(applicant)} />
+                        </Tooltip>
+                    </div>
+                }
+            >
+                <Typography.Title level={4}>{applicant.applicantName}</Typography.Title>
+                <p>{applicant.shortIntro}</p>
+                {applicant.skills && (
+                    <div className="flex flex-wrap gap-2">
+                        {applicant.skills.map((skill) => <Tag color="blue" key={skill}>{skill}</Tag>)}
+                    </div>
+                )}
+                <hr className='mt-4' />
+                <div className="mt-4">
+
+                    {editMode ? (
+                        <div className='flex space-x-2'>
+                            <TextArea
+                                disabled={saving}
+                                value={notes}
+                                rows={2}
+                                onChange={handleNotesChange}
+                            />
+                            <Button onClick={handleSaveNotes} className='mt-2 float-end top-3' type='default' icon={<SaveOutlined />}></Button>
+                        </div>
+                    ) : (
+                        <Paragraph>
+                            <Typography.Text onClick={toggleEditMode}>
+                                {notes || 'Add notes...'}
+                                <EditOutlined className="ml-2" />
+                            </Typography.Text>
+                        </Paragraph>
+                    )}
+                </div>
+            </Card>
+        )
+    }
+
+    return (
+        <>
+            <SummaryModal visible={modalVisible} summary={summary} onClose={toggleModal} />
+            <ViewResumeDetails viewResume={viewResume} onCloseModal={() => setViewResume(null)} />
+            <Col lg={8} md={12} xs={24}>
+                <CandidateCard />
             </Col>
         </>
     );
