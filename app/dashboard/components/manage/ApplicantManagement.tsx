@@ -178,16 +178,24 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
     }
 
 
-    const handleSetupForComparison = (rowIdx: number) => {
+    const handleSetupForComparison = (rowIdx: number, action: boolean) => {
         const updateApplicantsData = [...applicants];
-        updateApplicantsData[rowIdx].checkedForSummary = !updateApplicantsData[rowIdx].checkedForSummary;
         const compareStack = comparingApplicant;
+        const applicantCard = updateApplicantsData[rowIdx];
+        const applicantIdxInStack = compareStack.findIndex((stackElement) => stackElement._id === applicantCard._id);
 
+        if (applicantIdxInStack > -1) {
+            compareStack.splice(applicantIdxInStack, 1);
+            setComparingApplicant(compareStack);
+        } else {
 
-        if (compareStack.length <= 2) {
-            compareStack.push(updateApplicantsData[rowIdx]);
+            compareStack.push(applicantCard);
+
 
         }
+
+
+        updateApplicantsData[rowIdx].checkedForSummary = action;
         setApplicants(updateApplicantsData);
     };
 
