@@ -32,7 +32,7 @@ const URL = {
         private: {
             jobs: {
                 fetch: '/job/fetch',
-                update: '/job/update'
+                update: '/job/update',
             },
             application: {
                 update: '/application/update'
@@ -43,9 +43,11 @@ const URL = {
             ai: {
                 summarize: '/ai/summarize',
                 compare: '/ai/compare',
+                generateJd: '/ai/generate-jd',
                 engine: {
                     summarize: '/api/v1/summarize',
-                    compare: '/api/v1/compare'
+                    compare: '/api/v1/compare',
+                    generateJD: '/api/v1/description'
                 }
             }
         }
