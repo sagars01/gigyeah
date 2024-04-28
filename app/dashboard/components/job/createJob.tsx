@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, Typography, message } from 'antd';
-import { LoadingOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, RocketOutlined } from '@ant-design/icons';
 import { apiService } from '@/app/libs/request/apiservice';
+import URL from '@/app/utils/constants/url/url';
 
 interface ICreateJobProps {
     openDrawer: boolean;
@@ -36,6 +37,24 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
         onDrawerClose(false);
     };
 
+    const generateJobDesc = async () => {
+        const formValue = form.getFieldsValue();
+        debugger
+        try {
+            const jobData: any = await apiService.post(
+                URL.api.private.ai.generateJd, {
+                job_title: formValue.title,
+                mandatory_skills: convertSkillsArray(formValue.requirements)
+            })
+
+
+
+            form.setFieldValue("description", jobData.job_description)
+        } catch (error) {
+            message.error("Could not generate job description. Please fill manually");
+        }
+
+    }
 
 
     useEffect(() => {
@@ -82,7 +101,7 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
         <>
             <Drawer
                 title="Create a new job"
-                width={720}
+                width={"50%"}
                 onClose={onClose}
                 maskClosable={false}
                 open={open}
@@ -110,7 +129,12 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                             <Form.Item
                                 name="title"
                                 label="Job Title"
-                                rules={[{ required: true, message: 'Please enter job title' }]}
+                                rules={[{
+                                    required: true,
+                                    min: 10,
+                                    max: 100,
+                                    message: 'Please enter job title'
+                                }]}
                             >
                                 <Input placeholder="Please enter job title" />
                             </Form.Item>
@@ -119,7 +143,8 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                     <Row gutter={16}>
                         <Col span={24}>
                             <Typography.Paragraph>Mandatory Skills ( Max 3 )</Typography.Paragraph>
-                            <Form.List name="requirements">
+                            <Form.List
+                                name="requirements">
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map(({ key, name, ...restField }) => (
@@ -190,7 +215,10 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                             <Form.Item
                                 name={['payRange', 'max']}
                                 label="Maximum Pay"
-                                rules={[{ required: true, validator: validateMinMax, message: 'Please enter maximum pay' }]}
+                                rules={[{
+                                    required: true, validator: validateMinMax,
+                                    message: 'Please enter maximum pay'
+                                }]}
                             >
                                 <InputNumber
                                     style={{ width: '100%' }}
@@ -239,12 +267,29 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
 
                     <Row gutter={16}>
                         <Col span={24}>
+                            <div className=' flex justify-end'>
+                                <Button
+                                    onClick={generateJobDesc}
+                                    type='primary'
+                                    icon={
+                                        <RocketOutlined />
+                                    }
+                                >Generate Job Description</Button>
+                            </div>
+
+
                             <Form.Item
                                 name="description"
                                 label="Job Description"
-                                rules={[{ required: true, message: 'Please enter job description' }]}
+                                rules={[{
+                                    required: true,
+                                    min: 50,
+                                    max: 1000,
+                                    message: 'Please enter a min 50 words job description'
+                                }]}
                             >
-                                <Input.TextArea rows={6} placeholder="Please enter job description in 300 words" />
+                                <Input.TextArea rows={6}
+                                    placeholder="Please enter job description in 300 words" />
                             </Form.Item>
                         </Col>
                     </Row>

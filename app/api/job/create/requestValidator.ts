@@ -1,9 +1,8 @@
 import Joi from 'joi';
 
-// TODO: Phase 2: User Profile where onclick on the postedBy people should be redirected to User LinkTree Page
 
 const wordCount = (value, helpers) => {
-    const wordLimit = 500;
+    const wordLimit = 5000;
     const wordCount = value.trim().split(/\s+/).length;
     if (wordCount > wordLimit) {
         return helpers.message(`"description" exceeds the word limit of ${wordLimit}`);
