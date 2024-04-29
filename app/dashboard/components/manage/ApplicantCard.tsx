@@ -17,7 +17,7 @@ interface ApplicantCardProps {
     handleReject: (applicant: Applicant) => void;
     handleSaveForFuture: (applicant: Applicant) => void;
     jobDescription: string;
-    setUpForSummary: (rowIdx: number) => void
+    setUpForSummary: (rowIdx: number, action: boolean) => void
 }
 
 const ApplicantCard: React.FC<ApplicantCardProps> = ({
@@ -82,6 +82,7 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
         setNotes(e.target.value);
     };
     const [saving, setSavingNotes] = useState(false);
+
     const handleSaveNotes = async () => {
         try {
             setSavingNotes(true)
@@ -99,8 +100,8 @@ const ApplicantCard: React.FC<ApplicantCardProps> = ({
 
 
     const CandidateCard = () => {
-        const handleCheckCandidateCardForComparison = () => {
-            setUpForSummary(rowIdx)
+        const handleCheckCandidateCardForComparison = (e: any) => {
+            setUpForSummary(rowIdx, e.target.checked)
         }
 
 

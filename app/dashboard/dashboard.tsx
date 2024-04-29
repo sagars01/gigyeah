@@ -12,7 +12,8 @@ import './styles/dashboard.module.css'
 const DashboardComponent: React.FC = () => {
     const links = [
         { title: "Dashboard", link: URL.dashboard.root, isActive: true },
-        { title: "Profile", link: URL.user.profile, isActive: false }
+        { title: "Profile", link: URL.user.profile, isActive: false },
+        { title: "Repository", link: URL.dashboard.repository, isActive: false }
     ];
 
     const HeaderOptions = () => (
