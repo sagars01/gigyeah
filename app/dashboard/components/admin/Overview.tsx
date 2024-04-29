@@ -18,12 +18,6 @@ const OverviewSection: React.FC<any> = ({ openJobs, closedJobs }) => {
             status: 'enabled'
         },
         {
-            key: 'candidateRepository',
-            title: <><UserOutlined style={{ fontSize: '1.5rem' }} /></>,
-            description: "Candidate Repository",
-            status: 'enabled'
-        },
-        {
             key: 'profileViews',
             title: <><RiseOutlined style={{ fontSize: '1.5rem' }} /></>,
             description: "Profile Views",

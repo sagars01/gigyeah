@@ -3,9 +3,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs';
+import Head from 'next/head';
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
+
     <body style={{
       margin: 0,
       padding: 0

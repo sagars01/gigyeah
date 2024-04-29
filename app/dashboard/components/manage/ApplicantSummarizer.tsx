@@ -104,7 +104,9 @@ const ApplicantSummarizer: React.FC<Props> = ({ applicants, jobTitle, jobDesc })
             {
                 <div className="flex items-center space-x-2">
 
-                    <Button type="primary" onClick={showComparison}>View Comparison</Button>
+                    <Button
+                        disabled={compareStatus !== "ready"}
+                        type="primary" onClick={showComparison}>View Comparison</Button>
 
                     <Button
                         disabled={applicants.length !== 2}
