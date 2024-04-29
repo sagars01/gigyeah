@@ -17,7 +17,7 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
         { title: "Dashboard", link: URL.dashboard.root, isActive: false },
         { title: "Profile", link: URL.user.profile, isActive: false },
         { title: "Manage Application", link: '', isActive: true },
-        { title: "Repository", link: '/repository', isActive: false },
+        { title: "Repository", link: URL.dashboard.repository, isActive: false },
     ];
 
     const HeaderOptions = () => (

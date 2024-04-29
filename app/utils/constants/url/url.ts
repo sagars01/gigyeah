@@ -10,6 +10,7 @@ const URL = {
         root: createURL('/dashboard'),
         viewJob: createURL('/public/job/apply'),
         manageApplication: createURL('/dashboard/job/manage'),
+        repository: '/dashboard/repository'
     },
     user: {
         clerkUser: createURL(process.env.NEXT_PUBLIC_USER_PROFILE || '/user'),
