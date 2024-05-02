@@ -34,7 +34,7 @@ export default function Features() {
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h2 mb-4">Explore the solution</h1>
             <p className="text-xl text-gray-600">
-              A dead simple tool for hiring especially designed for solo recruiters
+              A dead simple tool for hiring especially designed for solopreneurs
             </p>
           </div>
 
