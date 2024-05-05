@@ -10,7 +10,10 @@ const nextConfig = {
         },
     },
     images: {
-        domains: ['img.clerk.com']
+        domains: ['img.clerk.com', 'withjessi.com']
+    },
+    env: {
+        metadataBase: 'https://www.withjessi.com'
     },
     webpack: (config) => {
         config.resolve.alias.canvas = false;
