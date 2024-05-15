@@ -40,7 +40,8 @@ async function JobDetails({ id, jobId }: { id: string, jobId: string }) {
             <>
                 <DashboardLayout
                     header={<HeaderOptions />}
-                    content={<ApplicantManagement />} />
+                    content={<ApplicantManagement job={{ title, description, jobId }} userId={id} />}
+                />
             </>
         )
     }

@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Card as AntdCard, Divider } from 'antd';
-
-const ItemTypes = {
-    CARD: 'card' as const,
-};
-
-interface Column {
-    id: string;
-    title: string;
-}
-
-interface Card {
-    id: string;
-    content: string;
-}
+import { Card as AntdCard, Divider, Skeleton, message } from 'antd';
+import { Applicant } from '@/app/dashboard/components/manage/ApplicantManagement';
+import { apiService } from '@/app/libs/request/apiservice';
 
 const columns: Column[] = [
     { id: 'applied', title: 'Applied' },
@@ -26,132 +14,145 @@ const columns: Column[] = [
     { id: 'archived', title: 'Archived' },
 ];
 
-interface InitialCards {
-    [key: string]: Card[];
-}
+const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [applicants, setApplicants] = useState<Record<string, Applicant[]>>({});
 
-const initialCards: InitialCards = {
-    applied: [{ id: '1', content: 'Card 1' }],
-    screen: [{ id: '2', content: 'Card 2' }],
-    interview: [{ id: '3', content: 'Card 3' }],
-    offer: [{ id: '4', content: 'Card 4' }],
-    hired: [],
-    archived: [],
-};
+    const fetchApplicants = async () => {
+        setLoading(true);
+        try {
+            const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobDetails.jobId}`);
+            const applicantMap: Record<string, Applicant[]> = {};
 
-interface CardProps {
-    id: string;
-    content: string;
-    index: number;
-    moveCard: (id: string, destColumnId: string) => void;
-}
-
-const Card: React.FC<CardProps> = ({ id, content, index, moveCard }) => {
-    const [{ isDragging }, drag] = useDrag({
-        type: ItemTypes.CARD,
-        item: { id, index },
-        end: (item, monitor) => {
-            const dropResult: any = monitor.getDropResult();
-            if (item && dropResult) {
-                moveCard(item.id, dropResult.id);
+            if (response.applicants) {
+                response.applicants.forEach((applicant: Applicant) => {
+                    if (!applicantMap[applicant.status]) {
+                        applicantMap[applicant.status] = [];
+                    }
+                    applicantMap[applicant.status].push(applicant);
+                });
             }
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    });
-
-    const opacity = isDragging ? 0.5 : 1;
-
-    return (
-        <div ref={drag} style={{ opacity }} className="bg-white p-4 mb-2 rounded-md shadow">
-            <AntdCard>{content}</AntdCard>
-        </div>
-    );
-};
-
-interface ColumnProps {
-    id: string;
-    title: string;
-    cards: Card[];
-    moveCard: (id: string, destColumnId: string) => void;
-}
-
-const Column: React.FC<ColumnProps> = ({ id, title, cards, moveCard }) => {
-    const [, drop] = useDrop({
-        accept: ItemTypes.CARD,
-        drop: (item: { id: string; index: number }, monitor) => {
-            moveCard(item.id, id);
-        },
-    });
-
-
-
-    return (
-        <div ref={drop} className="flex-none w-80 mr-4 min-h-80 max-h-screen overflow-y-scroll border border-gray-300 rounded-lg shadow">
-            <div className="p-4 rounded">
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <Divider></Divider>
-                {cards.map((card, index) => (
-                    <Card
-                        key={card.id}
-                        id={card.id}
-                        content={card.content}
-                        index={index}
-                        moveCard={moveCard}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const DragAndDropColumns: React.FC = () => {
-    const [cards, setCards] = useState<InitialCards>(initialCards);
+            setApplicants(applicantMap);
+        } catch (error) {
+            setError(true);
+            message.error('Failed to fetch applicants');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const a: any = [];
-        for (let i = 0; i < 100; i++) {
-            const model = { id: `${i}`, content: `Card ${i}` }
-            a.push(model)
-        }
-        cards.applied = a;
-        setCards(cards);
-    }, [])
+        fetchApplicants();
+    }, [userId]);
 
-    const moveCard = (id: string, destColumnId: string) => {
-        setCards((prevCards) => {
-            const newCards = { ...prevCards };
-            const sourceColumnId = Object.keys(newCards).find((columnId) =>
-                newCards[columnId].some((card) => card.id === id)
-            );
-            if (sourceColumnId && newCards[destColumnId]) {
-                const sourceColumnCards = newCards[sourceColumnId];
-                const [card] = sourceColumnCards.splice(sourceColumnCards.findIndex((c) => c.id === id), 1);
-                if (!newCards[destColumnId]) {
-                    newCards[destColumnId] = []; // Initialize if not exists
+    const moveCard = async (cardId: string, sourceStatus: string, destStatus: string) => {
+        try {
+            await apiService.post(`/application/update-status`, {
+                applicantId: cardId,
+                status: destStatus,
+            });
+            setApplicants((prevApplicants) => {
+                const sourceColumn = prevApplicants[sourceStatus] || [];
+                const targetColumn = prevApplicants[destStatus] || [];
+                const movedCardIndex = sourceColumn.findIndex((card) => card._id === cardId);
+
+                if (movedCardIndex === -1) {
+                    return prevApplicants;
                 }
-                newCards[destColumnId].push(card);
-            }
-            return newCards;
-        });
+
+                const [movedCard] = sourceColumn.splice(movedCardIndex, 1);
+                targetColumn.push(movedCard);
+
+                return {
+                    ...prevApplicants,
+                    [sourceStatus]: sourceColumn,
+                    [destStatus]: targetColumn,
+                };
+            });
+        } catch (error) {
+            message.error('Failed to update applicant status');
+        }
     };
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="flex" style={{ width: '100%', overflowX: 'scroll' }}>
-                {columns.map((column) => (
-                    <Column
-                        key={column.id}
-                        id={column.id}
-                        title={column.title}
-                        cards={cards[column.id]}
-                        moveCard={moveCard}
-                    />
-                ))}
-            </div>
-        </DndProvider>
+        <>
+            {!loading && !error && (
+                <DndProvider backend={HTML5Backend}>
+                    <div className="flex p-10" style={{ width: '100%', background: '#f0f0f0', borderRadius: '10px', overflowX: 'scroll' }}>
+                        {columns.map((column) => (
+                            <div key={column.id} className="flex-none bg-white w-80 mr-4 min-h-80 max-h-40 overflow-y-scroll border border-gray-300 rounded-lg shadow">
+                                <div className="p-4 rounded relative">
+                                    <h3 className="text-lg font-semibold">{column.title}</h3>
+                                    <Divider />
+                                    {applicants[column.id]?.map((applicant, index) => (
+                                        <ApplicantCard
+                                            key={applicant._id}
+                                            applicant={applicant}
+                                            index={index}
+                                            moveCard={moveCard}
+                                            status={column.id}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </DndProvider>
+            )}
+
+            {loading && (
+                <div>
+                    <Skeleton />
+                </div>
+            )}
+        </>
+    );
+};
+
+const ApplicantCard: React.FC<ApplicantCardProps> = ({ applicant, index, moveCard, status }) => {
+    const [{ isOver }, drop] = useDrop({
+        accept: 'card',
+        drop: (item: any) => {
+            if (item.id !== applicant._id) {
+                moveCard(item.id, item.status, status);
+            }
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+    });
+
+    const [, drag] = useDrag({
+        type: 'card',
+        item: { id: applicant._id, status, index },
+    });
+
+    return (
+        <div
+            ref={(node) => drag(drop(node))}
+            className={`bg-white p-4 mb-2 rounded-md shadow ${isOver ? 'bg-green-100' : ''}`}
+        >
+            <AntdCard>{applicant.applicantName}</AntdCard>
+        </div>
     );
 };
 
 export default DragAndDropColumns;
+
+interface Props {
+    jobDetails: any;
+    userId: string;
+}
+
+interface Column {
+    id: string;
+    title: string;
+}
+
+interface ApplicantCardProps {
+    applicant: Applicant;
+    index: number;
+    moveCard: (cardId: string, sourceStatus: string, destStatus: string) => void;
+    status: string;
+}
