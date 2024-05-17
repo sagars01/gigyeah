@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Card as AntdCard, Divider, Skeleton, message } from 'antd';
-import { Applicant } from '@/app/dashboard/components/manage/ApplicantManagement';
 import { apiService } from '@/app/libs/request/apiservice';
+import { Applicant } from '@/app/dashboard/components/manage/ApplicantManagement';
 
 const columns: Column[] = [
     { id: 'applied', title: 'Applied' },
@@ -13,6 +13,28 @@ const columns: Column[] = [
     { id: 'hired', title: 'Hired' },
     { id: 'archived', title: 'Archived' },
 ];
+
+const ApplicantCard: React.FC<ApplicantCardProps> = ({ applicant, moveCard, status }) => {
+    const [, drag] = useDrag({
+        type: 'card',
+        item: { id: applicant._id, status },
+    });
+
+    const [, drop] = useDrop({
+        accept: 'card',
+        drop: (item: any) => {
+            if (item.id !== applicant._id) {
+                moveCard(item.id, item.status, status);
+            }
+        },
+    });
+
+    return (
+        <div ref={(node) => drag(drop(node))} className="bg-white p-4 mb-2 rounded-md shadow">
+            <AntdCard>{applicant.applicantName}</AntdCard>
+        </div>
+    );
+};
 
 const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
     const [loading, setLoading] = useState(false);
@@ -25,14 +47,13 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
             const response = await apiService.get<{ applicants: Applicant[] }>(`/application/fetch?jobId=${jobDetails.jobId}`);
             const applicantMap: Record<string, Applicant[]> = {};
 
-            if (response.applicants) {
-                response.applicants.forEach((applicant: Applicant) => {
-                    if (!applicantMap[applicant.status]) {
-                        applicantMap[applicant.status] = [];
-                    }
-                    applicantMap[applicant.status].push(applicant);
-                });
-            }
+            response.applicants?.forEach((applicant: Applicant) => {
+                if (!applicantMap[applicant.status]) {
+                    applicantMap[applicant.status] = [];
+                }
+                applicantMap[applicant.status].push(applicant);
+            });
+
             setApplicants(applicantMap);
         } catch (error) {
             setError(true);
@@ -52,6 +73,7 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
                 applicantId: cardId,
                 status: destStatus,
             });
+
             setApplicants((prevApplicants) => {
                 const sourceColumn = prevApplicants[sourceStatus] || [];
                 const targetColumn = prevApplicants[destStatus] || [];
@@ -63,6 +85,8 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
 
                 const [movedCard] = sourceColumn.splice(movedCardIndex, 1);
                 targetColumn.push(movedCard);
+
+                console.log(`Moved ${movedCard.applicantName} from ${sourceStatus} to ${destStatus}`);
 
                 return {
                     ...prevApplicants,
@@ -79,7 +103,7 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
         <>
             {!loading && !error && (
                 <DndProvider backend={HTML5Backend}>
-                    <div className="flex p-10" style={{ width: '100%', background: '#f0f0f0', borderRadius: '10px', overflowX: 'scroll' }}>
+                    <div className="flex p-10 w-full bg-gray-100 rounded-lg overflow-x-scroll">
                         {columns.map((column) => (
                             <div key={column.id} className="flex-none bg-white w-80 mr-4 min-h-80 max-h-40 overflow-y-scroll border border-gray-300 rounded-lg shadow">
                                 <div className="p-4 rounded relative">
@@ -89,7 +113,6 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
                                         <ApplicantCard
                                             key={applicant._id}
                                             applicant={applicant}
-                                            index={index}
                                             moveCard={moveCard}
                                             status={column.id}
                                         />
@@ -110,34 +133,6 @@ const DragAndDropColumns: React.FC<Props> = ({ jobDetails, userId }) => {
     );
 };
 
-const ApplicantCard: React.FC<ApplicantCardProps> = ({ applicant, index, moveCard, status }) => {
-    const [{ isOver }, drop] = useDrop({
-        accept: 'card',
-        drop: (item: any) => {
-            if (item.id !== applicant._id) {
-                moveCard(item.id, item.status, status);
-            }
-        },
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-    });
-
-    const [, drag] = useDrag({
-        type: 'card',
-        item: { id: applicant._id, status, index },
-    });
-
-    return (
-        <div
-            ref={(node) => drag(drop(node))}
-            className={`bg-white p-4 mb-2 rounded-md shadow ${isOver ? 'bg-green-100' : ''}`}
-        >
-            <AntdCard>{applicant.applicantName}</AntdCard>
-        </div>
-    );
-};
-
 export default DragAndDropColumns;
 
 interface Props {
@@ -152,7 +147,6 @@ interface Column {
 
 interface ApplicantCardProps {
     applicant: Applicant;
-    index: number;
     moveCard: (cardId: string, sourceStatus: string, destStatus: string) => void;
     status: string;
 }
