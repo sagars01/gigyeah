@@ -163,7 +163,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                     <Col lg={{ span: 8, offset: 3 }} xs={24}>
                         <Card>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <Image
+                                <img
                                     src={userDetails?.image_url || "/dp.jpg"}
                                     alt="Profile Image"
                                     width={200}

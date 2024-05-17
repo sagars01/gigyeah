@@ -13,6 +13,7 @@ const imgUrl = domain + "/img/homepage/og_homt.png"
 export const metadata: Metadata = {
   title: 'Hiring Made Simple',
   description: 'Simplest ATS for recruiting software engineers',
+  metadataBase: new URL("https://www.withjessi.com"),
   openGraph: {
     title: 'WithJessi',
     description: 'The Simplest ATS to hire tech talent',
@@ -20,19 +21,19 @@ export const metadata: Metadata = {
     siteName: 'WithJessi',
     images: [
       {
-        url: imgUrl, // Must be an absolute URL
+        url: imgUrl,
         width: 800,
         height: 600,
       },
       {
-        url: imgUrl, // Must be an absolute URL
+        url: imgUrl,
         width: 1800,
         height: 1600,
         alt: 'View With Jessi',
       },
     ],
     locale: 'en_US',
-    type: 'website',
+    type: 'website'
   },
 }
 

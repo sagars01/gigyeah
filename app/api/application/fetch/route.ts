@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
         const allApplicationsRelatedtoJobId = await ApplicationsController.getAllApplicationsByJobId(jobId);
 
-        return NextResponse.json({ applicants: allApplicationsRelatedtoJobId }, { status: 200, statusText: "OK" });
+        return NextResponse.json(allApplicationsRelatedtoJobId, { status: 200, statusText: "OK" });
     } catch (error) {
         NextResponse.json({ applicants: null, error: error }, { status: 500, statusText: "FAIL" })
     }
