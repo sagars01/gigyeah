@@ -1,7 +1,6 @@
 "use client"
 
 import NonStrictDndProvider from "@/app/utils/ui/StrictModeProvider"
-import DragAndDropColumns from "./DnD"
 import Title from "antd/es/typography/Title"
 import Paragraph from "antd/es/typography/Paragraph"
 import { useState } from "react"

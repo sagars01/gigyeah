@@ -4,10 +4,6 @@
 import { Button, Row, Col } from 'antd';
 import { HomeOutlined, DollarOutlined, PhoneOutlined, LoginOutlined } from '@ant-design/icons';
 import styles from '../../../libs/styles/components/PublicHeader.module.css'; // Import your CSS module for styling
-import Image from 'next/image';
-import URL from '@/app/utils/constants/url/url';
-import ResponsiveLogo from './ResponsiveLogo';
-import Footer from '@/app/home/components/ui/footer';
 
 
 interface IHeaderProps {
