@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Space, Divider, Row, Col, Card, Tabs, Button, Menu, MenuProps, Result } from 'antd';
-import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined, InstagramOutlined, DesktopOutlined } from '@ant-design/icons';
+import { LinkedinOutlined, TwitterOutlined, GithubOutlined, UserOutlined, InstagramOutlined, DesktopOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
 import UserController from '@/app/libs/controllers/users/users.controller';
@@ -72,9 +72,7 @@ export interface IUserPublicProfileData {
     jobDetails: JobDetails;
 }
 
-const largeIconStyle = {
-    fontSize: '24px'
-};
+
 
 const getServerSideProps = async (userId: string): Promise<{ props: IUserPublicProfileData | null }> => {
     try {
@@ -156,6 +154,34 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
         expired: []
     } } = userInfo;
 
+    const UserDetails = ({ userDetails }) => {
+        return (
+            <div className="" style={{ width: "100%" }}>
+                <div className="flex items-center justify-center">
+                    {/* <UserOutlined className="text-2xl text-blue-500 mr-3" /> */}
+                    <Title level={3} className="m-0 text-center truncate">{userDetails.name}</Title>
+                </div>
+                <div className="">
+                    <DetailItem label="Who am I?" value={userDetails.intro} />
+                    <DetailItem label="My Company Name" value={userDetails.company.name} />
+                    <DetailItem label="What we do?" value={userDetails.company.description} />
+                </div>
+            </div>
+        );
+    };
+
+    const DetailItem = ({ label, value }) => (
+        <>
+            <div className='flex'>
+                <div className="font-semibold text-gray-700 text-right mr-4 w-1/2">{label}</div>
+                <div className="">
+                    <Text className="text-gray-800 break-words w-1/2 text-ellipsis">{value}</Text>
+                </div>
+            </div>
+        </>
+    );
+
+
     const MainContent = () => {
         return (
             <>
@@ -163,7 +189,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                     <Col lg={{ span: 8, offset: 3 }} xs={24}>
                         <Card>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <img
+                                <Image
                                     src={userDetails?.image_url || "/dp.jpg"}
                                     alt="Profile Image"
                                     width={200}
@@ -171,23 +197,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
                                     className="border-x-fuchsia-50"
                                     style={{ borderRadius: '20%' }}
                                 />
-                                <Title level={3} style={{ marginTop: '1rem' }}>
-                                    {userDetails.name}
-                                </Title>
-                                <Text>
-                                    {userDetails.intro}
-                                </Text>
-                                <Space style={{ marginTop: '0.5rem' }}>
-                                    <Text className='company-details'>
-                                        {userDetails.company.name}
-                                    </Text>
-                                </Space>
-
-                                <Space style={{ marginTop: '0.5rem' }}>
-                                    <Text className='company-details'>
-                                        {userDetails.company.description}
-                                    </Text>
-                                </Space>
+                                <UserDetails userDetails={userDetails} />
                                 <Divider />
                                 <SocialMediaIcons socialMedia={userDetails.socialMedia} />
                             </div>

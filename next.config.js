@@ -10,7 +10,18 @@ const nextConfig = {
         },
     },
     images: {
-        domains: ['img.clerk.com', 'withjessi.com']
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'img.clerk.com',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'withjessi.com',
+                pathname: '**',
+            },
+        ],
     },
     env: {
         metadataBase: 'https://www.withjessi.com'
