@@ -39,6 +39,7 @@ const CustomList: React.FC<CustomListProps> = ({ items }) => {
                                 )}
                             </Row>
                         </div>
+                        <hr className='mb-4' />
                     </div>
                 ))
             ) : (
