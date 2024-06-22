@@ -1,12 +1,16 @@
+"use client"
 import { Divider, Row, Col, Card, Tabs, Button, Result } from 'antd';
 import { LinkedinOutlined, TwitterOutlined, UserOutlined, InstagramOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
-import UserController from '../../../libs/controllers/users/users.controller';
 import CustomList from '../../../utils/ui/list.utils';
 import Layout, { Content, Footer } from 'antd/es/layout/layout';
 import PublicHeader from '../../../libs/components/reusables/header.public';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { apiService } from "@/app/libs/request/apiservice";
+import URL from '@/app/utils/constants/url/url';
+import { useParams, useSearchParams } from 'next/navigation'
 
 
 
@@ -62,24 +66,37 @@ const SocialMediaIcons = ({ socialMedia }: any) => {
 };
 
 
-const getServerSideProps = async (userId: string): Promise<{ error?: boolean, props: IUserPublicProfileData | undefined }> => {
+
+const PublicProfile = () => {
+
+
+    const { userId } = useParams();
+    const [userDetailsProps, setUserDetailsProps] = useState({ props: null, error: false })
+    const [loading, setLoading] = useState(false);
+
+    const getServerSideProps = async (userId: string) => {
+        try {
+            setLoading(true);
+            const res: any = await apiService.get(`${URL.api.public.user.fetch}?userId=${userId}`)
+            setUserDetailsProps({ error: false, props: res });
+        } catch (error: any) {
+            console.error('Error fetching user details:', error);
+            setUserDetailsProps({ error: true, props: null });
+        } finally {
+            setLoading(false)
+        }
+    };
+
+
+
     try {
-        const res = await UserController.getUserDetailsPublic(userId);
-        return { error: false, props: res };
-    } catch (error: any) {
-        console.error('Error fetching user details:', error);
-        return { error: true, props: undefined };
-    }
-};
-
-const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
-
-    try {
+        useEffect(() => {
+            getServerSideProps(userId as string)
+        }, [])
 
 
-        const { error, props } = await getServerSideProps(userId);
 
-        if (error) {
+        if (userDetailsProps.error) {
             return (<>
                 <>
                     <Layout style={{ backgroundColor: 'Background' }}>
@@ -119,7 +136,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
         }, jobDetails = {
             active: [],
             expired: []
-        } } = props as IUserPublicProfileData;
+        } } = userDetailsProps.props as any;
 
 
 
@@ -187,7 +204,7 @@ const Page = async ({ params: { userId } }: { params: { userId: string } }) => {
     }
 };
 
-export default Page;
+export default PublicProfile;
 
 
 interface SocialMedia {

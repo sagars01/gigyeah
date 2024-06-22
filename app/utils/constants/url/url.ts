@@ -28,6 +28,9 @@ const URL = {
         public: {
             job: {
                 apply: '/api/job/public/apply',
+            },
+            user: {
+                fetch: '/public/user/fetch'
             }
         },
         private: {
