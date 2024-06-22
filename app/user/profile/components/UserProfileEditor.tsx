@@ -21,7 +21,7 @@ const UserProfileEditor: React.FC = () => {
         try {
             setSubmitting(true);
             const values = await form.validateFields();
-            console.log('Submitting form data:', values);
+            // console.log('Submitting form data:', values);
             await apiService.post('/user/update', values)
             message.success('Profile updated successfully!');
         } catch (errorInfo) {

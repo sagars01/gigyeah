@@ -72,7 +72,7 @@ const CreateJob: React.FC<ICreateJobProps> = ({ openDrawer = false, onDrawerClos
                 formData
             )
             message.success("Job created successfully!")
-            console.log(response);
+            // console.log(response);
             jobCreatedEvt(response);
             form.resetFields();
 

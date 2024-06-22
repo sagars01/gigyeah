@@ -87,7 +87,7 @@ const GetJobsComponent: React.FC<JobsDisplayComponentProps> = ({ shouldFetchJobs
     }, [jobUpdateList])
 
     const handleMenuClick = useCallback((jobId: string, action: string, jobDetails?: Job) => {
-        console.log(`Action: ${action} on jobId: ${jobId}`);
+        // console.log(`Action: ${action} on jobId: ${jobId}`);
 
         if (action === "edit") {
             // open modal to edit

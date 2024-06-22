@@ -92,7 +92,7 @@ const DragAndDropComponent: React.FC<Props> = ({ jobDetails, userId }) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [applicants, setApplicants] = useState<Record<string, Applicant[]>>({});
+    // const [applicants, setApplicants] = useState<Record<string, Applicant[]>>({});
     const fetchApplicants = async () => {
         setLoading(true);
         try {
@@ -135,7 +135,7 @@ const DragAndDropComponent: React.FC<Props> = ({ jobDetails, userId }) => {
             return newData;
         });
 
-        console.log(`Moved ${item.text} from ${item.fromColumn} to ${toColumn}`);
+        // console.log(`Moved ${item.text} from ${item.fromColumn} to ${toColumn}`);
     };
 
 

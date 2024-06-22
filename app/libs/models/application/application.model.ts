@@ -52,7 +52,7 @@ ApplicationsSchema.post('save', function (doc) {
         { $inc: { applicationCount: 1 } }, // Increment the applicationCount by 1
         { new: true } // Return the modified document
     ).then(updatedJob => {
-        console.log('Updated job application count:', updatedJob);
+        // console.log('Updated job application count:', updatedJob);
     }).catch(err => {
         console.error('Error updating job application count:', err);
     });

@@ -26,10 +26,6 @@ const nextConfig = {
     env: {
         metadataBase: 'https://www.withjessi.com'
     },
-    webpack: (config) => {
-        config.resolve.alias.canvas = false;
-        return config
-    },
     async redirects() {
         return [
             {
