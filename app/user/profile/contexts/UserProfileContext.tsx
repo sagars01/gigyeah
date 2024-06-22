@@ -40,7 +40,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
 
 
     const fetchUserData = useCallback(async () => {
-        console.log("..Fetching User Data....")
+        // console.log("..Fetching User Data....")
         setLoading(true);
         try {
             const response = await apiService.get<IUserModel>('/user/fetch');

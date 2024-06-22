@@ -46,12 +46,12 @@ const CandidateTable: React.FC = () => {
     ];
 
     const viewDetails = (key: string) => {
-        console.log('Viewing details for:', key);
+        // console.log('Viewing details for:', key);
         // Implement view details functionality or navigation
     };
 
     const deleteCandidate = (key: string) => {
-        console.log('Deleting candidate:', key);
+        // console.log('Deleting candidate:', key);
         // Implement delete functionality
     };
 

@@ -1,5 +1,5 @@
 import URL from "@/app/utils/constants/url/url";
-import { UserContext, useUser } from "@/app/user/profile/contexts/UserProfileContext";
+import { UserContext } from "@/app/user/profile/contexts/UserProfileContext";
 import { InstagramOutlined, LinkOutlined, LinkedinOutlined, TwitterOutlined } from "@ant-design/icons";
 import { Typography, Card, Avatar, Button, Space, Col, Row } from "antd";
 import Link from "next/link";
@@ -39,7 +39,7 @@ const ProfileVisualizer: React.FC = () => {
     const { userData, loading } = useContext(UserContext);
 
     useEffect(() => {
-        console.log(userData);
+        // console.log(userData);
     }, [userData]);
 
     return (

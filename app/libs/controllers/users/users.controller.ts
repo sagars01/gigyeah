@@ -75,6 +75,7 @@ class UserController {
             };
 
             logger.log(LogLevel.INFO, 'User details and job details retrieved successfully');
+
             return { userDetails: leanUpdatedUser, jobDetails: jobDetails };
         } catch (error: any) {
             logger.log(LogLevel.ERROR, 'GetUserDetails: Failed to get user details : ' + error);
@@ -94,9 +95,9 @@ class UserController {
             };
             const newUser = new userModel(userDoc);
             await newUser.save();
-            console.log('User created successfully');
+            // console.log('User created successfully');
         } catch (error) {
-            console.error('Error creating user:', error);
+            // console.error('Error creating user:', error);
             throw new Error('Failed to create user');
         }
     }
@@ -153,7 +154,7 @@ class UserController {
         await dbConnect();
         try {
             await userModel.findOneAndDelete({ authProviderIdentifier: id });
-            console.log('User deleted successfully');
+            // console.log('User deleted successfully');
         } catch (error) {
             console.error('Error deleting user:', error);
             throw new Error('Failed to delete user');

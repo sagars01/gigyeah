@@ -55,7 +55,7 @@ const EditJobDrawer: React.FC<EditJobSiderProps> = ({ openDrawer, jobDetails, on
                 formData
             )
             message.success("Job Updated successfully!")
-            console.log(response);
+            // console.log(response);
             jobUpdatedEvt("Job Updated!", response.data);
 
             form.resetFields();

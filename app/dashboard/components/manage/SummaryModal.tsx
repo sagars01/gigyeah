@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
-import MarkdownRenderer from 'react-markdown-renderer';
+import { Modal } from 'antd';
 import Title from 'antd/es/typography/Title';
 
 interface SummaryModalProps {

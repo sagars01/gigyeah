@@ -215,7 +215,7 @@ const ApplicantManagement: React.FC<ApplicationManagementProps> = ({ jobId, jobD
                         rows: 1,
                         expandable: true,
                         onEllipsis: (ellipsis) => {
-                            console.log('Ellipsis changed:', ellipsis);
+                            // console.log('Ellipsis changed:', ellipsis);
                         },
                     }}
                 >
